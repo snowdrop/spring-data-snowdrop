@@ -24,5 +24,6 @@ public class HibernateSearchRepositoryConfigExtension extends RepositoryConfigur
   public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
     AnnotationAttributes attributes = config.getAttributes();
     builder.addPropertyReference("searchIntegrator", attributes.getString("searchIntegratorRef"));
+    builder.addPropertyReference("datasourceMapper", attributes.getString("datasourceMapperRef"));
   }
 }

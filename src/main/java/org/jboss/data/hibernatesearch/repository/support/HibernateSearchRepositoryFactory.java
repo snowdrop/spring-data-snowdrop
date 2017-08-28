@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.hibernate.search.spi.SearchIntegrator;
 import org.jboss.data.hibernatesearch.core.mapping.HibernateSearchPersistentEntity;
+import org.jboss.data.hibernatesearch.spi.DatasourceMapper;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -17,9 +18,11 @@ import org.springframework.data.util.TypeInformation;
  */
 public class HibernateSearchRepositoryFactory extends RepositoryFactorySupport {
   private SearchIntegrator searchIntegrator;
+  private DatasourceMapper datasourceMapper;
 
-  public HibernateSearchRepositoryFactory(SearchIntegrator searchIntegrator) {
+  public HibernateSearchRepositoryFactory(SearchIntegrator searchIntegrator, DatasourceMapper datasourceMapper) {
     this.searchIntegrator = searchIntegrator;
+    this.datasourceMapper = datasourceMapper;
   }
 
   @Override
@@ -31,7 +34,7 @@ public class HibernateSearchRepositoryFactory extends RepositoryFactorySupport {
 
   @Override
   protected Object getTargetRepository(RepositoryInformation info) {
-    return getTargetRepositoryViaReflection(info, searchIntegrator, getEntityInformation(info.getDomainType()));
+    return getTargetRepositoryViaReflection(info, searchIntegrator, datasourceMapper, getEntityInformation(info.getDomainType()));
   }
 
   @Override

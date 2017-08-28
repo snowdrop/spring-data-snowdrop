@@ -46,8 +46,12 @@ public @interface EnableHibernateSearchRepositories {
   /**
    * Configures the name of the {@link SearchIntegrator} bean definition to be used to create repositories
    * discovered through this annotation. Defaults to {@code searchIntegrator}.
-   *
-   * @return
    */
   String searchIntegratorRef() default "searchIntegrator";
+
+  /**
+   * Configures the name of the {@link DatasourceMapper} bean definition to be used to create repositories
+   * discovered through this annotation. Defaults to {@code datasourceMapper}.
+   */
+  String datasourceMapperRef() default "datasourceMapper";
 }

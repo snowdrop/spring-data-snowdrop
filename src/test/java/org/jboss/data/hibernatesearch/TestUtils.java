@@ -5,6 +5,7 @@ import org.hibernate.search.backend.spi.WorkType;
 import org.hibernate.search.backend.spi.Worker;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.hibernate.search.spi.SearchIntegratorBuilder;
+import org.jboss.data.hibernatesearch.spi.DatasourceMapper;
 
 /**
  * @author Ales Justin
@@ -23,7 +24,11 @@ public class TestUtils {
     return builder.buildSearchIntegrator();
   }
 
-  public static void preindexEntities(SearchIntegrator si, AbstractEntity... entities) {
+  public static DatasourceMapperForTest createDatasourceMapper() {
+    return new DatasourceMapperForTest();
+  }
+
+  public static void preindexEntities(SearchIntegrator si, DatasourceMapperForTest datasourceMapper, AbstractEntity... entities) {
     println("Starting index creation...");
     Worker worker = si.getWorker();
     TransactionContextForTest tc = new TransactionContextForTest();
@@ -33,6 +38,7 @@ public class TestUtils {
       AbstractEntity entity = entities[i - 1];
       Work work = new Work(entity, entity.getId(), WorkType.ADD, false);
       worker.performWork(work, tc);
+      datasourceMapper.put(entity);
       needsFlush = true;
       if (i % 1000 == 0) {
         //commit in batches of 1000:

@@ -1,6 +1,7 @@
 package org.jboss.data.hibernatesearch.smoke;
 
 import org.hibernate.search.spi.SearchIntegrator;
+import org.jboss.data.hibernatesearch.DatasourceMapperForTest;
 import org.jboss.data.hibernatesearch.TestUtils;
 import org.jboss.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.junit.Assert;
@@ -27,6 +28,11 @@ public class SmokeTest {
     public SearchIntegrator searchIntegrator() {
       return TestUtils.createSearchIntegrator(SmokeEntity.class);
     }
+
+    @Bean
+    public DatasourceMapperForTest datasourceMapper() {
+      return TestUtils.createDatasourceMapper();
+    }
   }
 
   @Autowired
@@ -34,6 +40,9 @@ public class SmokeTest {
 
   @Autowired
   SearchIntegrator searchIntegrator;
+
+  @Autowired
+  DatasourceMapperForTest datasourceMapper;
 
   @Before
   public void setUp() {
@@ -44,12 +53,13 @@ public class SmokeTest {
     entity.setType("foo");
     entities[0] = entity;
 
-    TestUtils.preindexEntities(searchIntegrator, entities);
+    TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities);
   }
 
   @Test
   public void testSmokeRepositry() {
     Assert.assertNotNull(repository);
     Assert.assertEquals(1L, repository.count());
+    Assert.assertEquals("1", repository.findAll().iterator().next().getId());
   }
 }

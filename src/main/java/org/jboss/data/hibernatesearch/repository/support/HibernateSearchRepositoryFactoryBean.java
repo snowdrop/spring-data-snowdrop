@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.hibernate.search.spi.SearchIntegrator;
 import org.jboss.data.hibernatesearch.core.mapping.HibernateSearchPersistentEntity;
+import org.jboss.data.hibernatesearch.spi.DatasourceMapper;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.RepositoryInformation;
@@ -21,6 +22,7 @@ import org.springframework.util.Assert;
 public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends RepositoryFactoryBeanSupport<T, S, ID> {
 
   private SearchIntegrator searchIntegrator;
+  private DatasourceMapper datasourceMapper;
 
   /**
    * Creates a new {@link HibernateSearchRepositoryFactory} for the given repository interface.
@@ -41,18 +43,23 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
     this.searchIntegrator = searchIntegrator;
   }
 
+  public void setDatasourceMapper(DatasourceMapper datasourceMapper) {
+    this.datasourceMapper = datasourceMapper;
+  }
+
   /*
-   * (non-Javadoc)
-   * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
-   */
+     * (non-Javadoc)
+     * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
+     */
   @Override
   public void afterPropertiesSet() {
     Assert.notNull(searchIntegrator, "SearchIntegrator must be configured!");
+    Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
     super.afterPropertiesSet();
   }
 
   @Override
   protected RepositoryFactorySupport createRepositoryFactory() {
-    return new HibernateSearchRepositoryFactory(searchIntegrator);
+    return new HibernateSearchRepositoryFactory(searchIntegrator, datasourceMapper);
   }
 }
