@@ -199,6 +199,17 @@ public class Criteria {
   }
 
   /**
+   * Crates new CriteriaEntry without any wildcards
+   *
+   * @param o
+   * @return new criteria instance
+   */
+  public Criteria isNot(Object o) {
+    queryCriteria.add(new CriteriaEntry(OperationKey.NOT_EQUALS, o));
+    return this;
+  }
+
+  /**
    * Crates new CriteriaEntry with leading and trailing wildcards <br/>
    * <strong>NOTE: </strong> mind your schema as leading wildcards may not be supported and/or execution might be slow.
    *
@@ -528,7 +539,7 @@ public class Criteria {
   }
 
   public enum OperationKey {
-    EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, EXPRESSION, BETWEEN, FUZZY, IN, NOT_IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
+    EQUALS, NOT_EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, EXPRESSION, BETWEEN, FUZZY, IN, NOT_IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
   }
 
   public static class CriteriaEntry {

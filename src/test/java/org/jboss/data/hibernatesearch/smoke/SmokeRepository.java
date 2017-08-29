@@ -9,4 +9,10 @@ import org.jboss.data.hibernatesearch.repository.HibernateSearchRepository;
  */
 public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, String> {
   List<SmokeEntity> findByType(String type);
+
+  SmokeEntity findByName(String name);
+
+  SmokeEntity findByNameAndType(String name, String type);
+
+  List<SmokeEntity> findByNameOrType(String name, String type);
 }

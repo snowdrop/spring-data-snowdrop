@@ -1,5 +1,7 @@
 package org.jboss.data.hibernatesearch.smoke;
 
+import java.util.List;
+
 import org.hibernate.search.spi.SearchIntegrator;
 import org.jboss.data.hibernatesearch.DatasourceMapperForTest;
 import org.jboss.data.hibernatesearch.TestUtils;
@@ -46,12 +48,25 @@ public class SmokeTest {
 
   @Before
   public void setUp() {
-    SmokeEntity[] entities = new SmokeEntity[1];
+    SmokeEntity[] entities = new SmokeEntity[3];
 
     SmokeEntity entity = new SmokeEntity();
     entity.setId("1");
+    entity.setName("a");
     entity.setType("foo");
     entities[0] = entity;
+
+    entity = new SmokeEntity();
+    entity.setId("2");
+    entity.setName("b");
+    entity.setType("bar");
+    entities[1] = entity;
+
+    entity = new SmokeEntity();
+    entity.setId("3");
+    entity.setName("c");
+    entity.setType("foo");
+    entities[2] = entity;
 
     TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities);
   }
@@ -59,8 +74,20 @@ public class SmokeTest {
   @Test
   public void testSmokeRepositry() {
     Assert.assertNotNull(repository);
-    Assert.assertEquals(1L, repository.count());
-    Assert.assertEquals("1", repository.findAll().iterator().next().getId());
-    Assert.assertEquals("1", repository.findByType("foo").iterator().next().getId());
+
+//    Assert.assertEquals(3L, repository.count());
+//
+//    Assert.assertEquals(2, repository.findByType("foo").size());
+//
+//    SmokeEntity byName = repository.findByName("b");
+//    Assert.assertNotNull(byName);
+//    Assert.assertEquals("2", byName.getId());
+//
+//    SmokeEntity byNameAndType = repository.findByNameAndType("c", "foo");
+//    Assert.assertNotNull(byNameAndType);
+//    Assert.assertEquals("3", byNameAndType.getId());
+
+    List<SmokeEntity> byNameOrType = repository.findByNameOrType("a", "bar");
+    Assert.assertEquals(2, byNameOrType.size());
   }
 }

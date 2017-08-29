@@ -12,11 +12,13 @@ import org.hibernate.search.query.engine.spi.HSQuery;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.jboss.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import org.jboss.data.hibernatesearch.core.mapping.SimpleHibernateSearchMappingContext;
+import org.jboss.data.hibernatesearch.core.query.CriteriaQuery;
+import org.jboss.data.hibernatesearch.core.query.QueryConverter;
+import org.jboss.data.hibernatesearch.core.query.StringQuery;
 import org.jboss.data.hibernatesearch.spi.DatasourceMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.mapping.context.MappingContext;
-import org.springframework.data.util.CloseableIterator;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -41,9 +43,18 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
 
   private <T> List<T> findAllInternal(org.jboss.data.hibernatesearch.core.query.Query allQuery) {
     Class<?> entityClass = allQuery.getEntityClass();
-    QueryBuilder queryBuilder = getQueryBuilder(entityClass);
-    Query query = queryBuilder.all().createQuery(); // TODO -- criteria, query string, ...
-    HSQuery hsQuery = getHSQuery(entityClass, query); // TODO -- sort, paging
+    HSQuery hsQuery;
+    if (allQuery instanceof CriteriaQuery) {
+      QueryConverter queryConverter = new QueryConverter(searchIntegrator, entityClass);
+      hsQuery = queryConverter.convert((CriteriaQuery) allQuery);
+    } else if (allQuery instanceof StringQuery) {
+      StringQuery stringQuery = (StringQuery) allQuery;
+      hsQuery = null; // TODO
+    } else {
+      QueryBuilder queryBuilder = getQueryBuilder(entityClass);
+      Query query = queryBuilder.all().createQuery(); // TODO -- query string, ...
+      hsQuery = getHSQuery(entityClass, query); // TODO -- sort, paging
+    }
     List<EntityInfo> entityInfos = hsQuery.queryEntityInfos();
     List<T> entities = new ArrayList<>();
     for (EntityInfo ei : entityInfos) {

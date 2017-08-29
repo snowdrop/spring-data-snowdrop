@@ -78,7 +78,7 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
       case FALSE:
         return criteria.is(false);
       case NEGATING_SIMPLE_PROPERTY:
-        return criteria.is(parameters.next()).not();
+        return criteria.isNot(parameters.next());
       case REGEX:
         return criteria.expression(parameters.next().toString());
       case LIKE:

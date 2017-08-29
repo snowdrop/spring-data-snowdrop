@@ -25,6 +25,8 @@ public class SmokeEntity implements AbstractEntity {
   @Id
   @DocumentId
   private String id;
+  @Field(store = Store.NO)
+  private String name;
   @Field(store = Store.YES)
   private String type;
 }
