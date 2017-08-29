@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.HSQuery;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author Ales Justin
@@ -26,11 +27,30 @@ public class QueryConverter {
 
   public HSQuery convert(CriteriaQuery query) {
     HSQuery hsQuery = createHSQuery(query);
+    addPagingToQuery(hsQuery, query);
     addSortToQuery(hsQuery, query);
     return hsQuery;
   }
 
-  private void addSortToQuery(HSQuery hsQuery, CriteriaQuery query) {
+  public HSQuery string(StringQuery query) {
+    return null;
+  }
+
+  public HSQuery query(Query query) {
+    HSQuery hsQuery = createHSQuery(query.getEntityClass(), queryBuilder.matchAll());
+    addPagingToQuery(hsQuery, query);
+    addSortToQuery(hsQuery, query);
+    return hsQuery;
+  }
+
+  private void addPagingToQuery(HSQuery hsQuery, Query query) {
+    Pageable pageable = query.getPageable();
+    if (pageable != null) {
+      // TODO
+    }
+  }
+
+  private void addSortToQuery(HSQuery hsQuery, Query query) {
     org.springframework.data.domain.Sort querySort = query.getSort();
     if (querySort != null) {
       Sort sort = orderConverter.convert(querySort);
@@ -38,8 +58,12 @@ public class QueryConverter {
     }
   }
 
+  private HSQuery createHSQuery(Class<?> entityClass, org.apache.lucene.search.Query query) {
+    return searchIntegrator.createHSQuery().luceneQuery(query).targetedEntities(Collections.singletonList(entityClass));
+  }
+
   private HSQuery createHSQuery(CriteriaQuery query) {
-    return searchIntegrator.createHSQuery().luceneQuery(createLuceneQuery(query)).targetedEntities(Collections.singletonList(query.getEntityClass()));
+    return createHSQuery(query.getEntityClass(), createLuceneQuery(query));
   }
 
   private org.apache.lucene.search.Query createLuceneQuery(CriteriaQuery query) {

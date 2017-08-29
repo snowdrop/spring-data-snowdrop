@@ -1,12 +1,9 @@
 package org.jboss.data.hibernatesearch.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.lucene.search.Query;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.engine.spi.EntityInfo;
 import org.hibernate.search.query.engine.spi.HSQuery;
 import org.hibernate.search.spi.SearchIntegrator;
@@ -33,27 +30,18 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
     this.datasourceMapper = datasourceMapper;
   }
 
-  private QueryBuilder getQueryBuilder(Class<?> entityClass) {
-    return searchIntegrator.buildQueryBuilder().forEntity(entityClass).get();
-  }
-
-  private HSQuery getHSQuery(Class<?> entityClass, Query query) {
-    return searchIntegrator.createHSQuery().luceneQuery(query).targetedEntities(Collections.singletonList(entityClass));
-  }
-
-  private <T> List<T> findAllInternal(org.jboss.data.hibernatesearch.core.query.Query allQuery) {
-    Class<?> entityClass = allQuery.getEntityClass();
+  private <T> List<T> findAllInternal(org.jboss.data.hibernatesearch.core.query.Query query) {
+    Class<?> entityClass = query.getEntityClass();
+    QueryConverter queryConverter = new QueryConverter(searchIntegrator, entityClass);
     HSQuery hsQuery;
-    if (allQuery instanceof CriteriaQuery) {
-      QueryConverter queryConverter = new QueryConverter(searchIntegrator, entityClass);
-      hsQuery = queryConverter.convert((CriteriaQuery) allQuery);
-    } else if (allQuery instanceof StringQuery) {
-      StringQuery stringQuery = (StringQuery) allQuery;
-      hsQuery = null; // TODO
+    if (query instanceof CriteriaQuery) {
+      CriteriaQuery criteriaQuery = (CriteriaQuery) query;
+      hsQuery = queryConverter.convert(criteriaQuery);
+    } else if (query instanceof StringQuery) {
+      StringQuery stringQuery = (StringQuery) query;
+      hsQuery = queryConverter.string(stringQuery);
     } else {
-      QueryBuilder queryBuilder = getQueryBuilder(entityClass);
-      Query query = queryBuilder.all().createQuery(); // TODO -- query string, ...
-      hsQuery = getHSQuery(entityClass, query); // TODO -- sort, paging
+      hsQuery = queryConverter.query(query);
     }
     List<EntityInfo> entityInfos = hsQuery.queryEntityInfos();
     List<T> entities = new ArrayList<>();
@@ -74,9 +62,7 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
 
   @Override
   public <T> long count(org.jboss.data.hibernatesearch.core.query.Query countQuery) {
-    QueryBuilder queryBuilder = getQueryBuilder(countQuery.getEntityClass());
-    Query query = queryBuilder.all().createQuery();
-    HSQuery hsQuery = getHSQuery(countQuery.getEntityClass(), query); // TODO -- sort, paging ?
+    HSQuery hsQuery = new QueryConverter(searchIntegrator, countQuery.getEntityClass()).query(countQuery);
     return hsQuery.queryResultSize();
   }
 
