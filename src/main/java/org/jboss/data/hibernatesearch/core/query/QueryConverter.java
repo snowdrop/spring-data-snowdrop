@@ -2,6 +2,10 @@ package org.jboss.data.hibernatesearch.core.query;
 
 import java.util.Collections;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.HSQuery;
 import org.hibernate.search.spi.SearchIntegrator;
@@ -26,21 +30,22 @@ public class QueryConverter {
   }
 
   public HSQuery convert(CriteriaQuery query) {
-    HSQuery hsQuery = createHSQuery(query);
-    addPagingToQuery(hsQuery, query);
-    addSortToQuery(hsQuery, query);
-    return hsQuery;
+    return createHSQuery(query);
   }
 
   public HSQuery string(StringQuery query) {
-    return null;
+    try {
+      String[] fields = query.getFields();
+      QueryParser parser = new MultiFieldQueryParser(fields, new StandardAnalyzer());
+      org.apache.lucene.search.Query luceneQuery = parser.parse(query.getQuery());
+      return createHSQuery(query, luceneQuery);
+    } catch (ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public HSQuery query(Query query) {
-    HSQuery hsQuery = createHSQuery(query.getEntityClass(), queryBuilder.matchAll());
-    addPagingToQuery(hsQuery, query);
-    addSortToQuery(hsQuery, query);
-    return hsQuery;
+    return createHSQuery(query, queryBuilder.matchAll());
   }
 
   private void addPagingToQuery(HSQuery hsQuery, Query query) {
@@ -58,12 +63,15 @@ public class QueryConverter {
     }
   }
 
-  private HSQuery createHSQuery(Class<?> entityClass, org.apache.lucene.search.Query query) {
-    return searchIntegrator.createHSQuery().luceneQuery(query).targetedEntities(Collections.singletonList(entityClass));
+  private HSQuery createHSQuery(Query query, org.apache.lucene.search.Query luceneQuery) {
+    HSQuery hsQuery = searchIntegrator.createHSQuery().luceneQuery(luceneQuery).targetedEntities(Collections.singletonList(query.getEntityClass()));
+    addPagingToQuery(hsQuery, query);
+    addSortToQuery(hsQuery, query);
+    return hsQuery;
   }
 
   private HSQuery createHSQuery(CriteriaQuery query) {
-    return createHSQuery(query.getEntityClass(), createLuceneQuery(query));
+    return createHSQuery(query, createLuceneQuery(query));
   }
 
   private org.apache.lucene.search.Query createLuceneQuery(CriteriaQuery query) {

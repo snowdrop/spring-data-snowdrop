@@ -22,6 +22,7 @@
     <commonscollections>3.2.1</commonscollections>
     <commonslang>2.6</commonslang>
     <hibernatesearch>5.5.8.Final</hibernatesearch>
+    <lucene>5.3.1</lucene>
     <springdata.commons>1.13.6.RELEASE</springdata.commons>
     <!-- compiler -->
     <source.level>1.8</source.level>
@@ -78,6 +79,12 @@
       <artifactId>hibernate-search-testing</artifactId>
       <scope>test</scope>
       <version>${hibernatesearch}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
+      <version>${lucene}</version>
     </dependency>
 
     <dependency>

@@ -8,6 +8,7 @@ import org.jboss.data.hibernatesearch.core.query.StringQuery;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.format.support.DefaultFormattingConversionService;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -21,7 +22,7 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
     this.query = queryString;
   }
 
-  private final GenericConversionService conversionService = new GenericConversionService(); // TODO -- date converters?
+  private final GenericConversionService conversionService = new DefaultFormattingConversionService();
 
   @Override
   public Object execute(Object[] parameters) {

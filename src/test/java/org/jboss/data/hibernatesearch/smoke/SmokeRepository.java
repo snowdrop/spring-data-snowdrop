@@ -2,6 +2,7 @@ package org.jboss.data.hibernatesearch.smoke;
 
 import java.util.List;
 
+import org.jboss.data.hibernatesearch.annotations.Query;
 import org.jboss.data.hibernatesearch.repository.HibernateSearchRepository;
 
 /**
@@ -15,4 +16,7 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
   SmokeEntity findByNameAndType(String name, String type);
 
   List<SmokeEntity> findByNameOrType(String name, String type);
+
+  @Query("(+type:?0)")
+  List<SmokeEntity> findByTypeQuery(String type);
 }
