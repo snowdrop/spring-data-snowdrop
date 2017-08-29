@@ -13,6 +13,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -48,7 +52,7 @@ public class SmokeTest {
 
   @Before
   public void setUp() {
-    SmokeEntity[] entities = new SmokeEntity[3];
+    SmokeEntity[] entities = new SmokeEntity[4];
 
     SmokeEntity entity = new SmokeEntity();
     entity.setId("1");
@@ -68,6 +72,12 @@ public class SmokeTest {
     entity.setType("foo");
     entities[2] = entity;
 
+    entity = new SmokeEntity();
+    entity.setId("4");
+    entity.setName("d");
+    entity.setType("baz");
+    entities[3] = entity;
+
     TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities);
   }
 
@@ -75,7 +85,7 @@ public class SmokeTest {
   public void testSmokeRepositry() {
     Assert.assertNotNull(repository);
 
-//    Assert.assertEquals(3L, repository.count());
+//    Assert.assertEquals(4L, repository.count());
 //
 //    Assert.assertEquals(2, repository.findByType("foo").size());
 //
@@ -89,6 +99,10 @@ public class SmokeTest {
 
     List<SmokeEntity> byTypeQuery = repository.findByTypeQuery("foo");
     Assert.assertEquals(2, byTypeQuery.size());
+
+    Pageable pageable = new PageRequest(1, 2, new Sort(new Sort.Order("type")));
+    Page<SmokeEntity> pageables = repository.findAll(pageable);
+    Assert.assertEquals(2, pageables.getTotalElements());
 
     List<SmokeEntity> byNameOrType = repository.findByNameOrType("a", "bar");
     //Assert.assertEquals(2, byNameOrType.size());

@@ -48,25 +48,33 @@ public class QueryConverter {
     return createHSQuery(query, queryBuilder.matchAll());
   }
 
-  private void addPagingToQuery(HSQuery hsQuery, Query query) {
-    Pageable pageable = query.getPageable();
-    if (pageable != null) {
-      // TODO
+  private void addSortToQuery(HSQuery hsQuery, Query query) {
+    addSortToQuery(hsQuery, query.getSort());
+  }
+
+  private void addSortToQuery(HSQuery hsQuery, org.springframework.data.domain.Sort sort) {
+    if (sort != null) {
+      Sort hsSort = orderConverter.convert(sort);
+      hsQuery.sort(hsSort);
     }
   }
 
-  private void addSortToQuery(HSQuery hsQuery, Query query) {
-    org.springframework.data.domain.Sort querySort = query.getSort();
-    if (querySort != null) {
-      Sort sort = orderConverter.convert(querySort);
-      hsQuery.sort(sort);
+  private void addPagingToQuery(HSQuery hsQuery, Query query) {
+    Pageable pageable = query.getPageable();
+    if (pageable != null) {
+      org.springframework.data.domain.Sort sort = pageable.getSort();
+      if (query.getSort() == null && sort != null) {
+        addSortToQuery(hsQuery, sort);
+      }
+      hsQuery.firstResult(pageable.getOffset());
+      hsQuery.maxResults(pageable.getPageSize());
     }
   }
 
   private HSQuery createHSQuery(Query query, org.apache.lucene.search.Query luceneQuery) {
     HSQuery hsQuery = searchIntegrator.createHSQuery().luceneQuery(luceneQuery).targetedEntities(Collections.singletonList(query.getEntityClass()));
-    addPagingToQuery(hsQuery, query);
     addSortToQuery(hsQuery, query);
+    addPagingToQuery(hsQuery, query);
     return hsQuery;
   }
 
