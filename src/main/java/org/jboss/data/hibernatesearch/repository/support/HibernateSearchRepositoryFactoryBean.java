@@ -1,19 +1,14 @@
 package org.jboss.data.hibernatesearch.repository.support;
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import org.hibernate.search.spi.SearchIntegrator;
-import org.jboss.data.hibernatesearch.core.mapping.HibernateSearchPersistentEntity;
+import org.jboss.data.hibernatesearch.core.HibernateSearchOperations;
+import org.jboss.data.hibernatesearch.core.HibernateSearchTemplate;
 import org.jboss.data.hibernatesearch.spi.DatasourceMapper;
 import org.springframework.data.repository.Repository;
-import org.springframework.data.repository.core.EntityInformation;
-import org.springframework.data.repository.core.RepositoryInformation;
-import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
-import org.springframework.data.util.ClassTypeInformation;
-import org.springframework.data.util.TypeInformation;
 import org.springframework.util.Assert;
 
 /**
@@ -23,6 +18,7 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
 
   private SearchIntegrator searchIntegrator;
   private DatasourceMapper datasourceMapper;
+  private HibernateSearchOperations hibernateSearchOperations;
 
   /**
    * Creates a new {@link HibernateSearchRepositoryFactory} for the given repository interface.
@@ -39,7 +35,6 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
    * @param searchIntegrator the search integrator to set
    */
   public void setSearchIntegrator(SearchIntegrator searchIntegrator) {
-    // setMappingContext(null); // TODO
     this.searchIntegrator = searchIntegrator;
   }
 
@@ -47,19 +42,30 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
     this.datasourceMapper = datasourceMapper;
   }
 
+  public void setHibernateSearchOperations(HibernateSearchOperations hibernateSearchOperations) {
+    this.hibernateSearchOperations = hibernateSearchOperations;
+  }
+
   /*
-     * (non-Javadoc)
-     * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
-     */
+   * (non-Javadoc)
+   * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
+   */
   @Override
   public void afterPropertiesSet() {
-    Assert.notNull(searchIntegrator, "SearchIntegrator must be configured!");
-    Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
+    if (hibernateSearchOperations == null) {
+      Assert.notNull(searchIntegrator, "SearchIntegrator must be configured!");
+      Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
+
+      hibernateSearchOperations = new HibernateSearchTemplate(searchIntegrator, datasourceMapper);
+    }
+
+    setMappingContext(hibernateSearchOperations.getMappingContext());
+
     super.afterPropertiesSet();
   }
 
   @Override
   protected RepositoryFactorySupport createRepositoryFactory() {
-    return new HibernateSearchRepositoryFactory(searchIntegrator, datasourceMapper);
+    return new HibernateSearchRepositoryFactory(hibernateSearchOperations);
   }
 }

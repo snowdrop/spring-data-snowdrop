@@ -61,5 +61,6 @@ public class SmokeTest {
     Assert.assertNotNull(repository);
     Assert.assertEquals(1L, repository.count());
     Assert.assertEquals("1", repository.findAll().iterator().next().getId());
+    Assert.assertEquals("1", repository.findByType("foo").iterator().next().getId());
   }
 }
