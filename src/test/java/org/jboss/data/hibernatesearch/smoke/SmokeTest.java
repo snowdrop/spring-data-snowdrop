@@ -56,25 +56,25 @@ public class SmokeTest {
 
     SmokeEntity entity = new SmokeEntity();
     entity.setId("1");
-    entity.setName("a");
+    entity.setName("aa");
     entity.setType("foo");
     entities[0] = entity;
 
     entity = new SmokeEntity();
     entity.setId("2");
-    entity.setName("b");
+    entity.setName("bb");
     entity.setType("bar");
     entities[1] = entity;
 
     entity = new SmokeEntity();
     entity.setId("3");
-    entity.setName("c");
+    entity.setName("cc");
     entity.setType("foo");
     entities[2] = entity;
 
     entity = new SmokeEntity();
     entity.setId("4");
-    entity.setName("d");
+    entity.setName("dd");
     entity.setType("baz");
     entities[3] = entity;
 
@@ -85,17 +85,17 @@ public class SmokeTest {
   public void testSmokeRepositry() {
     Assert.assertNotNull(repository);
 
-//    Assert.assertEquals(4L, repository.count());
-//
-//    Assert.assertEquals(2, repository.findByType("foo").size());
-//
-//    SmokeEntity byName = repository.findByName("b");
-//    Assert.assertNotNull(byName);
-//    Assert.assertEquals("2", byName.getId());
-//
-//    SmokeEntity byNameAndType = repository.findByNameAndType("c", "foo");
-//    Assert.assertNotNull(byNameAndType);
-//    Assert.assertEquals("3", byNameAndType.getId());
+    Assert.assertEquals(4L, repository.count());
+
+    Assert.assertEquals(2, repository.findByType("foo").size());
+
+    SmokeEntity byName = repository.findByName("bb");
+    Assert.assertNotNull(byName);
+    Assert.assertEquals("2", byName.getId());
+
+    List<SmokeEntity> byNameAndType = repository.findByNameAndType("cc", "foo");
+    Assert.assertEquals(1, byNameAndType.size());
+    Assert.assertEquals("3", byNameAndType.get(0).getId());
 
     List<SmokeEntity> byTypeQuery = repository.findByTypeQuery("foo");
     Assert.assertEquals(2, byTypeQuery.size());
@@ -104,7 +104,7 @@ public class SmokeTest {
     Page<SmokeEntity> pageables = repository.findAll(pageable);
     Assert.assertEquals(2, pageables.getTotalElements());
 
-    List<SmokeEntity> byNameOrType = repository.findByNameOrType("a", "bar");
-    //Assert.assertEquals(2, byNameOrType.size());
+    List<SmokeEntity> byNameOrType = repository.findByNameOrType("aa", "bar");
+    Assert.assertEquals(2, byNameOrType.size());
   }
 }

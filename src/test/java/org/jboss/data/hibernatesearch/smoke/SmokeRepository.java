@@ -13,7 +13,7 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
 
   SmokeEntity findByName(String name);
 
-  SmokeEntity findByNameAndType(String name, String type);
+  List<SmokeEntity> findByNameAndType(String name, String type);
 
   List<SmokeEntity> findByNameOrType(String name, String type);
 
