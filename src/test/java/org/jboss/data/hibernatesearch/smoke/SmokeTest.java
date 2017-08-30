@@ -6,6 +6,7 @@ import org.hibernate.search.spi.SearchIntegrator;
 import org.jboss.data.hibernatesearch.DatasourceMapperForTest;
 import org.jboss.data.hibernatesearch.TestUtils;
 import org.jboss.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,12 +82,30 @@ public class SmokeTest {
     TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities);
   }
 
+  @After
+  public void tearDown() {
+    TestUtils.purgeAll(searchIntegrator, datasourceMapper, SmokeEntity.class);
+  }
+
   @Test
-  public void testSmokeRepositry() {
+  public void testDefaultRepository() {
     Assert.assertNotNull(repository);
+
+    List<SmokeEntity> all = TestUtils.toList(repository.findAll());
+    Assert.assertEquals(4L, all.size());
 
     Assert.assertEquals(4L, repository.count());
 
+    Iterable<SmokeEntity> sorted = repository.findAll(new Sort(Sort.Direction.DESC, "name"));
+    Assert.assertEquals("4", sorted.iterator().next().getId());
+
+    Pageable pageable = new PageRequest(1, 2, new Sort(new Sort.Order("type")));
+    Page<SmokeEntity> pageables = repository.findAll(pageable);
+    Assert.assertEquals(2, pageables.getTotalElements());
+  }
+
+  @Test
+  public void testSmokeRepository() {
     Assert.assertEquals(2, repository.findByType("foo").size());
 
     SmokeEntity byName = repository.findByName("bb");
@@ -99,10 +118,6 @@ public class SmokeTest {
 
     List<SmokeEntity> byTypeQuery = repository.findByTypeQuery("foo");
     Assert.assertEquals(2, byTypeQuery.size());
-
-    Pageable pageable = new PageRequest(1, 2, new Sort(new Sort.Order("type")));
-    Page<SmokeEntity> pageables = repository.findAll(pageable);
-    Assert.assertEquals(2, pageables.getTotalElements());
 
     List<SmokeEntity> byNameOrType = repository.findByNameOrType("aa", "bar");
     Assert.assertEquals(2, byNameOrType.size());

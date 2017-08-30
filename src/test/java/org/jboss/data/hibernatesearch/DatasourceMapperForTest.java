@@ -21,4 +21,8 @@ public class DatasourceMapperForTest implements DatasourceMapper {
   public void put(AbstractEntity entity) {
     map.put(entity.getId(), entity);
   }
+
+  public void clear() {
+    map.clear();
+  }
 }
