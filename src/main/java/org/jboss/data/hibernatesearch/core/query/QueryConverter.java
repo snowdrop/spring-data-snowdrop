@@ -19,13 +19,13 @@ public class QueryConverter {
   private LuceneQueryBuilder queryBuilder;
   private SearchIntegrator searchIntegrator;
 
-  private FilterConverter filterConverter;
+  private CriteriaConverter criteriaConverter;
   private OrderConverter orderConverter;
 
   public QueryConverter(SearchIntegrator searchIntegrator, Class<?> entityClass) {
     this.searchIntegrator = searchIntegrator;
     this.queryBuilder = new LuceneQueryBuilder(searchIntegrator.buildQueryBuilder().forEntity(entityClass).get());
-    this.filterConverter = new FilterConverter(queryBuilder);
+    this.criteriaConverter = new CriteriaConverter(queryBuilder);
     this.orderConverter = new OrderConverter();
   }
 
@@ -83,6 +83,6 @@ public class QueryConverter {
   }
 
   private org.apache.lucene.search.Query createLuceneQuery(CriteriaQuery query) {
-    return filterConverter.convert(query.getCriteria());
+    return criteriaConverter.convert(query.getCriteria());
   }
 }

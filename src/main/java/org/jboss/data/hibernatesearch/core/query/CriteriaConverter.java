@@ -13,11 +13,11 @@ import org.apache.lucene.search.Query;
  *
  * @author Ales Justin
  */
-public class FilterConverter {
+public class CriteriaConverter {
 
   private LuceneQueryBuilder queryBuilder;
 
-  public FilterConverter(LuceneQueryBuilder queryBuilder) {
+  public CriteriaConverter(LuceneQueryBuilder queryBuilder) {
     this.queryBuilder = queryBuilder;
   }
 
