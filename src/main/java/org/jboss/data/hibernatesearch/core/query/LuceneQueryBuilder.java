@@ -3,7 +3,11 @@ package org.jboss.data.hibernatesearch.core.query;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryparser.flexible.core.util.StringUtils;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.WildcardQuery;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.RangeMatchingContext;
@@ -52,6 +56,14 @@ public class LuceneQueryBuilder {
     return bool.createQuery();
   }
 
+  public Query notIn(String fieldName, Collection<?> values) {
+    BooleanJunction<BooleanJunction> bool = queryBuilder.bool();
+    for (Object value : values) {
+      bool.must(equal(fieldName, value)).not();
+    }
+    return bool.createQuery();
+  }
+
   public Query notEqual(String fieldName, Object value) {
     return any(
       lessThan(fieldName, value),
@@ -64,12 +76,8 @@ public class LuceneQueryBuilder {
   }
 
   public Query equal(String fieldName, Object value) {
-    return equal(fieldName, convertToString(value));
-  }
-
-  public Query equal(String fieldName, String stringValue) {
     return keywordOnField(fieldName)
-      .matching(stringValue)
+      .matching(value)
       .createQuery();
   }
 
@@ -82,26 +90,48 @@ public class LuceneQueryBuilder {
 
   public Query greaterThan(String fieldName, Object value) {
     return rangeOnField(fieldName)
-      .above(convertToString(value)).excludeLimit()
+      .above(value).excludeLimit()
       .createQuery();
   }
 
   public Query greaterThanOrEqual(String fieldName, Object value) {
     return rangeOnField(fieldName)
-      .above(convertToString(value))
+      .above(value)
       .createQuery();
   }
 
   public Query lessThan(String fieldName, Object value) {
     return rangeOnField(fieldName)
-      .below(convertToString(value)).excludeLimit()
+      .below(value).excludeLimit()
       .createQuery();
   }
 
   public Query lessThanOrEqual(String fieldName, Object value) {
     return rangeOnField(fieldName)
-      .below(convertToString(value))
+      .below(value)
       .createQuery();
+  }
+
+  public Query between(String fieldName, Object min, Object max) {
+    BooleanJunction<BooleanJunction> bool = queryBuilder.bool();
+    bool.must(greaterThanOrEqual(fieldName, min)).must(lessThanOrEqual(fieldName, max));
+    return bool.createQuery();
+  }
+
+  public Query fuzzy(String fieldName, Object value) {
+    return new FuzzyQuery(new Term(fieldName, StringUtils.toString(value)));
+  }
+
+  public Query contains(String fieldName, Object value) {
+    return new WildcardQuery(new Term(fieldName, "*" + value + "*"));
+  }
+
+  public Query startsWith(String fieldName, Object value) {
+    return new WildcardQuery(new Term(fieldName, value + "*"));
+  }
+
+  public Query endsWith(String fieldName, Object value) {
+    return new WildcardQuery(new Term(fieldName, "*" + value));
   }
 
   public RangeMatchingContext rangeOnField(String fieldName) {

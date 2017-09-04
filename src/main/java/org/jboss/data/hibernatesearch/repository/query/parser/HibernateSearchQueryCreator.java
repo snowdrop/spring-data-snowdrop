@@ -109,9 +109,9 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
         Object firstParameter = parameters.next();
         Object secondParameter;
         if (type == Part.Type.SIMPLE_PROPERTY) {
-          if (part.getProperty().getType() != Point.class)
+          if (part.getProperty().getType() != Point.class) {
             return criteria.is(firstParameter);
-          else {
+          } else {
             // it means it's a simple find with exact geopoint matching (e.g. findByLocation)
             // and because HibernateSearch does not have any kind of query with just a geopoint
             // as argument we use a "geo distance" query with a distance of one meter.
@@ -121,11 +121,13 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
           secondParameter = parameters.next();
         }
 
-        if (firstParameter instanceof Point && secondParameter instanceof Distance)
+        if (firstParameter instanceof Point && secondParameter instanceof Distance) {
           return criteria.within((Point) firstParameter, (Distance) secondParameter);
+        }
 
-        if (firstParameter instanceof String && secondParameter instanceof String)
+        if (firstParameter instanceof String && secondParameter instanceof String) {
           return criteria.within((String) firstParameter, (String) secondParameter);
+        }
       }
       case NEAR: {
         Object firstParameter = parameters.next();
@@ -136,11 +138,13 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
 
         Object secondParameter = parameters.next();
 
-        if (firstParameter instanceof Point && secondParameter instanceof Distance)
+        if (firstParameter instanceof Point && secondParameter instanceof Distance) {
           return criteria.within((Point) firstParameter, (Distance) secondParameter);
+        }
 
-        if (firstParameter instanceof String && secondParameter instanceof String)
+        if (firstParameter instanceof String && secondParameter instanceof String) {
           return criteria.within((String) firstParameter, (String) secondParameter);
+        }
       }
 
       default:

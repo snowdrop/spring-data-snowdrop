@@ -101,6 +101,8 @@ public class CriteriaConverter {
         return queryBuilder.notEqual(fieldName, value);
       case IN:
         return queryBuilder.in(fieldName, (Collection<?>) value);
+      case NOT_IN:
+        return queryBuilder.notIn(fieldName, (Collection<?>) value);
       case GREATER:
         return queryBuilder.greaterThan(fieldName, value);
       case GREATER_EQUAL:
@@ -109,6 +111,17 @@ public class CriteriaConverter {
         return queryBuilder.lessThan(fieldName, value);
       case LESS_EQUAL:
         return queryBuilder.lessThanOrEqual(fieldName, value);
+      case BETWEEN:
+        Object[] ranges = (Object[]) value;
+        return queryBuilder.between(fieldName, ranges[0], ranges[1]);
+      case CONTAINS:
+        return queryBuilder.contains(fieldName, value);
+      case STARTS_WITH:
+        return queryBuilder.startsWith(fieldName, value);
+      case ENDS_WITH:
+        return queryBuilder.endsWith(fieldName, value);
+      case FUZZY:
+        return queryBuilder.fuzzy(fieldName, value);
       default:
         throw new IllegalArgumentException("Unknown operator " + criteriaEntry.getKey());
     }
