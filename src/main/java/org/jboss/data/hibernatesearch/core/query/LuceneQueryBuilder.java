@@ -7,6 +7,7 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.core.util.StringUtils;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.RegexpQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
@@ -126,6 +127,12 @@ public class LuceneQueryBuilder {
     return new WildcardQuery(new Term(fieldName, "*" + value + "*"));
   }
 
+  public Query notContains(String fieldName, Object value) {
+    BooleanJunction<BooleanJunction> bool = queryBuilder.bool();
+    bool.must(contains(fieldName, value)).not();
+    return bool.createQuery();
+  }
+
   public Query startsWith(String fieldName, Object value) {
     return new WildcardQuery(new Term(fieldName, value + "*"));
   }
@@ -134,14 +141,14 @@ public class LuceneQueryBuilder {
     return new WildcardQuery(new Term(fieldName, "*" + value));
   }
 
-  public RangeMatchingContext rangeOnField(String fieldName) {
+  public Query reqexp(String fieldName, String reqexp) {
+    return new RegexpQuery(new Term(fieldName, reqexp));
+  }
+
+  private RangeMatchingContext rangeOnField(String fieldName) {
     return queryBuilder
       .range().onField(fieldName)
       .ignoreFieldBridge()
       .ignoreAnalyzer();
-  }
-
-  private String convertToString(Object value) {
-    return String.valueOf(value);
   }
 }

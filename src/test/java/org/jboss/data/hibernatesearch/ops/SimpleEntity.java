@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -20,6 +21,7 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Indexed
 public class SimpleEntity implements AbstractEntity {
   @Id
@@ -33,4 +35,8 @@ public class SimpleEntity implements AbstractEntity {
   private int number;
   @Field(store = Store.NO)
   private boolean buul;
+  @Field(store = Store.NO)
+  private String hero;
+  @Field(store = Store.NO)
+  private String color;
 }

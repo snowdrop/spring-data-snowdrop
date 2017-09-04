@@ -116,10 +116,14 @@ public class CriteriaConverter {
         return queryBuilder.between(fieldName, ranges[0], ranges[1]);
       case CONTAINS:
         return queryBuilder.contains(fieldName, value);
+      case NOT_CONTAINS:
+        return queryBuilder.notContains(fieldName, value);
       case STARTS_WITH:
         return queryBuilder.startsWith(fieldName, value);
       case ENDS_WITH:
         return queryBuilder.endsWith(fieldName, value);
+      case REGEXP:
+        return queryBuilder.reqexp(fieldName, (String) value);
       case FUZZY:
         return queryBuilder.fuzzy(fieldName, value);
       default:

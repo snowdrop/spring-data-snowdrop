@@ -222,6 +222,12 @@ public class Criteria {
     return this;
   }
 
+  public Criteria notContains(String s) {
+    assertNoBlankInWildcardedQuery(s, true, true);
+    queryCriteria.add(new CriteriaEntry(OperationKey.NOT_CONTAINS, s));
+    return this;
+  }
+
   /**
    * Crates new CriteriaEntry with trailing wildcard
    *
@@ -269,13 +275,13 @@ public class Criteria {
   }
 
   /**
-   * Crates new CriteriaEntry allowing native elasticsearch expressions
+   * Crates new CriteriaEntry allowing native expressions
    *
    * @param s
    * @return new criteria instance
    */
-  public Criteria expression(String s) {
-    queryCriteria.add(new CriteriaEntry(OperationKey.EXPRESSION, s));
+  public Criteria regexp(String s) {
+    queryCriteria.add(new CriteriaEntry(OperationKey.REGEXP, s));
     return this;
   }
 
@@ -539,7 +545,7 @@ public class Criteria {
   }
 
   public enum OperationKey {
-    EQUALS, NOT_EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, EXPRESSION, BETWEEN, FUZZY, IN, NOT_IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
+    EQUALS, NOT_EQUALS, CONTAINS, NOT_CONTAINS, STARTS_WITH, ENDS_WITH, REGEXP, BETWEEN, FUZZY, IN, NOT_IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL;
   }
 
   public static class CriteriaEntry {

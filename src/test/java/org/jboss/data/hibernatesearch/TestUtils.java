@@ -18,10 +18,18 @@ public class TestUtils {
     System.out.println(line);
   }
 
+  public static <T> int size(Iterable<T> iter) {
+    return toList(iter).size();
+  }
+
   public static <T> List<T> toList(final Iterable<T> iter) {
-    List<T> list = new ArrayList<>();
-    iter.forEach(list::add);
-    return list;
+    if (iter instanceof List) {
+      return (List<T>) iter;
+    } else {
+      List<T> list = new ArrayList<>();
+      iter.forEach(list::add);
+      return list;
+    }
   }
 
   public static SearchIntegrator createSearchIntegrator(Class<?>... classes) {

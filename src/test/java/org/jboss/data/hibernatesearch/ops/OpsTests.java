@@ -1,81 +1,19 @@
 package org.jboss.data.hibernatesearch.ops;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-import org.hibernate.search.spi.SearchIntegrator;
-import org.jboss.data.hibernatesearch.DatasourceMapperForTest;
-import org.jboss.data.hibernatesearch.TestUtils;
-import org.jboss.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.data.domain.PageRequest;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration
-public class OpsTests {
+public class OpsTests extends OpsTestsBase {
 
-  @Configuration
-  @EnableHibernateSearchRepositories
-  public static class Config {
-    @Bean(destroyMethod = "close")
-    public SearchIntegrator searchIntegrator() {
-      return TestUtils.createSearchIntegrator(SimpleEntity.class);
-    }
-
-    @Bean
-    public DatasourceMapperForTest datasourceMapper() {
-      return TestUtils.createDatasourceMapper();
-    }
-  }
-
-  @Autowired
-  OpsRepository repository;
-
-  @Autowired
-  SearchIntegrator searchIntegrator;
-
-  @Autowired
-  DatasourceMapperForTest datasourceMapper;
-
-  @Before
-  public void setUp() {
-    List<SimpleEntity> entities = new ArrayList<>();
-
-    SimpleEntity entity = new SimpleEntity(1L, "ann", "Ann likes good red apples.", -20, true);
-    entities.add(entity);
-    entity = new SimpleEntity(2L, "barb", "Barb is dancing twist.", -10, true);
-    entities.add(entity);
-    entity = new SimpleEntity(3L, "carl", "Carl is jumping.", 0, true);
-    entities.add(entity);
-    entity = new SimpleEntity(4L, "doug", "Doug sleeps.", 10, false);
-    entities.add(entity);
-    entity = new SimpleEntity(5L, "eva", "Eva is running in circles.", 20, false);
-    entities.add(entity);
-    entity = new SimpleEntity(6L, "fanny", "Fanny is reading a good book.", 30, false);
-    entities.add(entity);
-
-    TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities.toArray(new SimpleEntity[0]));
-  }
-
-  @After
-  public void tearDown() {
-    TestUtils.purgeAll(searchIntegrator, datasourceMapper, SimpleEntity.class);
-  }
-
-  private void assertSize(List<SimpleEntity> list, int expectedSize){
-    Assert.assertEquals(expectedSize, list.size());
+  @Test
+  public void testDefaults() {
+    assertSize(repository.findAll(), 6);
+    assertSize(repository.findAll(new PageRequest(1, 3)), 3);
   }
 
   @Test
@@ -109,6 +47,11 @@ public class OpsTests {
   }
 
   @Test
+  public void testFindByTextRegex() {
+    assertSize(repository.findByTextRegex("like[s]?"), 2);
+  }
+
+  @Test
   public void testFindByTextLike() {
     assertSize(repository.findByTextLike("read"), 1);
   }
@@ -120,7 +63,12 @@ public class OpsTests {
 
   @Test
   public void testFindByTextContaining() {
-    assertSize(repository.findByTextContaining("good"), 2);
+    assertSize(repository.findByTextContaining("good"), 3);
+  }
+
+  @Test
+  public void testFindByTextNotContaining() {
+    assertSize(repository.findByTextNotContaining("running"), 4);
   }
 
   @Test
