@@ -4,8 +4,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.jboss.data</groupId>
-  <artifactId>spring-data-hibernatesearch</artifactId>
+  <artifactId>spring-data-hibernatesearch-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <parent>
     <groupId>org.springframework.data.build</groupId>
@@ -13,7 +14,7 @@
     <version>1.9.6.RELEASE</version>
   </parent>
 
-  <name>Spring Data HibernateSearch</name>
+  <name>Spring Data HibernateSearch Build</name>
   <description>Spring Data Implementation for Hibernate Search</description>
   <url>https://github.com/snowdrop/spring-data-hibernatesearch</url>
 
@@ -24,146 +25,178 @@
     <hibernatesearch>5.5.8.Final</hibernatesearch>
     <lucene>5.3.1</lucene>
     <springdata.commons>1.13.6.RELEASE</springdata.commons>
+    <springboot>1.4.1.RELEASE</springboot>
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
 
-  <dependencies>
+  <modules>
+    <module>core</module>
+    <module>config</module>
+  </modules>
 
-    <!-- Spring -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+  <dependencyManagement>
+    <dependencies>
 
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-tx</artifactId>
-    </dependency>
+      <dependency>
+        <groupId>org.jboss.data</groupId>
+        <artifactId>spring-data-hibernatesearch</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
-    <!-- SPRING DATA -->
-    <dependency>
-      <groupId>org.springframework.data</groupId>
-      <artifactId>spring-data-commons</artifactId>
-      <version>${springdata.commons}</version>
-    </dependency>
-
-    <!-- APACHE -->
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>${commonslang}</version>
-    </dependency>
-
-    <!-- JODA Time -->
-    <dependency>
-      <groupId>joda-time</groupId>
-      <artifactId>joda-time</artifactId>
-      <version>${jodatime}</version>
-    </dependency>
-
-    <!-- HibernateSearch -->
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-engine</artifactId>
-      <version>${hibernatesearch}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-testing</artifactId>
-      <scope>test</scope>
-      <version>${hibernatesearch}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-queryparser</artifactId>
-      <version>${lucene}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>log4j-over-slf4j</artifactId>
-      <version>1.7.22</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.8.2</version>
-    </dependency>
-
-    <!-- Jackson JSON Mapper -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson}</version>
-    </dependency>
-
-    <!-- CDI -->
-    <dependency>
-      <groupId>javax.enterprise</groupId>
-      <artifactId>cdi-api</artifactId>
-      <version>${cdi}</version>
-      <scope>provided</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- Test -->
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- dependency>
-        <groupId>org.apache.openwebbeans.test</groupId>
-        <artifactId>cditest-owb</artifactId>
-        <version>${webbeans}</version>
-        <scope>test</scope>
+      <!-- Spring -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring}</version>
         <exclusions>
-            <exclusion>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-atinject_1.0_spec</artifactId>
-            </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
         </exclusions>
-    </dependency -->
+      </dependency>
 
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>3.0-alpha-1</version>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-tx</artifactId>
+        <version>${spring}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok}</version>
-      <scope>test</scope>
-    </dependency>
+      <!-- SPRING DATA -->
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-commons</artifactId>
+        <version>${springdata.commons}</version>
+      </dependency>
 
-  </dependencies>
+      <!-- SPRING BOOT -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${springboot}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- APACHE -->
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>${commonslang}</version>
+      </dependency>
+
+      <!-- JODA Time -->
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${jodatime}</version>
+      </dependency>
+
+      <!-- HibernateSearch -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-search-engine</artifactId>
+        <version>${hibernatesearch}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-search-orm</artifactId>
+        <version>${hibernatesearch}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-search-testing</artifactId>
+        <scope>test</scope>
+        <version>${hibernatesearch}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.lucene</groupId>
+        <artifactId>lucene-queryparser</artifactId>
+        <version>${lucene}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>1.7.22</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.8.2</version>
+      </dependency>
+
+      <!-- Jackson JSON Mapper -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson}</version>
+      </dependency>
+
+      <!-- CDI -->
+      <dependency>
+        <groupId>javax.enterprise</groupId>
+        <artifactId>cdi-api</artifactId>
+        <version>${cdi}</version>
+        <scope>provided</scope>
+        <optional>true</optional>
+      </dependency>
+
+      <!-- Test -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <scope>test</scope>
+        <version>${spring}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- dependency>
+          <groupId>org.apache.openwebbeans.test</groupId>
+          <artifactId>cditest-owb</artifactId>
+          <version>${webbeans}</version>
+          <scope>test</scope>
+          <exclusions>
+              <exclusion>
+                  <groupId>org.apache.geronimo.specs</groupId>
+                  <artifactId>geronimo-jcdi_1.0_spec</artifactId>
+              </exclusion>
+              <exclusion>
+                  <groupId>org.apache.geronimo.specs</groupId>
+                  <artifactId>geronimo-atinject_1.0_spec</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency -->
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>3.0-alpha-1</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <!-- build>
       <plugins>

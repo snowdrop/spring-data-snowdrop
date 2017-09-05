@@ -16,6 +16,3 @@ target
 *.ipr
 *.iws
 .idea
-
-## Ignore tmp
-src/test/tmp
