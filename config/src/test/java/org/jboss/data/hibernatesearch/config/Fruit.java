@@ -1,6 +1,8 @@
 package org.jboss.data.hibernatesearch.config;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
 import org.hibernate.search.annotations.DocumentId;
@@ -13,11 +15,12 @@ import org.springframework.data.annotation.Id;
  */
 @Indexed
 @Entity
-@Table(name = "jpatests")
+@Table(name = "fruit")
 public class Fruit {
   @Id
   @DocumentId
   @javax.persistence.Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
   @Field

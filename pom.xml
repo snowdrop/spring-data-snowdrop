@@ -24,9 +24,7 @@
     <commonslang>2.6</commonslang>
     <hibernatesearch>5.5.8.Final</hibernatesearch>
     <lucene>5.3.1</lucene>
-    <spring>4.3.10.RELEASE</spring>
-    <springdata.commons>1.13.6.RELEASE</springdata.commons>
-    <springboot>1.4.1.RELEASE</springboot>
+    <springboot>1.5.6.RELEASE</springboot>
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
@@ -43,13 +41,6 @@
         <groupId>org.jboss.data</groupId>
         <artifactId>spring-data-hibernatesearch</artifactId>
         <version>${project.version}</version>
-      </dependency>
-
-      <!-- SPRING DATA -->
-      <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-commons</artifactId>
-        <version>${springdata.commons}</version>
       </dependency>
 
       <!-- SPRING BOOT -->
