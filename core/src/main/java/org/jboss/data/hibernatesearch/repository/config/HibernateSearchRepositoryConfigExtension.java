@@ -1,5 +1,11 @@
 package org.jboss.data.hibernatesearch.repository.config;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.hibernate.search.annotations.Indexed;
+import org.jboss.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.jboss.data.hibernatesearch.repository.support.HibernateSearchRepositoryFactoryBean;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -13,6 +19,16 @@ public class HibernateSearchRepositoryConfigExtension extends RepositoryConfigur
   @Override
   protected String getModulePrefix() {
     return "hibernatesearch";
+  }
+
+  @Override
+  protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
+    return Collections.singletonList(Indexed.class);
+  }
+
+  @Override
+  protected Collection<Class<?>> getIdentifyingTypes() {
+    return Collections.singleton(HibernateSearchRepository.class);
   }
 
   @Override
