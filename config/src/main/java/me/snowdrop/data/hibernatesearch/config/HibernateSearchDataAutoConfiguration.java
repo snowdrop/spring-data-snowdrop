@@ -37,7 +37,13 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Configuration
-@ConditionalOnClass(SearchIntegrator.class)
+@ConditionalOnClass({
+  EntityManagerFactory.class,
+  SearchIntegrator.class,
+  DatasourceMapper.class,
+  Search.class,
+  SharedEntityManagerCreator.class
+})
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
 public class HibernateSearchDataAutoConfiguration {
 
