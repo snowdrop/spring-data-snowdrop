@@ -1,21 +1,19 @@
 package org.jboss.data.hibernatesearch.config;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
-import org.jboss.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Configuration
-@EnableHibernateSearchRepositories
 public class JpaConfiguration {
   @PersistenceContext
   EntityManager entityManager;
