@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.jboss.data</groupId>
-  <artifactId>spring-data-hibernatesearch-parent</artifactId>
+  <artifactId>spring-data-hibernate-search-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -14,9 +14,9 @@
     <version>1.9.6.RELEASE</version>
   </parent>
 
-  <name>Spring Data HibernateSearch Build</name>
+  <name>Spring Data Hibernate Search Build</name>
   <description>Spring Data Implementation for Hibernate Search</description>
-  <url>https://github.com/snowdrop/spring-data-hibernatesearch</url>
+  <url>https://github.com/snowdrop/spring-data-hibernate-search</url>
 
   <properties>
     <bundlor.enabled>false</bundlor.enabled>
@@ -39,13 +39,13 @@
 
       <dependency>
         <groupId>org.jboss.data</groupId>
-        <artifactId>spring-data-hibernatesearch</artifactId>
+        <artifactId>spring-data-hibernate-search</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.jboss.data</groupId>
-        <artifactId>spring-data-hibernatesearch</artifactId>
+        <artifactId>spring-data-hibernate-search</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
