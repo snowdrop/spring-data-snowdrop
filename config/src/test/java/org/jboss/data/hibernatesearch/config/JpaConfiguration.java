@@ -1,14 +1,14 @@
 package org.jboss.data.hibernatesearch.config;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -28,7 +28,7 @@ public class JpaConfiguration {
     public void onApplicationEvent(final ApplicationReadyEvent event) {
       try {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        fullTextEntityManager.createIndexer().startAndWait();
+        fullTextEntityManager.createIndexer(Fruit.class).startAndWait();
       } catch (InterruptedException e) {
         System.out.println("An error occurred trying to build the search index: " + e.toString());
       }

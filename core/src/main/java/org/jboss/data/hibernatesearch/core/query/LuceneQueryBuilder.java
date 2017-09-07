@@ -85,8 +85,7 @@ public class LuceneQueryBuilder {
   private TermMatchingContext keywordOnField(String fieldName) {
     return queryBuilder
       .keyword().onField(fieldName)
-      .ignoreFieldBridge()
-      .ignoreAnalyzer();
+      .ignoreFieldBridge();
   }
 
   public Query greaterThan(String fieldName, Object value) {
@@ -148,7 +147,6 @@ public class LuceneQueryBuilder {
   private RangeMatchingContext rangeOnField(String fieldName) {
     return queryBuilder
       .range().onField(fieldName)
-      .ignoreFieldBridge()
-      .ignoreAnalyzer();
+      .ignoreFieldBridge();
   }
 }

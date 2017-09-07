@@ -22,7 +22,6 @@
       <artifactId>spring-data-hibernatesearch</artifactId>
     </dependency>
 
-    <!-- HibernateSearch -->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-search-orm</artifactId>
@@ -31,6 +30,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test-autoconfigure</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.data</groupId>
+      <artifactId>spring-data-hibernatesearch</artifactId>
+      <type>test-jar</type>
     </dependency>
 
     <dependency>

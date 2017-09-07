@@ -15,9 +15,24 @@
   <name>Spring Data HibernateSearch</name>
   <description>Spring Data Implementation for Hibernate Search</description>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
 
-    <!-- Spring -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
@@ -28,25 +43,21 @@
       <artifactId>spring-tx</artifactId>
     </dependency>
 
-    <!-- SPRING DATA -->
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
     </dependency>
 
-    <!-- APACHE -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
 
-    <!-- JODA Time -->
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
     </dependency>
 
-    <!-- HibernateSearch -->
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-search-engine</artifactId>
@@ -72,7 +83,6 @@
       <artifactId>log4j-core</artifactId>
     </dependency>
 
-    <!-- Jackson JSON Mapper -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
@@ -96,22 +106,6 @@
       <artifactId>spring-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- dependency>
-        <groupId>org.apache.openwebbeans.test</groupId>
-        <artifactId>cditest-owb</artifactId>
-        <version>${webbeans}</version>
-        <scope>test</scope>
-        <exclusions>
-            <exclusion>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-            </exclusion>
-            <exclusion>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-atinject_1.0_spec</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency -->
 
     <dependency>
       <groupId>javax.servlet</groupId>
