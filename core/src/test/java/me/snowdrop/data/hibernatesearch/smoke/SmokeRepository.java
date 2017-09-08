@@ -35,4 +35,6 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
 
   @Query("(+type:?0)")
   List<SmokeEntity> findByTypeQuery(String type);
+
+  List<SmokeEntity> findByNameViaNamedQuery(String name);
 }

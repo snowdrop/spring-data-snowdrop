@@ -137,5 +137,8 @@ public class SmokeTests {
 
     List<SmokeEntity> byNameOrType = repository.findByNameOrType("aa", "bar");
     Assert.assertEquals(2, byNameOrType.size());
+
+    List<SmokeEntity> byNamed = repository.findByNameViaNamedQuery("dd");
+    Assert.assertEquals(1, byNamed.size());
   }
 }
