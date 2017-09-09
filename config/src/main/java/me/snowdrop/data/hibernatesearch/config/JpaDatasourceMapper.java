@@ -19,6 +19,7 @@ package me.snowdrop.data.hibernatesearch.config;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
@@ -28,6 +29,7 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.util.Assert;
 
 /**
@@ -35,11 +37,11 @@ import org.springframework.util.Assert;
  */
 public class JpaDatasourceMapper implements DatasourceMapper {
 
-  private EntityManager em;
+  private EntityManagerFactory emf;
 
-  public JpaDatasourceMapper(EntityManager em) {
-    Assert.notNull(em, "Null EntityManager!");
-    this.em = em;
+  public JpaDatasourceMapper(EntityManagerFactory emf) {
+    Assert.notNull(emf, "Null EntityManagerFactory!");
+    this.emf = emf;
   }
 
   @Override
@@ -50,26 +52,46 @@ public class JpaDatasourceMapper implements DatasourceMapper {
   private class OrmQueryAdapter<T> implements QueryAdapter<T> {
     private final Class<T> entityClass;
     private FullTextQuery fullTextQuery;
+    private EntityManager entityManager;
 
     public OrmQueryAdapter(Class<T> entityClass) {
       this.entityClass = entityClass;
     }
 
+    private void close() {
+      if (entityManager != null) {
+        entityManager.close();
+      }
+    }
+
     @Override
     public void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query) {
+      EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
+      if (em == null) {
+        entityManager = emf.createEntityManager();
+        em = entityManager;
+      }
       FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
       fullTextQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
     }
 
     @Override
     public long size() {
-      return fullTextQuery.getResultSize();
+      try {
+        return fullTextQuery.getResultSize();
+      } finally {
+        close();
+      }
     }
 
     @Override
     public List<T> list() {
-      //noinspection unchecked
-      return fullTextQuery.getResultList();
+      try {
+        //noinspection unchecked
+        return fullTextQuery.getResultList();
+      } finally {
+        close();
+      }
     }
 
     @Override

@@ -16,8 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.config;
 
-import java.io.Closeable;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -47,35 +45,22 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
 public class HibernateSearchDataAutoConfiguration {
 
-  private EntityManager entityManager;
-
-  private synchronized EntityManager getEntityManager(EntityManagerFactory emf) {
-    if (entityManager == null) {
-      entityManager = SharedEntityManagerCreator.createSharedEntityManager(emf);
-    }
-    return entityManager;
-  }
-
-  @Bean(destroyMethod = "close")
-  public Closeable entityManagerCloser() {
-    return () -> {
-      if (entityManager != null) {
-        entityManager.close();
-      }
-    };
-  }
-
   @Bean(destroyMethod = "close", name = "searchIntegrator")
   @ConditionalOnBean(EntityManagerFactory.class)
   public SearchIntegrator createSearchIntegrator(EntityManagerFactory emf) {
-    return Search.getFullTextEntityManager(getEntityManager(emf)).getSearchFactory().unwrap(SearchIntegrator.class);
+    final EntityManager throwAwayEM = emf.createEntityManager();
+    try {
+      return Search.getFullTextEntityManager(throwAwayEM).getSearchFactory().unwrap(SearchIntegrator.class);
+    } finally {
+      throwAwayEM.close();
+    }
   }
 
   @Bean(name = "datasourceMapper")
   @ConditionalOnMissingBean(DatasourceMapper.class)
   @ConditionalOnBean(EntityManagerFactory.class)
   public DatasourceMapper createDatasourceMapper(EntityManagerFactory emf) {
-    return new JpaDatasourceMapper(getEntityManager(emf));
+    return new JpaDatasourceMapper(emf);
   }
 
 }
