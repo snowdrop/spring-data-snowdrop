@@ -54,7 +54,7 @@ public class SmokeTests {
 
     @Bean
     public DatasourceMapperForTest datasourceMapper() {
-      return TestUtils.createDatasourceMapper();
+      return TestUtils.createDatasourceMapper(SmokeEntity.class);
     }
   }
 

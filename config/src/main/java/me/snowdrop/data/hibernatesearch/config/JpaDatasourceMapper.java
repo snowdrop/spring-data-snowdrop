@@ -16,11 +16,18 @@
 
 package me.snowdrop.data.hibernatesearch.config;
 
-import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
+import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.util.Assert;
 
 /**
@@ -36,7 +43,48 @@ public class JpaDatasourceMapper implements DatasourceMapper {
   }
 
   @Override
-  public <T> T get(Class<T> entityClass, Serializable id) {
-    return em.find(entityClass, id);
+  public <T> QueryAdapter createQueryAdapter(Class<T> entityClass) {
+    return new OrmQueryAdapter<>(entityClass);
+  }
+
+  private class OrmQueryAdapter<T> implements QueryAdapter<T> {
+    private final Class<T> entityClass;
+    private FullTextQuery fullTextQuery;
+
+    public OrmQueryAdapter(Class<T> entityClass) {
+      this.entityClass = entityClass;
+    }
+
+    @Override
+    public void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query) {
+      FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
+      fullTextQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
+    }
+
+    @Override
+    public long size() {
+      return fullTextQuery.getResultSize();
+    }
+
+    @Override
+    public List<T> list() {
+      //noinspection unchecked
+      return fullTextQuery.getResultList();
+    }
+
+    @Override
+    public void setSort(Sort sort) {
+      fullTextQuery.setSort(sort);
+    }
+
+    @Override
+    public void setFirstResult(int firstResult) {
+      fullTextQuery.setFirstResult(firstResult);
+    }
+
+    @Override
+    public void setMaxResults(int maxResults) {
+      fullTextQuery.setMaxResults(maxResults);
+    }
   }
 }

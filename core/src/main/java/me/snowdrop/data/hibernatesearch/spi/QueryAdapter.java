@@ -16,9 +16,22 @@
 
 package me.snowdrop.data.hibernatesearch.spi;
 
+import java.util.List;
+
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.hibernate.search.spi.SearchIntegrator;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface DatasourceMapper {
-  <T> QueryAdapter createQueryAdapter(Class<T> entityClass);
+public interface QueryAdapter<T> {
+  void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query);
+
+  long size();
+  List<T> list();
+
+  void setSort(Sort sort);
+  void setFirstResult(int firstResult);
+  void setMaxResults(int maxResults);
 }

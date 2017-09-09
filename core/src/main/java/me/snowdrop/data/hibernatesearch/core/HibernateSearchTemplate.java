@@ -16,7 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.core;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,8 +26,7 @@ import me.snowdrop.data.hibernatesearch.core.query.Query;
 import me.snowdrop.data.hibernatesearch.core.query.QueryConverter;
 import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import org.hibernate.search.query.engine.spi.EntityInfo;
-import org.hibernate.search.query.engine.spi.HSQuery;
+import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,23 +48,17 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   private <T> List<T> findAllInternal(Query query) {
     Class<?> entityClass = query.getEntityClass();
     QueryConverter queryConverter = new QueryConverter(searchIntegrator, entityClass);
-    HSQuery hsQuery;
+    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter(entityClass);
     if (query instanceof CriteriaQuery) {
       CriteriaQuery criteriaQuery = (CriteriaQuery) query;
-      hsQuery = queryConverter.convert(criteriaQuery);
+      queryConverter.convert(queryAdapter, criteriaQuery);
     } else if (query instanceof StringQuery) {
       StringQuery stringQuery = (StringQuery) query;
-      hsQuery = queryConverter.string(stringQuery);
+      queryConverter.string(queryAdapter, stringQuery);
     } else {
-      hsQuery = queryConverter.query(query);
+      queryConverter.query(queryAdapter, query);
     }
-    List<EntityInfo> entityInfos = hsQuery.queryEntityInfos();
-    List<T> entities = new ArrayList<>();
-    for (EntityInfo ei : entityInfos) {
-      //noinspection unchecked
-      entities.add(datasourceMapper.get((Class<T>) entityClass, ei.getId()));
-    }
-    return entities;
+    return queryAdapter.list();
   }
 
   @Override
@@ -79,8 +71,10 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
 
   @Override
   public <T> long count(Query countQuery) {
-    HSQuery hsQuery = new QueryConverter(searchIntegrator, countQuery.getEntityClass()).query(countQuery);
-    return hsQuery.queryResultSize();
+    Class<?> entityClass = countQuery.getEntityClass();
+    QueryAdapter queryAdapter = datasourceMapper.createQueryAdapter(entityClass);
+    new QueryConverter(searchIntegrator, entityClass).query(queryAdapter, countQuery);
+    return queryAdapter.size();
   }
 
   @Override

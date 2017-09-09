@@ -20,16 +20,26 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.snowdrop.data.hibernatesearch.core.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
+import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperForTest implements DatasourceMapper {
+public class DatasourceMapperForTest<T> extends AbstractQueryAdapter<T> implements DatasourceMapper {
   private Map<Serializable, Object> map = new HashMap<>();
 
+  public DatasourceMapperForTest(Class<T> entityClass) {
+    super(entityClass);
+  }
+
   @Override
-  public <T> T get(Class<T> entityClass, Serializable id) {
+  public <U> QueryAdapter createQueryAdapter(Class<U> entityClass) {
+    return this;
+  }
+
+  protected T get(Class<T> entityClass, Serializable id) {
     Object entity = map.get(id);
     return entity != null ? entityClass.cast(entity) : null;
   }

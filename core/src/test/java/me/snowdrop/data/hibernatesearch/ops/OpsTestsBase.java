@@ -50,7 +50,7 @@ public class OpsTestsBase {
 
     @Bean
     public DatasourceMapperForTest datasourceMapper() {
-      return TestUtils.createDatasourceMapper();
+      return TestUtils.createDatasourceMapper(SimpleEntity.class);
     }
   }
 

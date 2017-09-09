@@ -56,8 +56,9 @@ public class TestUtils {
     return builder.buildSearchIntegrator();
   }
 
-  public static DatasourceMapperForTest createDatasourceMapper() {
-    return new DatasourceMapperForTest();
+  public static <T> DatasourceMapperForTest<T> createDatasourceMapper(Class<T> entityClass) {
+    //noinspection unchecked
+    return new DatasourceMapperForTest(entityClass);
   }
 
   public static void preindexEntities(SearchIntegrator si, DatasourceMapperForTest datasourceMapper, AbstractEntity... entities) {
