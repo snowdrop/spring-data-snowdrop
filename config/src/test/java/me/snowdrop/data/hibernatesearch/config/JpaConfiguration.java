@@ -44,7 +44,7 @@ public class JpaConfiguration {
     public void onApplicationEvent(final ApplicationReadyEvent event) {
       try {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        fullTextEntityManager.createIndexer(Fruit.class).startAndWait();
+        fullTextEntityManager.createIndexer().startAndWait();
       } catch (InterruptedException e) {
         System.out.println("An error occurred trying to build the search index: " + e.toString());
       }

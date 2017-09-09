@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config;
+package me.snowdrop.data.hibernatesearch.config.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.config.hibernatesearch.FruitHibernateSearchRepository;
-import me.snowdrop.data.hibernatesearch.config.jpa.FruitRepository;
+import me.snowdrop.data.hibernatesearch.config.Fruit;
+import me.snowdrop.data.hibernatesearch.config.JpaConfiguration;
+import me.snowdrop.data.hibernatesearch.config.smoke.hibernatesearch.FruitHibernateSearchRepository;
+import me.snowdrop.data.hibernatesearch.config.smoke.jpa.FruitRepository;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,13 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @SpringBootTest(classes = JpaConfiguration.class, properties = "debug=false")
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @EnableAutoConfiguration
 @EnableHibernateSearchRepositories(basePackageClasses = FruitHibernateSearchRepository.class)
 @EnableJpaRepositories(basePackageClasses = FruitRepository.class)
@@ -48,6 +50,9 @@ public class JpaTests {
   public void testDefault() {
     Assert.assertNotNull(hsRepository);
     Assert.assertNotNull(jpaRepository);
+
+    Assert.assertEquals(3, hsRepository.count());
+    Assert.assertEquals(3, jpaRepository.count());
 
     Assert.assertEquals(3, TestUtils.size(hsRepository.findAll()));
     Assert.assertEquals(3, TestUtils.size(jpaRepository.findAll()));

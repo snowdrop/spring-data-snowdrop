@@ -21,38 +21,16 @@ import java.util.List;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration
 public class OpsTestsBase {
-
-  @Configuration
-  @EnableHibernateSearchRepositories
-  public static class Config {
-    @Bean(destroyMethod = "close")
-    public SearchIntegrator searchIntegrator() {
-      return TestUtils.createSearchIntegrator(SimpleEntity.class);
-    }
-
-    @Bean
-    public DatasourceMapperForTest datasourceMapper() {
-      return TestUtils.createDatasourceMapper(SimpleEntity.class);
-    }
-  }
 
   @Autowired
   OpsRepository repository;

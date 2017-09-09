@@ -16,14 +16,26 @@
 
 package me.snowdrop.data.hibernatesearch.ops;
 
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
+import me.snowdrop.data.hibernatesearch.TestUtils;
+import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
+import org.hibernate.search.spi.SearchIntegrator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = OpsConfiguration.class)
-public class OpsTests extends OpsDefaultBase {
+@Configuration
+@EnableHibernateSearchRepositories
+public class OpsConfiguration {
+  @Bean(destroyMethod = "close")
+  public SearchIntegrator searchIntegrator() {
+    return TestUtils.createSearchIntegrator(SimpleEntity.class);
+  }
+
+  @Bean
+  public DatasourceMapperForTest datasourceMapper() {
+    return TestUtils.createDatasourceMapper(SimpleEntity.class);
+  }
 }

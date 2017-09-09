@@ -16,6 +16,10 @@
 
 package me.snowdrop.data.hibernatesearch.smoke;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,9 +41,13 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Builder
 @Indexed
+@Entity
+@Table(name = "smoke")
 public class SmokeEntity implements AbstractEntity {
   @Id
   @DocumentId
+  @javax.persistence.Id
+  @GeneratedValue
   private String id;
   @Field(store = Store.NO)
   private String name;
