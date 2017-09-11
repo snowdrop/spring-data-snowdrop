@@ -28,7 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.SharedEntityManagerCreator;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -39,7 +39,7 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
   SearchIntegrator.class,
   DatasourceMapper.class,
   Search.class,
-  SharedEntityManagerCreator.class
+  EntityManagerFactoryUtils.class
 })
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
 public class HibernateSearchDataAutoConfiguration {
