@@ -56,14 +56,15 @@ public class TestUtils {
     return builder.buildSearchIntegrator();
   }
 
-  public static <T> DatasourceMapperForTest<T> createDatasourceMapper(Class<T> entityClass) {
+  public static <T> DatasourceMapperForTest<T> createDatasourceMapper(SearchIntegrator searchIntegrator, Class<T> entityClass) {
     //noinspection unchecked
-    return new DatasourceMapperForTest(entityClass);
+    return new DatasourceMapperForTest(searchIntegrator, entityClass);
   }
 
-  public static void preindexEntities(SearchIntegrator si, DatasourceMapperForTest datasourceMapper, AbstractEntity... entities) {
+  public static void preindexEntities(DatasourceMapperForTest datasourceMapper, AbstractEntity... entities) {
     println("Starting index creation...");
-    Worker worker = si.getWorker();
+    SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
+    Worker worker = searchIntegrator.getWorker();
     TransactionContextForTest tc = new TransactionContextForTest();
     boolean needsFlush = false;
     int i = 1;
@@ -87,9 +88,10 @@ public class TestUtils {
     println(" ... created an index of " + (i - 1) + " entities.");
   }
 
-  public static void purgeAll(SearchIntegrator si, DatasourceMapperForTest datasourceMapper, Class<?> entityClass) {
+  public static void purgeAll(DatasourceMapperForTest datasourceMapper, Class<?> entityClass) {
     println("Purging index - " + entityClass.getSimpleName() + " ...");
-    Worker worker = si.getWorker();
+    SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
+    Worker worker = searchIntegrator.getWorker();
     TransactionContextForTest tc = new TransactionContextForTest();
     Work work = new Work(entityClass, null, WorkType.PURGE_ALL);
     worker.performWork(work, tc);

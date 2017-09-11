@@ -60,12 +60,6 @@ public @interface EnableHibernateSearchRepositories {
   Class<?> repositoryBaseClass() default DefaultRepositoryBaseClass.class;
 
   /**
-   * Configures the name of the {@link SearchIntegrator} bean definition to be used to create repositories
-   * discovered through this annotation. Defaults to {@code searchIntegrator}.
-   */
-  String searchIntegratorRef() default "searchIntegrator";
-
-  /**
    * Configures the name of the {@link DatasourceMapper} bean definition to be used to create repositories
    * discovered through this annotation. Defaults to {@code datasourceMapper}.
    */

@@ -26,7 +26,7 @@ import org.hibernate.search.spi.SearchIntegrator;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface QueryAdapter<T> {
-  void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query);
+  void applyLuceneQuery(Query query);
 
   long size();
   List<T> list();

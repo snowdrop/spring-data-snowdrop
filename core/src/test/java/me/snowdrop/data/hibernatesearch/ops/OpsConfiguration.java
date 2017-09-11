@@ -36,8 +36,8 @@ public class OpsConfiguration {
   }
 
   @Bean
-  public DatasourceMapperForTest datasourceMapper() {
-    return TestUtils.createDatasourceMapper(SimpleEntity.class);
+  public DatasourceMapperForTest datasourceMapper(SearchIntegrator searchIntegrator) {
+    return TestUtils.createDatasourceMapper(searchIntegrator, SimpleEntity.class);
   }
 
   @Bean

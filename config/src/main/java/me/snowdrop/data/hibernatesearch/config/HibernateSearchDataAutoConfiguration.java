@@ -45,17 +45,6 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
 public class HibernateSearchDataAutoConfiguration {
 
-  @Bean(destroyMethod = "close", name = "searchIntegrator")
-  @ConditionalOnBean(EntityManagerFactory.class)
-  public SearchIntegrator createSearchIntegrator(EntityManagerFactory emf) {
-    final EntityManager throwAwayEM = emf.createEntityManager();
-    try {
-      return Search.getFullTextEntityManager(throwAwayEM).getSearchFactory().unwrap(SearchIntegrator.class);
-    } finally {
-      throwAwayEM.close();
-    }
-  }
-
   @Bean(name = "datasourceMapper")
   @ConditionalOnMissingBean(DatasourceMapper.class)
   @ConditionalOnBean(EntityManagerFactory.class)

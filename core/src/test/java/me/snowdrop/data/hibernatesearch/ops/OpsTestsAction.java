@@ -31,9 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OpsTestsAction implements TestsAction {
 
   @Autowired
-  SearchIntegrator searchIntegrator;
-
-  @Autowired
   DatasourceMapperForTest<SimpleEntity> datasourceMapper;
 
   public void setUp() {
@@ -52,10 +49,10 @@ public class OpsTestsAction implements TestsAction {
     entity = new SimpleEntity(6L, "fanny", "Fanny is reading a good book.", 30, false, "Aquaman", "blue");
     entities.add(entity);
 
-    TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities.toArray(new SimpleEntity[0]));
+    TestUtils.preindexEntities(datasourceMapper, entities.toArray(new SimpleEntity[0]));
   }
 
   public void tearDown() {
-    TestUtils.purgeAll(searchIntegrator, datasourceMapper, SimpleEntity.class);
+    TestUtils.purgeAll(datasourceMapper, SimpleEntity.class);
   }
 }

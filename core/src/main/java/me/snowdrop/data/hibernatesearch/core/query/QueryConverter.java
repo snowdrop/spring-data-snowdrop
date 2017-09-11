@@ -86,7 +86,7 @@ public class QueryConverter {
   }
 
   private void fillQuery(QueryAdapter queryAdapter, Query query, org.apache.lucene.search.Query luceneQuery) {
-    queryAdapter.applyLuceneQuery(searchIntegrator, luceneQuery);
+    queryAdapter.applyLuceneQuery(luceneQuery);
     addSortToQuery(queryAdapter, query);
     addPagingToQuery(queryAdapter, query);
   }

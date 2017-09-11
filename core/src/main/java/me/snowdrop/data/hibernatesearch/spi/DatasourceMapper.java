@@ -16,9 +16,12 @@
 
 package me.snowdrop.data.hibernatesearch.spi;
 
+import org.hibernate.search.spi.SearchIntegrator;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface DatasourceMapper {
+  SearchIntegrator getSearchIntegrator();
   <T> QueryAdapter createQueryAdapter(Class<T> entityClass);
 }

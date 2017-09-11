@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hibernate.search.spi.SearchIntegrator;
+
 import me.snowdrop.data.hibernatesearch.core.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
@@ -27,21 +29,25 @@ import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperForTest<T> extends AbstractQueryAdapter<T> implements DatasourceMapper {
+public class DatasourceMapperForTest<T> implements DatasourceMapper {
+  private final SearchIntegrator searchIntegrator;
+  private final Class<T> entityClass;
+
   private Map<Serializable, Object> map = new HashMap<>();
 
-  public DatasourceMapperForTest(Class<T> entityClass) {
-    super(entityClass);
+  public DatasourceMapperForTest(SearchIntegrator searchIntegrator, Class<T> entityClass) {
+    this.searchIntegrator = searchIntegrator;
+    this.entityClass = entityClass;
+  }
+
+  @Override
+  public SearchIntegrator getSearchIntegrator() {
+    return searchIntegrator;
   }
 
   @Override
   public <U> QueryAdapter createQueryAdapter(Class<U> entityClass) {
-    return this;
-  }
-
-  protected T get(Class<T> entityClass, Serializable id) {
-    Object entity = map.get(id);
-    return entity != null ? entityClass.cast(entity) : null;
+    return new QueryAdapterForTest( getSearchIntegrator(), entityClass );
   }
 
   public void put(AbstractEntity entity) {
@@ -50,5 +56,18 @@ public class DatasourceMapperForTest<T> extends AbstractQueryAdapter<T> implemen
 
   public void clear() {
     map.clear();
+  }
+
+  private class QueryAdapterForTest<T> extends AbstractQueryAdapter<T> {
+
+    public QueryAdapterForTest(SearchIntegrator searchIntegrator, Class<T> entityClass) {
+      super( searchIntegrator, entityClass );
+    }
+
+    protected T get(Class<T> entityClass, Serializable id) {
+      Object entity = map.get(id);
+      return entity != null ? entityClass.cast(entity) : null;
+    }
+
   }
 }

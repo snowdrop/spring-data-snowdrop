@@ -53,16 +53,13 @@ public class SmokeTests {
     }
 
     @Bean
-    public DatasourceMapperForTest datasourceMapper() {
-      return TestUtils.createDatasourceMapper(SmokeEntity.class);
+    public DatasourceMapperForTest datasourceMapper(SearchIntegrator searchIntegrator) {
+      return TestUtils.createDatasourceMapper(searchIntegrator, SmokeEntity.class);
     }
   }
 
   @Autowired
   SmokeRepository repository;
-
-  @Autowired
-  SearchIntegrator searchIntegrator;
 
   @Autowired
   DatasourceMapperForTest datasourceMapper;
@@ -95,12 +92,12 @@ public class SmokeTests {
     entity.setType("baz");
     entities[3] = entity;
 
-    TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities);
+    TestUtils.preindexEntities(datasourceMapper, entities);
   }
 
   @After
   public void tearDown() {
-    TestUtils.purgeAll(searchIntegrator, datasourceMapper, SmokeEntity.class);
+    TestUtils.purgeAll(datasourceMapper, SmokeEntity.class);
   }
 
   @Test

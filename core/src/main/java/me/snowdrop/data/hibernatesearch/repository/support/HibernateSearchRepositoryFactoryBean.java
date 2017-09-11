@@ -32,7 +32,6 @@ import org.springframework.util.Assert;
  */
 public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends RepositoryFactoryBeanSupport<T, S, ID> {
 
-  private SearchIntegrator searchIntegrator;
   private DatasourceMapper datasourceMapper;
   private HibernateSearchOperations hibernateSearchOperations;
 
@@ -43,15 +42,6 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
    */
   public HibernateSearchRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
     super(repositoryInterface);
-  }
-
-  /**
-   * Configures the {@link SearchIntegrator} to be used to create Hibernatesearch repositories.
-   *
-   * @param searchIntegrator the search integrator to set
-   */
-  public void setSearchIntegrator(SearchIntegrator searchIntegrator) {
-    this.searchIntegrator = searchIntegrator;
   }
 
   public void setDatasourceMapper(DatasourceMapper datasourceMapper) {
@@ -69,10 +59,9 @@ public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S
   @Override
   public void afterPropertiesSet() {
     if (hibernateSearchOperations == null) {
-      Assert.notNull(searchIntegrator, "SearchIntegrator must be configured!");
       Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
 
-      hibernateSearchOperations = new HibernateSearchTemplate(searchIntegrator, datasourceMapper);
+      hibernateSearchOperations = new HibernateSearchTemplate(datasourceMapper);
     }
 
     setMappingContext(hibernateSearchOperations.getMappingContext());

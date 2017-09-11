@@ -25,6 +25,9 @@ import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.search.hcore.util.impl.ContextHelper;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
@@ -37,11 +40,20 @@ import org.springframework.util.Assert;
  */
 public class JpaDatasourceMapper implements DatasourceMapper {
 
+  private SearchIntegrator searchIntegrator;
   private EntityManagerFactory emf;
 
   public JpaDatasourceMapper(EntityManagerFactory emf) {
     Assert.notNull(emf, "Null EntityManagerFactory!");
     this.emf = emf;
+  }
+
+  @Override
+  public SearchIntegrator getSearchIntegrator() {
+    if ( searchIntegrator == null ) {
+      searchIntegrator = ContextHelper.getSearchintegratorBySFI( emf.unwrap( SessionFactoryImplementor.class ) );
+    }
+    return searchIntegrator;
   }
 
   @Override
@@ -65,7 +77,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
     }
 
     @Override
-    public void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query) {
+    public void applyLuceneQuery(Query query) {
       EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
       if (em == null) {
         entityManager = emf.createEntityManager();

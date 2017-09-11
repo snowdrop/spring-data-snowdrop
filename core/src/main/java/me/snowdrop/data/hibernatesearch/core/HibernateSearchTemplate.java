@@ -40,9 +40,9 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   private final DatasourceMapper datasourceMapper;
   private MappingContext<?, HibernateSearchPersistentProperty> mappingContext;
 
-  public HibernateSearchTemplate(SearchIntegrator searchIntegrator, DatasourceMapper datasourceMapper) {
-    this.searchIntegrator = searchIntegrator;
+  public HibernateSearchTemplate(DatasourceMapper datasourceMapper) {
     this.datasourceMapper = datasourceMapper;
+    this.searchIntegrator = datasourceMapper.getSearchIntegrator();
   }
 
   private <T> List<T> findAllInternal(Query query) {

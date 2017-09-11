@@ -32,16 +32,19 @@ import org.hibernate.search.spi.SearchIntegrator;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
+  private final SearchIntegrator searchIntegrator;
   private final Class<T> entityClass;
   private HSQuery hsQuery;
 
-  public AbstractQueryAdapter(Class<T> entityClass) {
+  public AbstractQueryAdapter(SearchIntegrator searchIntegrator, Class<T> entityClass) {
+    this.searchIntegrator = searchIntegrator;
     this.entityClass = entityClass;
   }
 
   protected abstract T get(Class<T> entityClass, Serializable id);
 
-  public void applyLuceneQuery(SearchIntegrator searchIntegrator, Query query) {
+  @Override
+  public void applyLuceneQuery(Query query) {
     hsQuery = searchIntegrator
       .createHSQuery()
       .luceneQuery(query)
