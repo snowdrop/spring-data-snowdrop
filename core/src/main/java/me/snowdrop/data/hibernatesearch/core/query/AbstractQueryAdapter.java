@@ -32,20 +32,15 @@ import org.springframework.data.domain.Pageable;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
-  protected final SearchIntegrator searchIntegrator;
   protected Class<T> entityClass;
 
   private LuceneQueryBuilder queryBuilder;
   private CriteriaConverter criteriaConverter;
   private OrderConverter orderConverter = OrderConverter.INSTANCE;
 
-  public AbstractQueryAdapter(SearchIntegrator searchIntegrator) {
-    this.searchIntegrator = searchIntegrator;
-  }
-
   protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     this.entityClass = query.getEntityClass();
-    this.queryBuilder = new LuceneQueryBuilder(searchIntegrator.buildQueryBuilder().forEntity(entityClass).get());
+    this.queryBuilder = new LuceneQueryBuilder(getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get());
     this.criteriaConverter = new CriteriaConverter(queryBuilder);
 
     if (query instanceof CriteriaQuery) {
@@ -72,6 +67,8 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
     initialize(query);
     return list();
   }
+
+  protected abstract SearchIntegrator getSearchIntegrator();
 
   protected abstract void applyLuceneQuery(Query query);
 

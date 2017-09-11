@@ -25,17 +25,12 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.EntityInfo;
 import org.hibernate.search.query.engine.spi.HSQuery;
-import org.hibernate.search.spi.SearchIntegrator;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> {
   private HSQuery hsQuery;
-
-  public AbstractHSQueryAdapter(SearchIntegrator searchIntegrator) {
-    super(searchIntegrator);
-  }
 
   protected abstract T get(Class<T> entityClass, Serializable id);
 
@@ -52,7 +47,7 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
   }
 
   protected void applyLuceneQuery(Query query) {
-    hsQuery = searchIntegrator
+    hsQuery = getSearchIntegrator()
       .createHSQuery()
       .luceneQuery(query)
       .targetedEntities(Collections.singletonList(entityClass));

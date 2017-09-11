@@ -40,7 +40,6 @@ import org.springframework.util.Assert;
  */
 public class JpaDatasourceMapper implements DatasourceMapper {
 
-  private SearchIntegrator searchIntegrator;
   private EntityManagerFactory emf;
 
   public JpaDatasourceMapper(EntityManagerFactory emf) {
@@ -48,29 +47,27 @@ public class JpaDatasourceMapper implements DatasourceMapper {
     this.emf = emf;
   }
 
-  private SearchIntegrator getSearchIntegrator() {
-    if (searchIntegrator == null) {
-      searchIntegrator = ContextHelper.getSearchintegratorBySFI(emf.unwrap(SessionFactoryImplementor.class));
-    }
-    return searchIntegrator;
-  }
-
   public <T> QueryAdapter<T> createQueryAdapter() {
-    return new OrmQueryAdapter<>(getSearchIntegrator());
+    return new OrmQueryAdapter<>();
   }
 
   private class OrmQueryAdapter<T> extends AbstractQueryAdapter<T> {
+    private SearchIntegrator searchIntegrator;
+
     private FullTextQuery fullTextQuery;
     private EntityManager entityManager;
-
-    public OrmQueryAdapter(SearchIntegrator searchIntegrator) {
-      super(searchIntegrator);
-    }
 
     private void close() {
       if (entityManager != null) {
         entityManager.close();
       }
+    }
+
+    protected SearchIntegrator getSearchIntegrator() {
+      if (searchIntegrator == null) {
+        searchIntegrator = ContextHelper.getSearchintegratorBySFI(emf.unwrap(SessionFactoryImplementor.class));
+      }
+      return searchIntegrator;
     }
 
     protected void applyLuceneQuery(Query query) {

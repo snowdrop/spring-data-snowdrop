@@ -30,7 +30,7 @@ import org.hibernate.search.spi.SearchIntegrator;
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperForTest implements DatasourceMapper, Closeable {
+public class DatasourceMapperForTest<T> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
   private final SearchIntegrator searchIntegrator;
 
   private Map<Serializable, Object> map = new HashMap<>();
@@ -39,18 +39,19 @@ public class DatasourceMapperForTest implements DatasourceMapper, Closeable {
     this.searchIntegrator = searchIntegrator;
   }
 
-  @Override
-  public void close() throws IOException {
-    searchIntegrator.close();
-  }
-
   public SearchIntegrator getSearchIntegrator() {
     return searchIntegrator;
   }
 
   @Override
-  public <T> QueryAdapter<T> createQueryAdapter() {
-    return new QueryAdapterForTest<>(searchIntegrator);
+  public void close() throws IOException {
+    searchIntegrator.close();
+  }
+
+  @Override
+  public <U> QueryAdapter<U> createQueryAdapter() {
+    //noinspection unchecked
+    return (QueryAdapter<U>) this;
   }
 
   public void put(AbstractEntity entity) {
@@ -61,16 +62,8 @@ public class DatasourceMapperForTest implements DatasourceMapper, Closeable {
     map.clear();
   }
 
-  private class QueryAdapterForTest<T> extends AbstractHSQueryAdapter<T> {
-
-    public QueryAdapterForTest(SearchIntegrator searchIntegrator) {
-      super(searchIntegrator);
-    }
-
-    protected T get(Class<T> entityClass, Serializable id) {
-      Object entity = map.get(id);
-      return entity != null ? entityClass.cast(entity) : null;
-    }
-
+  protected T get(Class<T> entityClass, Serializable id) {
+    Object entity = map.get(id);
+    return entity != null ? entityClass.cast(entity) : null;
   }
 }
