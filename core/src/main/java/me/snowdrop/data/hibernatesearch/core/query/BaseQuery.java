@@ -32,6 +32,10 @@ public class BaseQuery<T> implements Query<T> {
     this.entityClass = entityClass;
   }
 
+  void apply(AbstractQueryAdapter<T> adapter) {
+    adapter.query(this);
+  }
+
   public Class<T> getEntityClass() {
     return entityClass;
   }

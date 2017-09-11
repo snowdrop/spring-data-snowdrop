@@ -45,6 +45,11 @@ public class CriteriaQuery<T> extends BaseQuery<T> {
     }
   }
 
+  @Override
+  void apply(AbstractQueryAdapter<T> adapter) {
+    adapter.convert(this);
+  }
+
   public static <U> Query<U> fromQuery(CriteriaQuery<U> source) {
     //noinspection unchecked
     return fromQuery(source, new CriteriaQuery(source.getEntityClass()));

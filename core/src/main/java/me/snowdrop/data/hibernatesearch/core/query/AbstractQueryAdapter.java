@@ -43,15 +43,8 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
     this.queryBuilder = new LuceneQueryBuilder(getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get());
     this.criteriaConverter = new CriteriaConverter(queryBuilder);
 
-    if (query instanceof CriteriaQuery) {
-      CriteriaQuery criteriaQuery = (CriteriaQuery) query;
-      convert(criteriaQuery);
-    } else if (query instanceof StringQuery) {
-      StringQuery stringQuery = (StringQuery) query;
-      string(stringQuery);
-    } else {
-      query(query);
-    }
+    BaseQuery<T> baseQuery = (BaseQuery<T>) query;
+    baseQuery.apply(this);
   }
 
   protected abstract long size();
@@ -78,11 +71,11 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   protected abstract void setMaxResults(int maxResults);
 
-  private void convert(CriteriaQuery query) {
+  void convert(CriteriaQuery query) {
     fillQuery(query);
   }
 
-  private void string(StringQuery query) {
+  void string(StringQuery query) {
     try {
       String[] fields = query.getFields();
       QueryParser parser = new MultiFieldQueryParser(fields, new StandardAnalyzer());
@@ -93,7 +86,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
     }
   }
 
-  private void query(me.snowdrop.data.hibernatesearch.spi.Query query) {
+  void query(me.snowdrop.data.hibernatesearch.spi.Query query) {
     fillQuery(query, queryBuilder.matchAll());
   }
 

@@ -30,6 +30,11 @@ public class StringQuery<T> extends BaseQuery<T> {
     this.query = query;
   }
 
+  @Override
+  void apply(AbstractQueryAdapter<T> adapter) {
+    adapter.string(this);
+  }
+
   public String getQuery() {
     return query;
   }
