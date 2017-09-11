@@ -16,25 +16,26 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
+import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.Assert;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CriteriaQuery extends AbstractQuery {
+public class CriteriaQuery<T> extends AbstractQuery<T> {
 
   private Criteria criteria;
 
-  private CriteriaQuery(Class<?> entityClass) {
+  private CriteriaQuery(Class<T> entityClass) {
     super(entityClass);
   }
 
-  public CriteriaQuery(Class<?> entityClass, Criteria criteria) {
+  public CriteriaQuery(Class<T> entityClass, Criteria criteria) {
     this(entityClass, criteria, null);
   }
 
-  public CriteriaQuery(Class<?> entityClass, Criteria criteria, Pageable pageable) {
+  public CriteriaQuery(Class<T> entityClass, Criteria criteria, Pageable pageable) {
     super(entityClass);
     Assert.notNull(criteria, "Criteria must not be null!");
     this.criteria = criteria;
@@ -44,11 +45,12 @@ public class CriteriaQuery extends AbstractQuery {
     }
   }
 
-  public static final Query fromQuery(CriteriaQuery source) {
+  public static <U> Query<U> fromQuery(CriteriaQuery<U> source) {
+    //noinspection unchecked
     return fromQuery(source, new CriteriaQuery(source.getEntityClass()));
   }
 
-  public static <T extends CriteriaQuery> T fromQuery(CriteriaQuery source, T destination) {
+  public static <S extends CriteriaQuery> S fromQuery(CriteriaQuery source, S destination) {
     if (source == null || destination == null) {
       return null;
     }
@@ -65,14 +67,14 @@ public class CriteriaQuery extends AbstractQuery {
   }
 
   @SuppressWarnings("unchecked")
-  public final <T extends CriteriaQuery> T addCriteria(Criteria criteria) {
+  public final <S extends CriteriaQuery> S addCriteria(Criteria criteria) {
     Assert.notNull(criteria, "Cannot add null criteria.");
     if (this.criteria == null) {
       this.criteria = criteria;
     } else {
       this.criteria.and(criteria);
     }
-    return (T) this;
+    return (S) this;
   }
 
   public Criteria getCriteria() {

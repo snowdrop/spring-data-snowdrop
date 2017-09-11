@@ -21,11 +21,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
-
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.search.hcore.util.impl.ContextHelper;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -48,26 +48,23 @@ public class JpaDatasourceMapper implements DatasourceMapper {
     this.emf = emf;
   }
 
-  @Override
-  public SearchIntegrator getSearchIntegrator() {
-    if ( searchIntegrator == null ) {
-      searchIntegrator = ContextHelper.getSearchintegratorBySFI( emf.unwrap( SessionFactoryImplementor.class ) );
+  private SearchIntegrator getSearchIntegrator() {
+    if (searchIntegrator == null) {
+      searchIntegrator = ContextHelper.getSearchintegratorBySFI(emf.unwrap(SessionFactoryImplementor.class));
     }
     return searchIntegrator;
   }
 
-  @Override
-  public <T> QueryAdapter createQueryAdapter(Class<T> entityClass) {
-    return new OrmQueryAdapter<>(entityClass);
+  public <T> QueryAdapter<T> createQueryAdapter() {
+    return new OrmQueryAdapter<>(getSearchIntegrator());
   }
 
-  private class OrmQueryAdapter<T> implements QueryAdapter<T> {
-    private final Class<T> entityClass;
+  private class OrmQueryAdapter<T> extends AbstractQueryAdapter<T> {
     private FullTextQuery fullTextQuery;
     private EntityManager entityManager;
 
-    public OrmQueryAdapter(Class<T> entityClass) {
-      this.entityClass = entityClass;
+    public OrmQueryAdapter(SearchIntegrator searchIntegrator) {
+      super(searchIntegrator);
     }
 
     private void close() {
@@ -76,8 +73,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       }
     }
 
-    @Override
-    public void applyLuceneQuery(Query query) {
+    protected void applyLuceneQuery(Query query) {
       EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
       if (em == null) {
         entityManager = emf.createEntityManager();
@@ -87,8 +83,19 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       fullTextQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
     }
 
-    @Override
-    public long size() {
+    protected void setSort(Sort sort) {
+      fullTextQuery.setSort(sort);
+    }
+
+    protected void setFirstResult(int firstResult) {
+      fullTextQuery.setFirstResult(firstResult);
+    }
+
+    protected void setMaxResults(int maxResults) {
+      fullTextQuery.setMaxResults(maxResults);
+    }
+
+    protected long size() {
       try {
         return fullTextQuery.getResultSize();
       } finally {
@@ -96,29 +103,13 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       }
     }
 
-    @Override
-    public List<T> list() {
+    protected List<T> list() {
       try {
         //noinspection unchecked
         return fullTextQuery.getResultList();
       } finally {
         close();
       }
-    }
-
-    @Override
-    public void setSort(Sort sort) {
-      fullTextQuery.setSort(sort);
-    }
-
-    @Override
-    public void setFirstResult(int firstResult) {
-      fullTextQuery.setFirstResult(firstResult);
-    }
-
-    @Override
-    public void setMaxResults(int maxResults) {
-      fullTextQuery.setMaxResults(maxResults);
     }
   }
 }

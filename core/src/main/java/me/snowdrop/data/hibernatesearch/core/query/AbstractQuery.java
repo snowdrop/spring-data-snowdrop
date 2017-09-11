@@ -16,22 +16,23 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
+import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractQuery implements Query {
-  private Class<?> entityClass;
+public abstract class AbstractQuery<T> implements Query<T> {
+  private Class<T> entityClass;
   private Pageable pageable;
   private Sort sort;
 
-  public AbstractQuery(Class<?> entityClass) {
+  public AbstractQuery(Class<T> entityClass) {
     this.entityClass = entityClass;
   }
 
-  public Class<?> getEntityClass() {
+  public Class<T> getEntityClass() {
     return entityClass;
   }
 

@@ -16,38 +16,41 @@
 
 package me.snowdrop.data.hibernatesearch;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.search.spi.SearchIntegrator;
-
-import me.snowdrop.data.hibernatesearch.core.AbstractQueryAdapter;
+import me.snowdrop.data.hibernatesearch.core.query.AbstractHSQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
+import org.hibernate.search.spi.SearchIntegrator;
 
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperForTest<T> implements DatasourceMapper {
+public class DatasourceMapperForTest implements DatasourceMapper, Closeable {
   private final SearchIntegrator searchIntegrator;
-  private final Class<T> entityClass;
 
   private Map<Serializable, Object> map = new HashMap<>();
 
-  public DatasourceMapperForTest(SearchIntegrator searchIntegrator, Class<T> entityClass) {
+  public DatasourceMapperForTest(SearchIntegrator searchIntegrator) {
     this.searchIntegrator = searchIntegrator;
-    this.entityClass = entityClass;
   }
 
   @Override
+  public void close() throws IOException {
+    searchIntegrator.close();
+  }
+
   public SearchIntegrator getSearchIntegrator() {
     return searchIntegrator;
   }
 
   @Override
-  public <U> QueryAdapter createQueryAdapter(Class<U> entityClass) {
-    return new QueryAdapterForTest( getSearchIntegrator(), entityClass );
+  public <T> QueryAdapter<T> createQueryAdapter() {
+    return new QueryAdapterForTest<>(searchIntegrator);
   }
 
   public void put(AbstractEntity entity) {
@@ -58,10 +61,10 @@ public class DatasourceMapperForTest<T> implements DatasourceMapper {
     map.clear();
   }
 
-  private class QueryAdapterForTest<T> extends AbstractQueryAdapter<T> {
+  private class QueryAdapterForTest<T> extends AbstractHSQueryAdapter<T> {
 
-    public QueryAdapterForTest(SearchIntegrator searchIntegrator, Class<T> entityClass) {
-      super( searchIntegrator, entityClass );
+    public QueryAdapterForTest(SearchIntegrator searchIntegrator) {
+      super(searchIntegrator);
     }
 
     protected T get(Class<T> entityClass, Serializable id) {

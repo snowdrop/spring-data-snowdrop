@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.core;
+package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.EntityInfo;
@@ -31,32 +30,20 @@ import org.hibernate.search.spi.SearchIntegrator;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
-  private final SearchIntegrator searchIntegrator;
-  private final Class<T> entityClass;
+public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> {
   private HSQuery hsQuery;
 
-  public AbstractQueryAdapter(SearchIntegrator searchIntegrator, Class<T> entityClass) {
-    this.searchIntegrator = searchIntegrator;
-    this.entityClass = entityClass;
+  public AbstractHSQueryAdapter(SearchIntegrator searchIntegrator) {
+    super(searchIntegrator);
   }
 
   protected abstract T get(Class<T> entityClass, Serializable id);
 
-  @Override
-  public void applyLuceneQuery(Query query) {
-    hsQuery = searchIntegrator
-      .createHSQuery()
-      .luceneQuery(query)
-      .targetedEntities(Collections.singletonList(entityClass));
-  }
-
-  @Override
-  public long size() {
+  protected long size() {
     return hsQuery.queryResultSize();
   }
 
-  public List<T> list() {
+  protected List<T> list() {
     List<T> list = new ArrayList<>();
     for (EntityInfo ei : hsQuery.queryEntityInfos()) {
       list.add(get(entityClass, ei.getId()));
@@ -64,18 +51,22 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
     return list;
   }
 
-  @Override
-  public void setSort(Sort sort) {
+  protected void applyLuceneQuery(Query query) {
+    hsQuery = searchIntegrator
+      .createHSQuery()
+      .luceneQuery(query)
+      .targetedEntities(Collections.singletonList(entityClass));
+  }
+
+  protected void setSort(Sort sort) {
     hsQuery.sort(sort);
   }
 
-  @Override
-  public void setFirstResult(int firstResult) {
+  protected void setFirstResult(int firstResult) {
     hsQuery.firstResult(firstResult);
   }
 
-  @Override
-  public void setMaxResults(int maxResults) {
+  protected void setMaxResults(int maxResults) {
     hsQuery.maxResults(maxResults);
   }
 }

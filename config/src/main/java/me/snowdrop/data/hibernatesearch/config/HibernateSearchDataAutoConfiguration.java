@@ -16,7 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.config;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;

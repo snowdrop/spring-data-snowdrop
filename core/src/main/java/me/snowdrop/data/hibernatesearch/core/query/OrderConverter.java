@@ -26,6 +26,10 @@ import org.apache.lucene.search.SortField;
  * @author Ales Justin
  */
 public class OrderConverter {
+  public static final OrderConverter INSTANCE = new OrderConverter();
+
+  private OrderConverter() {
+  }
 
   public Sort convert(org.springframework.data.domain.Sort sort) {
     return new Sort(toArray(convertToSortFields(sort)));

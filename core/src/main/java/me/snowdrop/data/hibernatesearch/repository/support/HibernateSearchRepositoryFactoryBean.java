@@ -21,7 +21,6 @@ import java.io.Serializable;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchTemplate;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;

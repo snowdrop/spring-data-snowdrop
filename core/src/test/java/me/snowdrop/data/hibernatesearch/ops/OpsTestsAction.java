@@ -22,16 +22,16 @@ import java.util.List;
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.TestsAction;
-import org.hibernate.search.spi.SearchIntegrator;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class OpsTestsAction implements TestsAction {
+  private DatasourceMapperForTest datasourceMapper;
 
-  @Autowired
-  DatasourceMapperForTest<SimpleEntity> datasourceMapper;
+  public OpsTestsAction(DatasourceMapperForTest datasourceMapper) {
+    this.datasourceMapper = datasourceMapper;
+  }
 
   public void setUp() {
     List<SimpleEntity> entities = new ArrayList<>();

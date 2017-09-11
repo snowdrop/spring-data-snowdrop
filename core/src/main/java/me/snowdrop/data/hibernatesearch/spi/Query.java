@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.core.query;
+package me.snowdrop.data.hibernatesearch.spi;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,8 +22,8 @@ import org.springframework.data.domain.Sort;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Query {
-  Class<?> getEntityClass();
+public interface Query<T> {
+  Class<T> getEntityClass();
 
   Pageable getPageable();
 

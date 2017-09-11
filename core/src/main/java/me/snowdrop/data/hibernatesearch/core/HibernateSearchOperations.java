@@ -19,7 +19,7 @@ package me.snowdrop.data.hibernatesearch.core;
 import java.util.Iterator;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
-import me.snowdrop.data.hibernatesearch.core.query.Query;
+import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.mapping.context.MappingContext;
 
@@ -36,7 +36,7 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return the number of entities
    */
-  <T> long count(Query query);
+  <T> long count(Query<T> query);
 
   /**
    * Returns all instances of the type.
@@ -44,7 +44,7 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return matching entity or null
    */
-  <T> T findSingle(Query query);
+  <T> T findSingle(Query<T> query);
 
   /**
    * Returns all instances of the type.
@@ -52,7 +52,7 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return all entities
    */
-  <T> Iterable<T> findAll(Query Query);
+  <T> Iterable<T> findAll(Query<T> query);
 
   /**
    * Returns a {@link Page} of entities meeting the paging restriction provided in the {@code Pageable} object.
@@ -60,7 +60,7 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return a page of entities
    */
-  <T> Page<T> findPageable(Query query);
+  <T> Page<T> findPageable(Query<T> query);
 
-  <T> Iterator<T> stream(Query query);
+  <T> Iterator<T> stream(Query<T> query);
 }

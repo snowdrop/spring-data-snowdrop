@@ -18,20 +18,11 @@ package me.snowdrop.data.hibernatesearch.spi;
 
 import java.util.List;
 
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.hibernate.search.spi.SearchIntegrator;
-
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface QueryAdapter<T> {
-  void applyLuceneQuery(Query query);
+  long size(Query<T> query);
 
-  long size();
-  List<T> list();
-
-  void setSort(Sort sort);
-  void setFirstResult(int firstResult);
-  void setMaxResults(int maxResults);
+  List<T> list(Query<T> query);
 }

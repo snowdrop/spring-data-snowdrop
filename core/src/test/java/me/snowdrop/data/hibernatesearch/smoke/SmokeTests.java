@@ -21,7 +21,6 @@ import java.util.List;
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
-import org.hibernate.search.spi.SearchIntegrator;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,13 +47,8 @@ public class SmokeTests {
   @EnableHibernateSearchRepositories
   public static class Config {
     @Bean(destroyMethod = "close")
-    public SearchIntegrator searchIntegrator() {
-      return TestUtils.createSearchIntegrator(SmokeEntity.class);
-    }
-
-    @Bean
-    public DatasourceMapperForTest datasourceMapper(SearchIntegrator searchIntegrator) {
-      return TestUtils.createDatasourceMapper(searchIntegrator, SmokeEntity.class);
+    public DatasourceMapperForTest datasourceMapper() {
+      return TestUtils.createDatasourceMapper(SmokeEntity.class);
     }
   }
 

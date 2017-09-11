@@ -20,7 +20,6 @@ import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.TestsAction;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
-import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,17 +30,12 @@ import org.springframework.context.annotation.Configuration;
 @EnableHibernateSearchRepositories
 public class OpsConfiguration {
   @Bean(destroyMethod = "close")
-  public SearchIntegrator searchIntegrator() {
-    return TestUtils.createSearchIntegrator(SimpleEntity.class);
+  public DatasourceMapperForTest datasourceMapper() {
+    return TestUtils.createDatasourceMapper(SimpleEntity.class);
   }
 
   @Bean
-  public DatasourceMapperForTest datasourceMapper(SearchIntegrator searchIntegrator) {
-    return TestUtils.createDatasourceMapper(searchIntegrator, SimpleEntity.class);
-  }
-
-  @Bean
-  public TestsAction testsAction() {
-    return new OpsTestsAction();
+  public TestsAction testsAction(DatasourceMapperForTest datasourceMapper) {
+    return new OpsTestsAction(datasourceMapper);
   }
 }
