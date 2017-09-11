@@ -22,10 +22,10 @@ import java.util.Set;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class StringQuery extends AbstractQuery {
+public class StringQuery<T> extends BaseQuery<T> {
   private final String query;
 
-  public StringQuery(Class<?> entityClass, String query) {
+  public StringQuery(Class<T> entityClass, String query) {
     super(entityClass);
     this.query = query;
   }

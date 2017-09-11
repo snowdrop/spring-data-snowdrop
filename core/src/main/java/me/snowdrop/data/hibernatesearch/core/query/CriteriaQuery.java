@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class CriteriaQuery<T> extends AbstractQuery<T> {
+public class CriteriaQuery<T> extends BaseQuery<T> {
 
   private Criteria criteria;
 

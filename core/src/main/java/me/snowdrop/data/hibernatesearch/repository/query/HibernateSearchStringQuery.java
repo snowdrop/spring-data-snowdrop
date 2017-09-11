@@ -43,7 +43,7 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
   @Override
   public Object execute(Object[] parameters) {
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
-    StringQuery stringQuery = createQuery(accessor);
+    StringQuery<?> stringQuery = createQuery(accessor);
     if (getQueryMethod().isPageQuery()) {
       stringQuery.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findPageable(stringQuery);
@@ -55,9 +55,10 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
     }
   }
 
-  protected StringQuery createQuery(ParametersParameterAccessor parameterAccessor) {
+  protected StringQuery<?> createQuery(ParametersParameterAccessor parameterAccessor) {
     String queryString = replacePlaceholders(this.query, parameterAccessor);
-    return new StringQuery(getQueryMethod().getEntityInformation().getJavaType(), queryString);
+    Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
+    return new StringQuery<>(entityClass, queryString);
   }
 
   private String replacePlaceholders(String input, ParametersParameterAccessor accessor) {
