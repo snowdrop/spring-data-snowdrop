@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config;
+package me.snowdrop.data.hibernatesearch.config.smoke;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

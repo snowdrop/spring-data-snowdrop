@@ -16,12 +16,10 @@
 
 package me.snowdrop.data.hibernatesearch.ops;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import org.hibernate.search.spi.SearchIntegrator;
+import me.snowdrop.data.hibernatesearch.TestsAction;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,34 +34,16 @@ public class OpsTestsBase {
   OpsRepository repository;
 
   @Autowired
-  SearchIntegrator searchIntegrator;
-
-  @Autowired
-  DatasourceMapperForTest datasourceMapper;
+  TestsAction testsAction;
 
   @Before
   public void setUp() {
-    List<SimpleEntity> entities = new ArrayList<>();
-
-    SimpleEntity entity = new SimpleEntity(1L, "ann", "Does Ann like good red apples?", -20, true, "Superman", "red");
-    entities.add(entity);
-    entity = new SimpleEntity(2L, "barb", "Why is Barb dancing twist?", -10, true, "Spiderman", "red");
-    entities.add(entity);
-    entity = new SimpleEntity(3L, "carl", "Carl is good at running and jumping.", 0, true, "Flash", "red");
-    entities.add(entity);
-    entity = new SimpleEntity(4L, "doug", "Doug likes to sleeps.", 10, false, "Batman", "black");
-    entities.add(entity);
-    entity = new SimpleEntity(5L, "eva", "Eva is running in circles.", 20, false, "Ironman", "gold");
-    entities.add(entity);
-    entity = new SimpleEntity(6L, "fanny", "Fanny is reading a good book.", 30, false, "Aquaman", "blue");
-    entities.add(entity);
-
-    TestUtils.preindexEntities(searchIntegrator, datasourceMapper, entities.toArray(new SimpleEntity[0]));
+    testsAction.setUp();
   }
 
   @After
   public void tearDown() {
-    TestUtils.purgeAll(searchIntegrator, datasourceMapper, SimpleEntity.class);
+    testsAction.tearDown();
   }
 
   protected void assertSize(Iterable<SimpleEntity> iter, int expectedSize) {

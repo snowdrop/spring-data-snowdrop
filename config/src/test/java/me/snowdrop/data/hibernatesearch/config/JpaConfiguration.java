@@ -19,6 +19,9 @@ package me.snowdrop.data.hibernatesearch.config;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import me.snowdrop.data.hibernatesearch.TestsAction;
+import me.snowdrop.data.hibernatesearch.config.smoke.Fruit;
+import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -31,8 +34,15 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class JpaConfiguration {
+  private static final Class<?>[] CLASSES = {Fruit.class, SimpleEntity.class};
+
   @PersistenceContext
   EntityManager entityManager;
+
+  @Bean
+  public TestsAction testsAction() {
+    return TestsAction.NOOP;
+  }
 
   @Bean
   public BuildSearchIndex buildSearchIndex() {
@@ -44,7 +54,7 @@ public class JpaConfiguration {
     public void onApplicationEvent(final ApplicationReadyEvent event) {
       try {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        fullTextEntityManager.createIndexer().startAndWait();
+        fullTextEntityManager.createIndexer(CLASSES).startAndWait();
       } catch (InterruptedException e) {
         System.out.println("An error occurred trying to build the search index: " + e.toString());
       }

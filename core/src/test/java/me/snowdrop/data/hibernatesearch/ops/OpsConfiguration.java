@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
+import me.snowdrop.data.hibernatesearch.TestsAction;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.context.annotation.Bean;
@@ -37,5 +38,10 @@ public class OpsConfiguration {
   @Bean
   public DatasourceMapperForTest datasourceMapper() {
     return TestUtils.createDatasourceMapper(SimpleEntity.class);
+  }
+
+  @Bean
+  public TestsAction testsAction() {
+    return new OpsTestsAction();
   }
 }

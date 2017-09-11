@@ -16,7 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.config.smoke.jpa;
 
-import me.snowdrop.data.hibernatesearch.config.Fruit;
+import me.snowdrop.data.hibernatesearch.config.smoke.Fruit;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface FruitRepository extends PagingAndSortingRepository<Fruit, Long> {

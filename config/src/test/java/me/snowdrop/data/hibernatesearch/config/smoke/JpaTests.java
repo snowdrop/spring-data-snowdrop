@@ -17,7 +17,6 @@
 package me.snowdrop.data.hibernatesearch.config.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.config.Fruit;
 import me.snowdrop.data.hibernatesearch.config.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.config.smoke.hibernatesearch.FruitHibernateSearchRepository;
 import me.snowdrop.data.hibernatesearch.config.smoke.jpa.FruitRepository;

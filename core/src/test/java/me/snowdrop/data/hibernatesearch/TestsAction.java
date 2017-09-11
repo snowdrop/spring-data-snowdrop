@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.smoke.hibernatesearch;
-
-import me.snowdrop.data.hibernatesearch.config.smoke.Fruit;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+package me.snowdrop.data.hibernatesearch;
 
 /**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
+ * @author Ales Justin
  */
-public interface FruitHibernateSearchRepository extends HibernateSearchRepository<Fruit, Long> {
-  Fruit findByName(String name);
+public interface TestsAction {
+  TestsAction NOOP = new TestsAction() {
+    public void setUp() {
+    }
+
+    public void tearDown() {
+    }
+  };
+
+  void setUp();
+
+  void tearDown();
 }
