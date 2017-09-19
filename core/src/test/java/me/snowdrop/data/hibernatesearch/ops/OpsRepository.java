@@ -26,6 +26,8 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long> {
+  long countByColor(String color);
+
   List<SimpleEntity> findByNameNot(String notName);
 
   List<SimpleEntity> findByNumberBetween(int min, int max);

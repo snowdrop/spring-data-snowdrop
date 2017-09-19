@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.Collections;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
@@ -30,6 +31,11 @@ public class OpsDefaultBase extends OpsTestsBase {
   public void testDefaults() {
     assertSize(repository.findAll(), 6);
     assertSize(repository.findAll(new PageRequest(1, 3)), 3);
+  }
+
+  @Test
+  public void testCountBy() {
+    Assert.assertEquals(repository.countByColor("red"), 3L);
   }
 
   @Test
