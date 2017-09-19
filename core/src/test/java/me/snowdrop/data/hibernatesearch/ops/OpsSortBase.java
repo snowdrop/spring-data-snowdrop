@@ -106,4 +106,9 @@ public class OpsSortBase extends OpsTestsBase {
     assertIds(repository.findByBuulFalse(new Sort("hero")), 6, 4, 5);
   }
 
+  @Test
+  public void testOrderBy() {
+    assertIds(repository.findByColorOrderByNameAsc("red"), 1, 2, 3);
+    assertIds(repository.findByColorOrderByNameDesc("red"), 3, 2, 1);
+  }
 }

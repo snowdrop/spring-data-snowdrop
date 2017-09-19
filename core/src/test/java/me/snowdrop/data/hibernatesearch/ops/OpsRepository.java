@@ -87,4 +87,8 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
   List<SimpleEntity> findByBuulTrue(Sort sort);
 
   List<SimpleEntity> findByBuulFalse(Sort sort);
+
+  List<SimpleEntity> findByColorOrderByNameAsc(String color);
+
+  List<SimpleEntity> findByColorOrderByNameDesc(String color);
 }
