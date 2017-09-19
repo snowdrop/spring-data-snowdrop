@@ -25,7 +25,9 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.hibernate.search.spi.IndexedTypeIdentifier;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
 import org.springframework.data.domain.Pageable;
 
 /**
@@ -78,7 +80,8 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
   void string(StringQuery query) {
     try {
       String[] fields = query.getFields();
-      Analyzer analyzer = getSearchIntegrator().getAnalyzer(entityClass);
+      IndexedTypeIdentifier iti = PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
+      Analyzer analyzer = getSearchIntegrator().getAnalyzer(iti);
       QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
       org.apache.lucene.search.Query luceneQuery = parser.parse(query.getQuery());
       fillQuery(query, luceneQuery);

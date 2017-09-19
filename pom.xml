@@ -38,9 +38,10 @@
     <bundlor.enabled>false</bundlor.enabled>
     <commonscollections>3.2.1</commonscollections>
     <commonslang>2.6</commonslang>
-    <hibernatesearch>5.5.8.Final</hibernatesearch>
-    <lucene>5.3.1</lucene>
-    <springboot>1.5.6.RELEASE</springboot>
+    <hibernatesearch>5.8.0.Final</hibernatesearch>
+    <hibernate>5.2.11.Final</hibernate>
+    <lucene>5.5.4</lucene>
+    <springboot>1.5.7.RELEASE</springboot>
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
@@ -106,6 +107,17 @@
         <artifactId>hibernate-search-testing</artifactId>
         <scope>test</scope>
         <version>${hibernatesearch}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${hibernate}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${hibernate}</version>
       </dependency>
 
       <dependency>

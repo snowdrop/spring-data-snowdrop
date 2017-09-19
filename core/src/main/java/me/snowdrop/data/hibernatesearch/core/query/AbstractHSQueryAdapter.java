@@ -18,7 +18,6 @@ package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.lucene.search.Query;
@@ -47,10 +46,7 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
   }
 
   protected void applyLuceneQuery(Query query) {
-    hsQuery = getSearchIntegrator()
-      .createHSQuery()
-      .luceneQuery(query)
-      .targetedEntities(Collections.singletonList(entityClass));
+    hsQuery = getSearchIntegrator().createHSQuery(query, entityClass);
   }
 
   protected void setSort(Sort sort) {

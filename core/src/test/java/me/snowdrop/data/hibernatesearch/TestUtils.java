@@ -22,8 +22,10 @@ import java.util.List;
 import org.hibernate.search.backend.spi.Work;
 import org.hibernate.search.backend.spi.WorkType;
 import org.hibernate.search.backend.spi.Worker;
+import org.hibernate.search.spi.IndexedTypeIdentifier;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.hibernate.search.spi.SearchIntegratorBuilder;
+import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
 
 /**
  * @author Ales Justin
@@ -93,7 +95,8 @@ public class TestUtils {
     SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
     Worker worker = searchIntegrator.getWorker();
     TransactionContextForTest tc = new TransactionContextForTest();
-    Work work = new Work(entityClass, null, WorkType.PURGE_ALL);
+    IndexedTypeIdentifier indexedTypeIdentifier = PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
+    Work work = new Work(indexedTypeIdentifier, null, WorkType.PURGE_ALL);
     worker.performWork(work, tc);
     tc.end();
     datasourceMapper.clear();

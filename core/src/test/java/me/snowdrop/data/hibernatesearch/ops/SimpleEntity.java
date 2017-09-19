@@ -30,6 +30,7 @@ import me.snowdrop.data.hibernatesearch.AbstractEntity;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Store;
 import org.springframework.data.annotation.Id;
 
@@ -52,6 +53,7 @@ public class SimpleEntity implements AbstractEntity {
   @GeneratedValue
   private Long id;
   @Field(store = Store.NO)
+  @SortableField
   private String name;
   @Field(store = Store.NO)
   private String text;
@@ -60,7 +62,9 @@ public class SimpleEntity implements AbstractEntity {
   @Field(store = Store.NO)
   private boolean buul;
   @Field(store = Store.NO)
+  @SortableField
   private String hero;
   @Field(store = Store.NO)
+  @SortableField
   private String color;
 }

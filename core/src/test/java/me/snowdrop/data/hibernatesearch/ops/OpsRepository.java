@@ -58,6 +58,8 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByBuulFalse();
 
+  //List<SimpleEntity> findByAddressZipcode(int zipcode);
+
   List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
   List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);

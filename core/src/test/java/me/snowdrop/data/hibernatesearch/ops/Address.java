@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.smoke;
+package me.snowdrop.data.hibernatesearch.ops;
+
+import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import me.snowdrop.data.hibernatesearch.AbstractEntity;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.SortableField;
-import org.hibernate.search.annotations.Store;
-import org.springframework.data.annotation.Id;
+import lombok.ToString;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -36,16 +31,11 @@ import org.springframework.data.annotation.Id;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Indexed
-public class SmokeEntity implements AbstractEntity {
-  @Id
-  @DocumentId
-  private String id;
-  @Field(store = Store.NO)
-  @SortableField
-  private String name;
-  @Field(store = Store.YES)
-  @SortableField
-  private String type;
+@ToString
+public class Address implements Serializable {
+  private String path;
+  private int number;
+  private int zipcode;
+  private String city;
+  private String country;
 }

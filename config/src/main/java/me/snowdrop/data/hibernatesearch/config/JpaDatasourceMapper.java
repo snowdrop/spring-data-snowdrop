@@ -65,7 +65,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
 
     protected SearchIntegrator getSearchIntegrator() {
       if (searchIntegrator == null) {
-        searchIntegrator = ContextHelper.getSearchintegratorBySFI(emf.unwrap(SessionFactoryImplementor.class));
+        searchIntegrator = ContextHelper.getSearchIntegratorBySF(emf.unwrap(SessionFactoryImplementor.class));
       }
       return searchIntegrator;
     }

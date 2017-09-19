@@ -17,13 +17,14 @@
 package me.snowdrop.data.hibernatesearch.config;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
 
 import me.snowdrop.data.hibernatesearch.TestsAction;
 import me.snowdrop.data.hibernatesearch.config.smoke.Fruit;
 import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -36,8 +37,8 @@ import org.springframework.context.annotation.Configuration;
 public class JpaConfiguration {
   private static final Class<?>[] CLASSES = {Fruit.class, SimpleEntity.class};
 
-  @PersistenceContext
-  EntityManager entityManager;
+  @Autowired
+  EntityManagerFactory entityManagerFactory;
 
   @Bean
   public TestsAction testsAction() {
@@ -53,8 +54,13 @@ public class JpaConfiguration {
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
       try {
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        fullTextEntityManager.createIndexer(CLASSES).startAndWait();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+          FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+          fullTextEntityManager.createIndexer(CLASSES).startAndWait();
+        } finally {
+          entityManager.close();
+        }
       } catch (InterruptedException e) {
         System.out.println("An error occurred trying to build the search index: " + e.toString());
       }

@@ -113,4 +113,8 @@ public class OpsDefaultBase extends OpsTestsBase {
     assertSize(repository.findByBuulFalse(), 3);
   }
 
+  @Test
+  public void testNestedProps() {
+    //assertSize(repository.findByAddressZipcode(1360), 2);
+  }
 }
