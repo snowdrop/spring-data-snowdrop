@@ -21,10 +21,11 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
-import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentEntity;
+import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchPartQuery;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchQueryMethod;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchStringQuery;
+import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
@@ -34,8 +35,6 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.RepositoryQuery;
-import org.springframework.data.util.ClassTypeInformation;
-import org.springframework.data.util.TypeInformation;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -49,9 +48,8 @@ public class HibernateSearchRepositoryFactory extends RepositoryFactorySupport {
 
   @Override
   public <T, ID extends Serializable> EntityInformation<T, ID> getEntityInformation(Class<T> aClass) {
-    TypeInformation<T> typeInformation = ClassTypeInformation.from(aClass);
-    HibernateSearchPersistentEntity<T> persistentEntity = new HibernateSearchPersistentEntity<>(typeInformation);
-    return new MappingHibernateSearchEntityInformation<>(persistentEntity);
+    PersistentEntity<?, HibernateSearchPersistentProperty> persistentEntity = hibernateSearchOperations.getMappingContext().getPersistentEntity(aClass);
+    return new MappingHibernateSearchEntityInformation(persistentEntity);
   }
 
   @Override
