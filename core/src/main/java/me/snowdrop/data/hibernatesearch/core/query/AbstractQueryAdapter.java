@@ -19,7 +19,7 @@ package me.snowdrop.data.hibernatesearch.core.query;
 import java.util.List;
 
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -78,7 +78,8 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
   void string(StringQuery query) {
     try {
       String[] fields = query.getFields();
-      QueryParser parser = new MultiFieldQueryParser(fields, new StandardAnalyzer());
+      Analyzer analyzer = getSearchIntegrator().getAnalyzer(entityClass);
+      QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
       org.apache.lucene.search.Query luceneQuery = parser.parse(query.getQuery());
       fillQuery(query, luceneQuery);
     } catch (ParseException e) {
