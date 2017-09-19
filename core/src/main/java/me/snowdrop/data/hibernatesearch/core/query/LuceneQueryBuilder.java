@@ -81,13 +81,6 @@ public class LuceneQueryBuilder {
     return bool.createQuery();
   }
 
-  public Query notEqual(String fieldName, Object value) {
-    return any(
-      lessThan(fieldName, value),
-      greaterThan(fieldName, value)
-    );
-  }
-
   public Query not(Query query) {
     return queryBuilder.bool().must(query).not().createQuery();
   }
@@ -98,10 +91,8 @@ public class LuceneQueryBuilder {
       .createQuery();
   }
 
-  private TermMatchingContext keywordOnField(String fieldName) {
-    return queryBuilder
-      .keyword().onField(fieldName)
-      .ignoreFieldBridge();
+  public Query notEqual(String fieldName, Object value) {
+    return not(equal(fieldName, value));
   }
 
   public Query greaterThan(String fieldName, Object value) {
@@ -160,9 +151,13 @@ public class LuceneQueryBuilder {
     return new RegexpQuery(new Term(fieldName, reqexp));
   }
 
+  private TermMatchingContext keywordOnField(String fieldName) {
+    return queryBuilder
+      .keyword().onField(fieldName);
+  }
+
   private RangeMatchingContext rangeOnField(String fieldName) {
     return queryBuilder
-      .range().onField(fieldName)
-      .ignoreFieldBridge();
+      .range().onField(fieldName);
   }
 }
