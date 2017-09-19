@@ -22,7 +22,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.Query;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Metric;
+import org.springframework.data.geo.Metrics;
 
 /**
  * Converts Criteria to Lucene Queries
@@ -100,7 +104,7 @@ public class CriteriaConverter {
     for (Criteria.CriteriaEntry criteriaEntry : criteria.getQueryCriteriaEntries()) {
       Query subQuery = processCriteriaEntry(criteria.getField().getName(), criteriaEntry);
       if (!Float.isNaN(criteria.getBoost())) {
-        subQuery.setBoost(criteria.getBoost());
+        subQuery = new BoostQuery(subQuery, criteria.getBoost());
       }
       queries.add(subQuery);
     }
@@ -142,9 +146,26 @@ public class CriteriaConverter {
         return queryBuilder.reqexp(fieldName, (String) value);
       case FUZZY:
         return queryBuilder.fuzzy(fieldName, value);
+      case WITHIN:
+        Object[] params = (Object[]) value;
+        Double latitude = (Double) params[0];
+        Double longitude = (Double) params[1];
+        Distance distance = (Distance) params[2];
+        double distanceInKm = toKm(distance);
+        return queryBuilder.spatial(fieldName, latitude, longitude, distanceInKm);
       default:
         throw new IllegalArgumentException("Unknown operator " + criteriaEntry.getKey());
     }
   }
 
+  private static double toKm(Distance distance) {
+    Metric metric = distance.getMetric();
+    if (Metrics.KILOMETERS.equals(metric)) {
+      return distance.getValue();
+    } else if (Metrics.MILES.equals(metric)) {
+      return distance.getValue() * 1.609344;
+    } else {
+      throw new IllegalArgumentException("Unknown metric: " + metric);
+    }
+  }
 }

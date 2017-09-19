@@ -22,11 +22,11 @@ import java.util.Iterator;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.Criteria;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaQuery;
+import org.hibernate.search.spatial.Coordinates;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
+import org.springframework.data.geo.Metrics;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.context.PersistentPropertyPath;
 import org.springframework.data.repository.query.ParameterAccessor;
@@ -123,46 +123,40 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
       case NOT_IN:
         return criteria.notIn(asArray(parameters.next()));
       case SIMPLE_PROPERTY:
+        return criteria.is(parameters.next());
       case WITHIN: {
-        Object firstParameter = parameters.next();
-        Object secondParameter;
-        if (type == Part.Type.SIMPLE_PROPERTY) {
-          if (part.getProperty().getType() != Point.class) {
-            return criteria.is(firstParameter);
-          } else {
-            // it means it's a simple find with exact geopoint matching (e.g. findByLocation)
-            // and because HibernateSearch does not have any kind of query with just a geopoint
-            // as argument we use a "geo distance" query with a distance of one meter.
-            secondParameter = ".001km";
+        Number latitude;
+        Number longitude;
+
+        Object first = parameters.next();
+        if (first instanceof Number) {
+          latitude = (Number) first;
+          Object second = parameters.next();
+          if (!(second instanceof Number)) {
+            throw new IllegalArgumentException("Illegal second parameter type: " + second);
           }
+          longitude = (Number) second;
+        } else if (first instanceof Coordinates) {
+          Coordinates coordinates = (Coordinates) first;
+          latitude = coordinates.getLatitude();
+          longitude = coordinates.getLongitude();
         } else {
-          secondParameter = parameters.next();
+          throw new IllegalArgumentException("Illegal first parameter type: " + first);
         }
 
-        if (firstParameter instanceof Point && secondParameter instanceof Distance) {
-          return criteria.within((Point) firstParameter, (Distance) secondParameter);
+        Object distance = new Distance(0.001, Metrics.KILOMETERS); // 1m accurate
+        if (parameters.hasNext()) {
+          distance = parameters.next();
+          if (distance instanceof Number) {
+            distance = new Distance(Number.class.cast(distance).doubleValue(), Metrics.KILOMETERS);
+          }
         }
-
-        if (firstParameter instanceof String && secondParameter instanceof String) {
-          return criteria.within((String) firstParameter, (String) secondParameter);
+        if (distance instanceof Distance) {
+          return criteria.within(latitude.doubleValue(), longitude.doubleValue(), (Distance) distance);
         }
       }
       case NEAR: {
-        Object firstParameter = parameters.next();
-
-        if (firstParameter instanceof Box) {
-          return criteria.boundedBy((Box) firstParameter);
-        }
-
-        Object secondParameter = parameters.next();
-
-        if (firstParameter instanceof Point && secondParameter instanceof Distance) {
-          return criteria.within((Point) firstParameter, (Distance) secondParameter);
-        }
-
-        if (firstParameter instanceof String && secondParameter instanceof String) {
-          return criteria.within((String) firstParameter, (String) secondParameter);
-        }
+        // TODO
       }
 
       default:

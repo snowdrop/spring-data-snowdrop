@@ -28,7 +28,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
 
 /**
@@ -419,40 +418,24 @@ public class Criteria {
   /**
    * Creates new CriteriaEntry for {@code location WITHIN distance}
    *
-   * @param location {@link org.springframework.data.geo.Point} center coordinates
-   * @param distance {@link org.springframework.data.geo.Distance} radius
+   * @param latitude {@link org.springframework.data.geo.Point} latitude
+   * @param longitude {@link org.springframework.data.geo.Point} longitude
+   * @param distance {@link org.springframework.data.geo.Distance} dostance
    *                 .
    * @return new criteria instance Criteria the chaind criteria with the new 'within' criteria included.
    */
-  public Criteria within(Point location, Distance distance) {
-    Assert.notNull(location, "Location value for near criteria must not be null");
-    Assert.notNull(location, "Distance value for near criteria must not be null");
-    filterCriteria.add(new CriteriaEntry(OperationKey.WITHIN, new Object[]{location, distance}));
-    return this;
-  }
-
-  /**
-   * Creates new CriteriaEntry for {@code geoLocation WITHIN distance}
-   *
-   * @param geoLocation {@link String} center point
-   *                    supported formats:
-   *                    lat on = > "41.2,45.1",
-   *                    geohash = > "asd9as0d"
-   * @param distance    {@link String} radius as a string (e.g. : '100km').
-   *                    Distance unit :
-   *                    either mi/miles or km can be set
-   * @return new criteria instance
-   */
-  public Criteria within(String geoLocation, String distance) {
-    Assert.isTrue(StringUtils.isNotBlank(geoLocation), "geoLocation value must not be null");
-    filterCriteria.add(new CriteriaEntry(OperationKey.WITHIN, new Object[]{geoLocation, distance}));
+  public Criteria within(Double latitude, Double longitude, Distance distance) {
+    Assert.notNull(latitude, "Latitude must not be null");
+    Assert.notNull(longitude, "Longitude must not be null");
+    Assert.notNull(distance, "Distance must not be null");
+    filterCriteria.add(new CriteriaEntry(OperationKey.WITHIN, new Object[]{latitude, longitude, distance}));
     return this;
   }
 
   /**
    * Creates new CriteriaEntry for {@code location Box bounding box}
    *
-   * @param boundingBox {@link org.springframework.data.elasticsearch.core.geo.GeoBox} bounding box(left top corner + right bottom corner)
+   * @param boundingBox bounding box(left top corner + right bottom corner)
    * @return new criteria instance Criteria the chaind criteria with the new 'boundingBox' criteria included.
    */
   public Criteria boundedBy(Box boundingBox) {

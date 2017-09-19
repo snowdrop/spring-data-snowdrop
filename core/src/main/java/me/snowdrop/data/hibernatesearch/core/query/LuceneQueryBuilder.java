@@ -29,6 +29,7 @@ import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.RangeMatchingContext;
 import org.hibernate.search.query.dsl.TermMatchingContext;
+import org.hibernate.search.query.dsl.Unit;
 
 /**
  * @author <a href="mailto:mluksa@redhat.com">Marko Luksa</a>
@@ -149,6 +150,16 @@ public class LuceneQueryBuilder {
 
   public Query reqexp(String fieldName, String reqexp) {
     return new RegexpQuery(new Term(fieldName, reqexp));
+  }
+
+  public Query spatial(String fieldName, double latitude, double longitude, double distance) {
+    return queryBuilder
+      .spatial()
+      .onField(fieldName)
+      .within(distance, Unit.KM)
+      .ofLatitude(latitude)
+      .andLongitude(longitude)
+      .createQuery();
   }
 
   private TermMatchingContext keywordOnField(String fieldName) {
