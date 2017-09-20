@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.smoke;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
@@ -35,6 +36,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -47,6 +49,7 @@ public class SmokeTests {
 
   @Configuration
   @EnableHibernateSearchRepositories
+  @EnableAsync
   public static class Config {
     @Bean(destroyMethod = "close")
     public DatasourceMapperForTest datasourceMapper() {
@@ -114,7 +117,7 @@ public class SmokeTests {
   }
 
   @Test
-  public void testSmokeRepository() {
+  public void testSmokeRepository() throws Exception {
     Assert.assertEquals(2, repository.findByType("foo").size());
 
     SmokeEntity byName = repository.findByName("bb");
@@ -137,5 +140,9 @@ public class SmokeTests {
     try (Stream<SmokeEntity> stream = repository.findByTypeIn(Collections.singleton("foo"))) {
       Assert.assertEquals(2, stream.count());
     }
+
+    Future<List<SmokeEntity>> async = repository.findByTypeAfter("cqq");
+    List<SmokeEntity> list = async.get();
+    Assert.assertEquals(2, list.size());
   }
 }

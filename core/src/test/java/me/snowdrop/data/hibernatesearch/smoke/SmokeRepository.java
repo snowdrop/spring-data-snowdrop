@@ -18,10 +18,12 @@ package me.snowdrop.data.hibernatesearch.smoke;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.annotations.Query;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -41,4 +43,7 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
   List<SmokeEntity> findByNameViaNamedQuery(String name);
 
   Stream<SmokeEntity> findByTypeIn(Collection<String> types);
+
+  @Async
+  Future<List<SmokeEntity>> findByTypeAfter(String after);
 }
