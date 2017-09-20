@@ -150,6 +150,8 @@ public class SmokeTests {
 
     Optional<SmokeEntity> optional = repository.findByNameBefore("az");
     Assert.assertEquals("aa", optional.get().getName());
+    optional = repository.findByNameBefore("00"); // should be before "aa"
+    Assert.assertFalse(optional.isPresent());
 
     Assert.assertTrue(repository.existsByType("foo"));
     Assert.assertFalse(repository.existsByType("zwy"));

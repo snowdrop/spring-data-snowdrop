@@ -55,7 +55,7 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
       case 1:
         return list.get(0);
       default:
-        throw new IncorrectResultSizeDataAccessException(1);
+        throw new IncorrectResultSizeDataAccessException(String.format("Found %s results, expected 1.", list.size()), 1);
     }
   }
 
