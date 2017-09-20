@@ -19,6 +19,7 @@ package me.snowdrop.data.hibernatesearch.smoke;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -51,6 +52,8 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
   Optional<SmokeEntity> findByNameBefore(String name);
 
   boolean existsByType(String type);
+
+  Set<SmokeEntity> findByNameAfter(String name);
 
   void deleteByName(String name);
 }

@@ -19,6 +19,7 @@ package me.snowdrop.data.hibernatesearch.smoke;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -152,6 +153,9 @@ public class SmokeTests {
 
     Assert.assertTrue(repository.existsByType("foo"));
     Assert.assertFalse(repository.existsByType("zwy"));
+
+    Set<SmokeEntity> set = repository.findByNameAfter("bz");
+    Assert.assertEquals(2, set.size());
 
     try {
       repository.findByNameBefore("bz"); // should be 2
