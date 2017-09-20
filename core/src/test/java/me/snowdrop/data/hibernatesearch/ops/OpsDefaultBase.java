@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.Assert;
@@ -117,6 +118,16 @@ public class OpsDefaultBase extends OpsTestsBase {
   @Test
   public void testNestedProps() {
     //assertSize(repository.findByAddressZipcode(1360), 2);
+  }
+
+  @Test
+  public void testOptional() {
+    Optional<SimpleEntity> optional = repository.findByNumber(10);
+    Assert.assertTrue(optional.isPresent());
+    Assert.assertEquals(new Long(4), optional.get().getId());
+
+    optional = repository.findByNumber(1234);
+    Assert.assertFalse(optional.isPresent());
   }
 
   @Test

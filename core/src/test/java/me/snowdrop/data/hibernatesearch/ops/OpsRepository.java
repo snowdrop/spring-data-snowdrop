@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
@@ -60,6 +61,8 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
   List<SimpleEntity> findByBuulFalse();
 
   Stream<SimpleEntity> findByColor(String color);
+
+  Optional<SimpleEntity> findByNumber(int number);
 
   //List<SimpleEntity> findByAddressZipcode(int zipcode);
 
