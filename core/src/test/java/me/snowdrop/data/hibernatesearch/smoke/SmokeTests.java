@@ -108,7 +108,7 @@ public class SmokeTests {
 
     Pageable pageable = new PageRequest(1, 2, new Sort(new Sort.Order("type")));
     Page<SmokeEntity> pageables = repository.findAll(pageable);
-    Assert.assertEquals(2, pageables.getTotalElements());
+    Assert.assertEquals(2, pageables.getNumberOfElements());
   }
 
   @Test

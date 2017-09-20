@@ -45,7 +45,10 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
     CriteriaQuery query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
 
-    if (getQueryMethod().isPageQuery()) {
+    if (getQueryMethod().isSliceQuery()) {
+      query.setPageable(accessor.getPageable());
+      return hibernateSearchOperations.findSlice(query);
+    } else if (getQueryMethod().isPageQuery()) {
       query.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findPageable(query);
     } else if (getQueryMethod().isStreamQuery()) {

@@ -48,7 +48,6 @@ public class Criteria {
       ", boost=" + boost +
       ", negating=" + negating +
       ", queryCriteria=" + StringUtils.join(queryCriteria, '|') +
-      ", filterCriteria=" + StringUtils.join(filterCriteria, '|') +
       '}';
   }
 
@@ -65,8 +64,6 @@ public class Criteria {
   private List<Criteria> criteriaChain = new ArrayList<>(1);
 
   private Set<CriteriaEntry> queryCriteria = new LinkedHashSet<>();
-
-  private Set<CriteriaEntry> filterCriteria = new LinkedHashSet<>();
 
   public Criteria() {
   }
@@ -428,7 +425,7 @@ public class Criteria {
     Assert.notNull(latitude, "Latitude must not be null");
     Assert.notNull(longitude, "Longitude must not be null");
     Assert.notNull(distance, "Distance must not be null");
-    filterCriteria.add(new CriteriaEntry(OperationKey.WITHIN, new Object[]{latitude, longitude, distance}));
+    queryCriteria.add(new CriteriaEntry(OperationKey.WITHIN, new Object[]{latitude, longitude, distance}));
     return this;
   }
 
@@ -440,7 +437,7 @@ public class Criteria {
    */
   public Criteria boundedBy(Box boundingBox) {
     Assert.notNull(boundingBox, "boundingBox value for boundedBy criteria must not be null");
-    filterCriteria.add(new CriteriaEntry(OperationKey.BBOX, new Object[]{boundingBox.getFirst(), boundingBox.getSecond()}));
+    queryCriteria.add(new CriteriaEntry(OperationKey.BBOX, new Object[]{boundingBox.getFirst(), boundingBox.getSecond()}));
     return this;
   }
 
@@ -454,7 +451,7 @@ public class Criteria {
   public Criteria boundedBy(String topLeftGeohash, String bottomRightGeohash) {
     Assert.isTrue(StringUtils.isNotBlank(topLeftGeohash), "topLeftGeohash must not be empty");
     Assert.isTrue(StringUtils.isNotBlank(bottomRightGeohash), "bottomRightGeohash must not be empty");
-    filterCriteria.add(new CriteriaEntry(OperationKey.BBOX, new Object[]{topLeftGeohash, bottomRightGeohash}));
+    queryCriteria.add(new CriteriaEntry(OperationKey.BBOX, new Object[]{topLeftGeohash, bottomRightGeohash}));
     return this;
   }
 
@@ -476,14 +473,6 @@ public class Criteria {
 
   public Set<CriteriaEntry> getQueryCriteriaEntries() {
     return Collections.unmodifiableSet(this.queryCriteria);
-  }
-
-  public Set<CriteriaEntry> getFilterCriteriaEntries() {
-    return Collections.unmodifiableSet(this.filterCriteria);
-  }
-
-  public Set<CriteriaEntry> getFilterCriteria() {
-    return filterCriteria;
   }
 
   /**

@@ -36,17 +36,17 @@ public class OpsTestsAction implements TestsAction {
   public void setUp() {
     List<SimpleEntity> entities = new ArrayList<>();
 
-    SimpleEntity entity = new SimpleEntity(1L, "ann", "Does Ann like good red apples?", -20, true, "Superman", "red");
+    SimpleEntity entity = new SimpleEntity(1L, "ann", "Does Ann like good red apples?", -20, true, "Superman", "red", new Location(10.0, 10.0));
     entities.add(entity);
-    entity = new SimpleEntity(2L, "barb", "Why is Barb dancing twist?", -10, true, "Spiderman", "red");
+    entity = new SimpleEntity(2L, "barb", "Why is Barb dancing twist?", -10, true, "Spiderman", "red", new Location(24.0, 32.0));
     entities.add(entity);
-    entity = new SimpleEntity(3L, "carl", "Carl is good at running and jumping.", 0, true, "Flash", "red");
+    entity = new SimpleEntity(3L, "carl", "Carl is good at running and jumping.", 0, true, "Flash", "red", new Location(20.0, 20.0));
     entities.add(entity);
-    entity = new SimpleEntity(4L, "doug", "Doug likes to sleeps.", 10, false, "Batman", "black");
+    entity = new SimpleEntity(4L, "doug", "Doug likes to sleeps.", 10, false, "Batman", "black", new Location(-10.0, -10.0));
     entities.add(entity);
-    entity = new SimpleEntity(5L, "eva", "Eva is running in circles.", 20, false, "Ironman", "gold");
+    entity = new SimpleEntity(5L, "eva", "Eva is running in circles.", 20, false, "Ironman", "gold", new Location(-20.0, 5.0));
     entities.add(entity);
-    entity = new SimpleEntity(6L, "fanny", "Fanny is reading a good book.", 30, false, "Aquaman", "blue");
+    entity = new SimpleEntity(6L, "fanny", "Fanny is reading a good book.", 30, false, "Aquaman", "blue", new Location(5.0, -20.0));
     entities.add(entity);
 
     TestUtils.preindexEntities(datasourceMapper, entities.toArray(new SimpleEntity[0]));

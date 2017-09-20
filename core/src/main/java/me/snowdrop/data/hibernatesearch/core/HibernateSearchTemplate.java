@@ -21,11 +21,15 @@ import java.util.List;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.mapping.SimpleHibernateSearchMappingContext;
+import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.mapping.context.MappingContext;
 
 /**
@@ -52,6 +56,10 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
     return mappingContext;
   }
 
+  private <T> long total(Query<T> query) {
+    return count(new BaseQuery<>(query.getEntityClass()));
+  }
+
   @Override
   public <T> long count(Query<T> countQuery) {
     QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
@@ -70,13 +78,30 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   }
 
   @Override
+  public <T> Slice<T> findSlice(Query<T> query) {
+    List<T> list = findAllInternal(query);
+    Pageable pageable = query.getPageable();
+    if (pageable != null) {
+      boolean hasNext = ((pageable.getPageNumber() + 1) * pageable.getPageSize() < total(query));
+      return new SliceImpl<T>(list, query.getPageable(), hasNext);
+    } else {
+      return new SliceImpl<T>(list);
+    }
+  }
+
+  @Override
   public <T> Page<T> findPageable(Query<T> query) {
-    return new PageImpl<T>(findAllInternal(query));
+    List<T> list = findAllInternal(query);
+    Pageable pageable = query.getPageable();
+    if (pageable != null) {
+      return new PageImpl<T>(list, query.getPageable(), total(query));
+    } else {
+      return new PageImpl<T>(list);
+    }
   }
 
   @Override
   public <T> Iterator<T> stream(Query<T> query) {
-    //noinspection unchecked
-    return (Iterator<T>) findAllInternal(query).iterator();
+    return findAllInternal(query).iterator();
   }
 }

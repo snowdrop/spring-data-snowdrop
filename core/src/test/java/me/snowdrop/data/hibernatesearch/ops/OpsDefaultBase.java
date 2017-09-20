@@ -35,7 +35,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testCountBy() {
-    Assert.assertEquals(repository.countByColor("red"), 3L);
+    Assert.assertEquals(3L, repository.countByColor("red"));
   }
 
   @Test
@@ -116,5 +116,10 @@ public class OpsDefaultBase extends OpsTestsBase {
   @Test
   public void testNestedProps() {
     //assertSize(repository.findByAddressZipcode(1360), 2);
+  }
+
+  @Test
+  public void testGeoLocation() {
+    assertSize(repository.findByLocationWithin(24.0, 31.5, 55), 1);
   }
 }

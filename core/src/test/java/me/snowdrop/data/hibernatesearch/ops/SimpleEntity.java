@@ -16,6 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.ops;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
@@ -31,6 +32,7 @@ import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Spatial;
 import org.hibernate.search.annotations.Store;
 import org.springframework.data.annotation.Id;
 
@@ -67,4 +69,7 @@ public class SimpleEntity implements AbstractEntity {
   @Field(store = Store.NO)
   @SortableField
   private String color;
+  @Spatial
+  @Embedded
+  private Location location;
 }

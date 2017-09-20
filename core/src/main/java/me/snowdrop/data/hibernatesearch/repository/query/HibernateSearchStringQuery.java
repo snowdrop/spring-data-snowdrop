@@ -44,7 +44,10 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
   public Object execute(Object[] parameters) {
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
     StringQuery<?> stringQuery = createQuery(accessor);
-    if (getQueryMethod().isPageQuery()) {
+    if (getQueryMethod().isSliceQuery()) {
+      stringQuery.setPageable(accessor.getPageable());
+      return hibernateSearchOperations.findSlice(stringQuery);
+    } else if (getQueryMethod().isPageQuery()) {
       stringQuery.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findPageable(stringQuery);
     } else if (getQueryMethod().isCollectionQuery()) {

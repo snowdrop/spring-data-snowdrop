@@ -21,6 +21,7 @@ import java.util.Iterator;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.mapping.context.MappingContext;
 
 /**
@@ -55,6 +56,14 @@ public interface HibernateSearchOperations {
   <T> Iterable<T> findAll(Query<T> query);
 
   /**
+   * Returns a {@link Slice} of entities meeting the paging restriction provided in the {@code Pageable} object.
+   *
+   * @param query the query
+   * @return a slice of entities
+   */
+  <T> Slice<T> findSlice(Query<T> query);
+
+  /**
    * Returns a {@link Page} of entities meeting the paging restriction provided in the {@code Pageable} object.
    *
    * @param query the query
@@ -62,5 +71,11 @@ public interface HibernateSearchOperations {
    */
   <T> Page<T> findPageable(Query<T> query);
 
+  /**
+   * Returns a stream of entities meeting the paging restriction provided in the {@code Pageable} object.
+   *
+   * @param query the query
+   * @return a stream of entities
+   */
   <T> Iterator<T> stream(Query<T> query);
 }
