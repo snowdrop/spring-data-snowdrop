@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.analysis.Analyzer;
@@ -29,6 +30,7 @@ import org.hibernate.search.spi.IndexedTypeIdentifier;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.StreamUtils;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -51,16 +53,35 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   protected abstract long size();
 
+  protected abstract T single();
+
   protected abstract List<T> list();
+
+  protected abstract Stream<T> stream();
+
+  protected Stream<T> toStream(Iterable<T> iterator) {
+    return StreamUtils.createStreamFromIterator(iterator.iterator());
+  }
 
   public long size(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     initialize(query);
     return size();
   }
 
+  public T single(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+    initialize(query);
+    setMaxResults(1);
+    return single();
+  }
+
   public List<T> list(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     initialize(query);
     return list();
+  }
+
+  public Stream<T> stream(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+    initialize(query);
+    return stream();
   }
 
   protected abstract SearchIntegrator getSearchIntegrator();

@@ -25,7 +25,6 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.data.util.StreamUtils;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -56,7 +55,7 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     } else if (getQueryMethod().isPageQuery()) {
       return hibernateSearchOperations.findPageable(query);
     } else if (getQueryMethod().isStreamQuery()) {
-      return StreamUtils.createStreamFromIterator(hibernateSearchOperations.stream(query));
+      return hibernateSearchOperations.stream(query);
     } else if (getQueryMethod().isCollectionQuery()) {
       return hibernateSearchOperations.findAll(query);
     } else if (tree.isCountProjection()) {

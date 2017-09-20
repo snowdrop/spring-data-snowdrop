@@ -17,20 +17,23 @@
 package me.snowdrop.data.hibernatesearch.config;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 
 import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.search.FullTextQuery;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.Search;
 import org.hibernate.search.hcore.util.impl.ContextHelper;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.FullTextQuery;
-import org.hibernate.search.jpa.Search;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.util.Assert;
@@ -76,8 +79,8 @@ public class JpaDatasourceMapper implements DatasourceMapper {
         entityManager = emf.createEntityManager();
         em = entityManager;
       }
-      FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
-      fullTextQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
+      FullTextSession fullTextSession = Search.getFullTextSession(em.unwrap(Session.class));
+      fullTextQuery = fullTextSession.createFullTextQuery(query, entityClass);
     }
 
     protected void setSort(Sort sort) {
@@ -100,6 +103,17 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       }
     }
 
+    protected T single() {
+      try {
+        //noinspection unchecked
+        return (T) fullTextQuery.getSingleResult();
+      } catch (NoResultException ignored) {
+        return null; // return null
+      } finally {
+        close();
+      }
+    }
+
     protected List<T> list() {
       try {
         //noinspection unchecked
@@ -107,6 +121,12 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       } finally {
         close();
       }
+    }
+
+    protected Stream<T> stream() {
+      Stream stream = fullTextQuery.stream();
+      //noinspection unchecked
+      return (Stream<T>) stream.onClose(this::close);
     }
   }
 }

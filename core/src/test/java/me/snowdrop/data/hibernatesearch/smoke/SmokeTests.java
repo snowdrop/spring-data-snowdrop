@@ -16,7 +16,9 @@
 
 package me.snowdrop.data.hibernatesearch.smoke;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
 import me.snowdrop.data.hibernatesearch.TestUtils;
@@ -131,5 +133,9 @@ public class SmokeTests {
 
     List<SmokeEntity> byNamed = repository.findByNameViaNamedQuery("dd");
     Assert.assertEquals(1, byNamed.size());
+
+    try (Stream<SmokeEntity> stream = repository.findByTypeIn(Collections.singleton("foo"))) {
+      Assert.assertEquals(2, stream.count());
+    }
   }
 }

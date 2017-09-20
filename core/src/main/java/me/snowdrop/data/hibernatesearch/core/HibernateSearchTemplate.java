@@ -16,8 +16,8 @@
 
 package me.snowdrop.data.hibernatesearch.core;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.mapping.SimpleHibernateSearchMappingContext;
@@ -68,8 +68,8 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
 
   @Override
   public <T> T findSingle(Query<T> query) {
-    List<T> list = findAllInternal(query);
-    return (list.isEmpty() ? null : list.get(0));
+    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    return queryAdapter.single(query);
   }
 
   @Override
@@ -101,7 +101,8 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   }
 
   @Override
-  public <T> Iterator<T> stream(Query<T> query) {
-    return findAllInternal(query).iterator();
+  public <T> Stream<T> stream(Query<T> query) {
+    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    return queryAdapter.stream(query);
   }
 }

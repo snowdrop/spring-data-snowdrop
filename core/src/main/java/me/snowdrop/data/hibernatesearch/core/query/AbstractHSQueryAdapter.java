@@ -19,6 +19,7 @@ package me.snowdrop.data.hibernatesearch.core.query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
@@ -43,6 +44,15 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
       list.add(get(entityClass, ei.getId()));
     }
     return list;
+  }
+
+  protected T single() {
+    List<T> list = list();
+    return (list.isEmpty() ? null : list.get(0));
+  }
+
+  protected Stream<T> stream() {
+    return toStream(list());
   }
 
   protected void applyLuceneQuery(Query query) {

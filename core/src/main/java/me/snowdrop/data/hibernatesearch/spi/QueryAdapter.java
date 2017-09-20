@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.spi;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -24,5 +25,9 @@ import java.util.List;
 public interface QueryAdapter<T> {
   long size(Query<T> query);
 
+  T single(Query<T> query);
+
   List<T> list(Query<T> query);
+
+  Stream<T> stream(Query<T> query);
 }

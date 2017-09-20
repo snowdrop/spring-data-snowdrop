@@ -16,7 +16,9 @@
 
 package me.snowdrop.data.hibernatesearch.smoke;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.annotations.Query;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
@@ -37,4 +39,6 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
   List<SmokeEntity> findByTypeQuery(String type);
 
   List<SmokeEntity> findByNameViaNamedQuery(String name);
+
+  Stream<SmokeEntity> findByTypeIn(Collection<String> types);
 }

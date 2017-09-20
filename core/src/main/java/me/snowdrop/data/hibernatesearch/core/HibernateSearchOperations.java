@@ -16,7 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.core;
 
-import java.util.Iterator;
+import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.spi.Query;
@@ -77,5 +77,5 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return a stream of entities
    */
-  <T> Iterator<T> stream(Query<T> query);
+  <T> Stream<T> stream(Query<T> query);
 }
