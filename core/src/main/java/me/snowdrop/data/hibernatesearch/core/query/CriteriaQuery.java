@@ -16,7 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
-import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.Assert;
 
@@ -26,6 +25,9 @@ import org.springframework.util.Assert;
 public class CriteriaQuery<T> extends BaseQuery<T> {
 
   private Criteria criteria;
+
+  private Integer maxResults;
+  private boolean distinct;
 
   private CriteriaQuery(Class<T> entityClass) {
     super(entityClass);
@@ -50,27 +52,6 @@ public class CriteriaQuery<T> extends BaseQuery<T> {
     adapter.convert(this);
   }
 
-  public static <U> Query<U> fromQuery(CriteriaQuery<U> source) {
-    //noinspection unchecked
-    return fromQuery(source, new CriteriaQuery(source.getEntityClass()));
-  }
-
-  public static <S extends CriteriaQuery> S fromQuery(CriteriaQuery source, S destination) {
-    if (source == null || destination == null) {
-      return null;
-    }
-
-    if (source.getCriteria() != null) {
-      destination.addCriteria(source.getCriteria());
-    }
-
-    if (source.getSort() != null) {
-      destination.setSort(source.getSort());
-    }
-
-    return destination;
-  }
-
   @SuppressWarnings("unchecked")
   public final <S extends CriteriaQuery> S addCriteria(Criteria criteria) {
     Assert.notNull(criteria, "Cannot add null criteria.");
@@ -84,5 +65,21 @@ public class CriteriaQuery<T> extends BaseQuery<T> {
 
   public Criteria getCriteria() {
     return criteria;
+  }
+
+  public Integer getMaxResults() {
+    return maxResults;
+  }
+
+  public void setMaxResults(Integer maxResults) {
+    this.maxResults = maxResults;
+  }
+
+  public boolean isDistinct() {
+    return distinct;
+  }
+
+  public void setDistinct(boolean distinct) {
+    this.distinct = distinct;
   }
 }

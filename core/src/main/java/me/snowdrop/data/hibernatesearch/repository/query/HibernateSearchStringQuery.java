@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.format.support.DefaultFormattingConversionService;
@@ -44,14 +45,15 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
   public Object execute(Object[] parameters) {
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
     StringQuery<?> stringQuery = createQuery(accessor);
+
+    Pageable pageable = accessor.getPageable();
+    stringQuery.setPageable(pageable);
+
     if (getQueryMethod().isSliceQuery()) {
-      stringQuery.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findSlice(stringQuery);
     } else if (getQueryMethod().isPageQuery()) {
-      stringQuery.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findPageable(stringQuery);
     } else if (getQueryMethod().isCollectionQuery()) {
-      stringQuery.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findAll(stringQuery);
     } else {
       return hibernateSearchOperations.findSingle(stringQuery);

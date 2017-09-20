@@ -75,6 +75,10 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   void convert(CriteriaQuery query) {
     fillQuery(query);
+    // apply/override max results
+    if (query.getMaxResults() != null) {
+      setMaxResults(query.getMaxResults());
+    }
   }
 
   void string(StringQuery query) {

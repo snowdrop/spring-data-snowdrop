@@ -20,6 +20,7 @@ import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaQuery;
 import me.snowdrop.data.hibernatesearch.repository.query.parser.HibernateSearchQueryCreator;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
@@ -45,16 +46,18 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
     CriteriaQuery query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
 
+    Pageable pageable = accessor.getPageable();
+    query.setPageable(pageable);
+    query.setMaxResults(tree.getMaxResults());
+    query.setDistinct(tree.isDistinct());
+
     if (getQueryMethod().isSliceQuery()) {
-      query.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findSlice(query);
     } else if (getQueryMethod().isPageQuery()) {
-      query.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findPageable(query);
     } else if (getQueryMethod().isStreamQuery()) {
       return StreamUtils.createStreamFromIterator(hibernateSearchOperations.stream(query));
     } else if (getQueryMethod().isCollectionQuery()) {
-      query.setPageable(accessor.getPageable());
       return hibernateSearchOperations.findAll(query);
     } else if (tree.isCountProjection()) {
       return hibernateSearchOperations.count(query);

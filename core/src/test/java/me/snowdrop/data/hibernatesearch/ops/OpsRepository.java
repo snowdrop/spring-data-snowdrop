@@ -62,6 +62,8 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
+  List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
+
   List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
   List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);

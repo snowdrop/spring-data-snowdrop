@@ -32,6 +32,11 @@ public class OpsSortBase extends OpsTestsBase {
   }
 
   @Test
+  public void testFindTop() {
+    assertIds(repository.findFirst2ByNumberAfter(5, new Sort("hero")), 6, 4);
+  }
+
+  @Test
   public void testFindByNameNot() {
     assertIds(repository.findByNameNot("doug", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 5, 3, 6);
   }
