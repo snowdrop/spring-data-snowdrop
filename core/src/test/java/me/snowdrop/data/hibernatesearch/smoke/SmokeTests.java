@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.smoke;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -144,5 +145,8 @@ public class SmokeTests {
     Future<List<SmokeEntity>> async = repository.findByTypeAfter("cqq");
     List<SmokeEntity> list = async.get();
     Assert.assertEquals(2, list.size());
+
+    Optional<SmokeEntity> optional = repository.findByNameBefore("az");
+    Assert.assertEquals("aa", optional.get().getName());
   }
 }

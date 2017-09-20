@@ -16,7 +16,12 @@
 
 package me.snowdrop.data.hibernatesearch.repository.query;
 
+import java.util.Optional;
+
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
+import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
+import me.snowdrop.data.hibernatesearch.spi.Query;
+import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
 
@@ -35,5 +40,35 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
   @Override
   public QueryMethod getQueryMethod() {
     return queryMethod;
+  }
+
+  protected abstract boolean isCountProjection(Query<?> query);
+
+  protected abstract BaseQuery<?> createQuery(ParametersParameterAccessor accessor);
+
+  @Override
+  public Object execute(Object[] parameters) {
+    ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+    BaseQuery<?> query = createQuery(accessor);
+    query.setPageable(accessor.getPageable());
+
+    if (getQueryMethod().isSliceQuery()) {
+      return hibernateSearchOperations.findSlice(query);
+    } else if (getQueryMethod().isPageQuery()) {
+      return hibernateSearchOperations.findPageable(query);
+    } else if (getQueryMethod().isStreamQuery()) {
+      return hibernateSearchOperations.stream(query);
+    } else if (getQueryMethod().isCollectionQuery()) {
+      return hibernateSearchOperations.findAll(query);
+    } else if (isCountProjection(query)) {
+      return hibernateSearchOperations.count(query);
+    } else {
+      Optional<?> optional = hibernateSearchOperations.findSingle(query);
+      if (Optional.class.equals(getQueryMethod().getReturnedObjectType())) {
+        return optional;
+      } else {
+        return optional.get();
+      }
+    }
   }
 }

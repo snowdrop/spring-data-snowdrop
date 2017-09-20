@@ -18,6 +18,7 @@ package me.snowdrop.data.hibernatesearch.smoke;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
@@ -46,4 +47,6 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
 
   @Async
   Future<List<SmokeEntity>> findByTypeAfter(String after);
+
+  Optional<SmokeEntity> findByNameBefore(String name);
 }

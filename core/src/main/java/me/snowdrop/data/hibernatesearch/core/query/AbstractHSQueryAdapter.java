@@ -19,12 +19,14 @@ package me.snowdrop.data.hibernatesearch.core.query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.EntityInfo;
 import org.hibernate.search.query.engine.spi.HSQuery;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -46,9 +48,16 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
     return list;
   }
 
-  protected T single() {
+  protected Optional<T> single() {
     List<T> list = list();
-    return (list.isEmpty() ? null : list.get(0));
+    switch (list.size()) {
+      case 0:
+        return Optional.empty();
+      case 1:
+        return Optional.of(list.get(0));
+      default:
+        throw new IncorrectResultSizeDataAccessException(1);
+    }
   }
 
   protected Stream<T> stream() {

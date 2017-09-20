@@ -20,9 +20,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
+import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
+import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.format.support.DefaultFormattingConversionService;
@@ -41,26 +42,11 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
 
   private final GenericConversionService conversionService = new DefaultFormattingConversionService();
 
-  @Override
-  public Object execute(Object[] parameters) {
-    ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
-    StringQuery<?> stringQuery = createQuery(accessor);
-
-    Pageable pageable = accessor.getPageable();
-    stringQuery.setPageable(pageable);
-
-    if (getQueryMethod().isSliceQuery()) {
-      return hibernateSearchOperations.findSlice(stringQuery);
-    } else if (getQueryMethod().isPageQuery()) {
-      return hibernateSearchOperations.findPageable(stringQuery);
-    } else if (getQueryMethod().isCollectionQuery()) {
-      return hibernateSearchOperations.findAll(stringQuery);
-    } else {
-      return hibernateSearchOperations.findSingle(stringQuery);
-    }
+  protected boolean isCountProjection(Query<?> query) {
+    return false; // TODO Lucene count string query?
   }
 
-  protected StringQuery<?> createQuery(ParametersParameterAccessor parameterAccessor) {
+  protected BaseQuery<?> createQuery(ParametersParameterAccessor parameterAccessor) {
     String queryString = replacePlaceholders(this.query, parameterAccessor);
     Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
     return new StringQuery<>(entityClass, queryString);

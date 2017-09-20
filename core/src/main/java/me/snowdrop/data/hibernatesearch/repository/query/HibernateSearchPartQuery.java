@@ -18,9 +18,10 @@ package me.snowdrop.data.hibernatesearch.repository.query;
 
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
+import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaQuery;
 import me.snowdrop.data.hibernatesearch.repository.query.parser.HibernateSearchQueryCreator;
-import org.springframework.data.domain.Pageable;
+import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
@@ -40,28 +41,18 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
   }
 
   @Override
-  public Object execute(Object[] parameters) {
-    Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
-    ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
-    CriteriaQuery query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
+  protected boolean isCountProjection(Query<?> query) {
+    return tree.isCountProjection();
+  }
 
-    Pageable pageable = accessor.getPageable();
-    query.setPageable(pageable);
+  @Override
+  protected BaseQuery<?> createQuery(ParametersParameterAccessor accessor) {
+    Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
+    CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
+
     query.setMaxResults(tree.getMaxResults());
     query.setDistinct(tree.isDistinct());
 
-    if (getQueryMethod().isSliceQuery()) {
-      return hibernateSearchOperations.findSlice(query);
-    } else if (getQueryMethod().isPageQuery()) {
-      return hibernateSearchOperations.findPageable(query);
-    } else if (getQueryMethod().isStreamQuery()) {
-      return hibernateSearchOperations.stream(query);
-    } else if (getQueryMethod().isCollectionQuery()) {
-      return hibernateSearchOperations.findAll(query);
-    } else if (tree.isCountProjection()) {
-      return hibernateSearchOperations.count(query);
-    } else {
-      return hibernateSearchOperations.findSingle(query);
-    }
+    return query;
   }
 }

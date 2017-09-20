@@ -17,11 +17,13 @@
 package me.snowdrop.data.hibernatesearch.config;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 
 import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
@@ -35,6 +37,7 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.hibernate.search.hcore.util.impl.ContextHelper;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.util.Assert;
 
@@ -103,12 +106,14 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       }
     }
 
-    protected T single() {
+    protected Optional<T> single() {
       try {
         //noinspection unchecked
-        return (T) fullTextQuery.getSingleResult();
-      } catch (NoResultException ignored) {
-        return null; // return null
+        return Optional.of((T) fullTextQuery.getSingleResult());
+      } catch (NoResultException ex) {
+        return Optional.empty();
+      } catch (NonUniqueResultException ex) {
+        throw new IncorrectResultSizeDataAccessException(ex.getMessage(), 1);
       } finally {
         close();
       }
