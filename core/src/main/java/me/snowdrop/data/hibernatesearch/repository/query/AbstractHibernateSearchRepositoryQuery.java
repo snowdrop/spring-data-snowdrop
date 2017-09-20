@@ -49,8 +49,14 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
   @Override
   public Object execute(Object[] parameters) {
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+
     BaseQuery<?> query = createQuery(accessor);
-    query.setPageable(accessor.getPageable());
+    if (query.getSort() == null) {
+      query.setSort(accessor.getSort());
+    }
+    if (query.getPageable() == null) {
+      query.setPageable(accessor.getPageable());
+    }
 
     if (getQueryMethod().isSliceQuery()) {
       return hibernateSearchOperations.findSlice(query);

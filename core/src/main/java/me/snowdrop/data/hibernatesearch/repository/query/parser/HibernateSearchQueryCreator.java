@@ -41,7 +41,7 @@ import org.springframework.data.repository.query.parser.PartTree;
  * @author Artur Konczak
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQuery, CriteriaQuery> {
+public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQuery<?>, CriteriaQuery<?>> {
 
   private final Class<?> entityClass;
   private final MappingContext<?, HibernateSearchPersistentProperty> context;
@@ -53,13 +53,13 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
   }
 
   @Override
-  protected CriteriaQuery create(Part part, Iterator<Object> iterator) {
+  protected CriteriaQuery<?> create(Part part, Iterator<Object> iterator) {
     PersistentPropertyPath<HibernateSearchPersistentProperty> path = context.getPersistentPropertyPath(part.getProperty());
-    return new CriteriaQuery(entityClass, from(part, new Criteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
+    return new CriteriaQuery<>(entityClass, from(part, new Criteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
   }
 
   @Override
-  protected CriteriaQuery and(Part part, CriteriaQuery base, Iterator<Object> iterator) {
+  protected CriteriaQuery<?> and(Part part, CriteriaQuery<?> base, Iterator<Object> iterator) {
     if (base == null) {
       return create(part, iterator);
     }
@@ -68,8 +68,8 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
   }
 
   @Override
-  protected CriteriaQuery or(CriteriaQuery base, CriteriaQuery query) {
-    return new CriteriaQuery(base.getEntityClass(), base.getCriteria().or(query.getCriteria()));
+  protected CriteriaQuery<?> or(CriteriaQuery<?> base, CriteriaQuery<?> query) {
+    return new CriteriaQuery<>(base.getEntityClass(), base.getCriteria().or(query.getCriteria()));
   }
 
   @Override
