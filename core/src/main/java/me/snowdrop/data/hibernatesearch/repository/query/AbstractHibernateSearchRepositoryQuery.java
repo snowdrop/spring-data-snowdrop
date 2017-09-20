@@ -21,6 +21,7 @@ import java.util.Optional;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.spi.Query;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
@@ -51,9 +52,15 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
 
     BaseQuery<?> query = createQuery(accessor);
-    if (query.getSort() == null) {
-      query.setSort(accessor.getSort());
+
+    Sort sort = query.getSort();
+    if (sort == null) {
+      sort = accessor.getSort();
+    } else {
+      sort = sort.and(accessor.getSort());
     }
+    query.setSort(sort);
+
     if (query.getPageable() == null) {
       query.setPageable(accessor.getPageable());
     }
