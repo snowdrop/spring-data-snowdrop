@@ -40,12 +40,18 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     this.mappingContext = hibernateSearchOperations.getMappingContext();
   }
 
-  @Override
+  protected boolean isModify(Query<?> query) {
+    return tree.isDelete();
+  }
+
+  protected boolean isExistsProjection(Query<?> query) {
+    return tree.isExistsProjection() != null && tree.isExistsProjection();
+  }
+
   protected boolean isCountProjection(Query<?> query) {
     return tree.isCountProjection();
   }
 
-  @Override
   protected BaseQuery<?> createQuery(ParametersParameterAccessor accessor) {
     Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
     CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();

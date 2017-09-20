@@ -42,6 +42,14 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
 
   private final GenericConversionService conversionService = new DefaultFormattingConversionService();
 
+  protected boolean isModify(Query<?> query) {
+    return false;
+  }
+
+  protected boolean isExistsProjection(Query<?> query) {
+    return false;
+  }
+
   protected boolean isCountProjection(Query<?> query) {
     return false; // TODO Lucene count string query?
   }

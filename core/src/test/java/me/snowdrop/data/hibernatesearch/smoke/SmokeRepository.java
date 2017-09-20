@@ -49,4 +49,8 @@ public interface SmokeRepository extends HibernateSearchRepository<SmokeEntity, 
   Future<List<SmokeEntity>> findByTypeAfter(String after);
 
   Optional<SmokeEntity> findByNameBefore(String name);
+
+  boolean existsByType(String type);
+
+  void deleteByName(String name);
 }

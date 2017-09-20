@@ -43,6 +43,10 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
     return queryMethod;
   }
 
+  protected abstract boolean isModify(Query<?> query);
+
+  protected abstract boolean isExistsProjection(Query<?> query);
+
   protected abstract boolean isCountProjection(Query<?> query);
 
   protected abstract BaseQuery<?> createQuery(ParametersParameterAccessor accessor);
@@ -65,7 +69,9 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
       query.setPageable(accessor.getPageable());
     }
 
-    if (getQueryMethod().isSliceQuery()) {
+    if (isModify(query)) {
+      throw new UnsupportedOperationException("Hibernate Search repository support is read-only!");
+    } else if (getQueryMethod().isSliceQuery()) {
       return hibernateSearchOperations.findSlice(query);
     } else if (getQueryMethod().isPageQuery()) {
       return hibernateSearchOperations.findPageable(query);
@@ -75,6 +81,8 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
       return hibernateSearchOperations.findAll(query);
     } else if (isCountProjection(query)) {
       return hibernateSearchOperations.count(query);
+    } else if (isExistsProjection(query)) {
+      return (hibernateSearchOperations.count(query) > 0);
     } else {
       Optional<?> optional = hibernateSearchOperations.findSingle(query);
       if (Optional.class.equals(getQueryMethod().getReturnedObjectType())) {

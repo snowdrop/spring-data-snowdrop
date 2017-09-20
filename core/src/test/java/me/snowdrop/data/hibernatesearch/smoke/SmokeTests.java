@@ -150,11 +150,21 @@ public class SmokeTests {
     Optional<SmokeEntity> optional = repository.findByNameBefore("az");
     Assert.assertEquals("aa", optional.get().getName());
 
+    Assert.assertTrue(repository.existsByType("foo"));
+    Assert.assertFalse(repository.existsByType("zwy"));
+
     try {
       repository.findByNameBefore("bz"); // should be 2
       Assert.fail();
     } catch (Exception e) {
       Assert.assertEquals(IncorrectResultSizeDataAccessException.class, e.getClass());
+    }
+
+    try {
+      repository.deleteByName("bz");
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertEquals(UnsupportedOperationException.class, e.getClass());
     }
   }
 }
