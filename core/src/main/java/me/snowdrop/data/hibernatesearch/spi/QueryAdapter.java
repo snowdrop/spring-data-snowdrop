@@ -17,7 +17,6 @@
 package me.snowdrop.data.hibernatesearch.spi;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
 public interface QueryAdapter<T> {
   long size(Query<T> query);
 
-  Optional<T> single(Query<T> query);
+  T single(Query<T> query);
 
   List<T> list(Query<T> query);
 

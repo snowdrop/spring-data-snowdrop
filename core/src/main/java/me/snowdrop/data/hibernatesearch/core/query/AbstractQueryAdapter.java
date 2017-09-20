@@ -17,7 +17,6 @@
 package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
@@ -54,7 +53,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   protected abstract long size();
 
-  protected abstract Optional<T> single();
+  protected abstract T single();
 
   protected abstract List<T> list();
 
@@ -69,7 +68,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
     return size();
   }
 
-  public Optional<T> single(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+  public T single(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     initialize(query);
     return single();
   }

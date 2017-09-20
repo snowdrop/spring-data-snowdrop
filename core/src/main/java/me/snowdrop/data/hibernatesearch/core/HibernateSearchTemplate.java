@@ -17,7 +17,6 @@
 package me.snowdrop.data.hibernatesearch.core;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
@@ -68,7 +67,7 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   }
 
   @Override
-  public <T> Optional<T> findSingle(Query<T> query) {
+  public <T> T findSingle(Query<T> query) {
     QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
     return queryAdapter.single(query);
   }

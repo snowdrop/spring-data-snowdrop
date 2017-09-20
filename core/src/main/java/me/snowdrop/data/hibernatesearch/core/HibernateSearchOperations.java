@@ -16,7 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.core;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
@@ -46,7 +45,7 @@ public interface HibernateSearchOperations {
    * @param query the query
    * @return matching optional entity
    */
-  <T> Optional<T> findSingle(Query<T> query);
+  <T> T findSingle(Query<T> query);
 
   /**
    * Returns all instances of the type.

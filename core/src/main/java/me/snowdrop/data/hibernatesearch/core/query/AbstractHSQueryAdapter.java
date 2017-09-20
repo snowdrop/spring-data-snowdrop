@@ -19,7 +19,6 @@ package me.snowdrop.data.hibernatesearch.core.query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apache.lucene.search.Query;
@@ -48,13 +47,13 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
     return list;
   }
 
-  protected Optional<T> single() {
+  protected T single() {
     List<T> list = list();
     switch (list.size()) {
       case 0:
-        return Optional.empty();
+        return null;
       case 1:
-        return Optional.of(list.get(0));
+        return list.get(0);
       default:
         throw new IncorrectResultSizeDataAccessException(1);
     }

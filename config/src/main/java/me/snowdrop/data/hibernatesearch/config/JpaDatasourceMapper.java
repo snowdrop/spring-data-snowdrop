@@ -17,7 +17,6 @@
 package me.snowdrop.data.hibernatesearch.config;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.persistence.EntityManager;
@@ -106,12 +105,12 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       }
     }
 
-    protected Optional<T> single() {
+    protected T single() {
       try {
         //noinspection unchecked
-        return Optional.of((T) fullTextQuery.getSingleResult());
+        return (T) fullTextQuery.getSingleResult();
       } catch (NoResultException ex) {
-        return Optional.empty();
+        return null;
       } catch (NonUniqueResultException ex) {
         throw new IncorrectResultSizeDataAccessException(ex.getMessage(), 1);
       } finally {

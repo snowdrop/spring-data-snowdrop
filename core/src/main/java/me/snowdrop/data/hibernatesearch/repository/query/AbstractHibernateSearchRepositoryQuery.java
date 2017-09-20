@@ -16,8 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository.query;
 
-import java.util.Optional;
-
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.spi.Query;
@@ -84,12 +82,7 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
     } else if (isExistsProjection(query)) {
       return (hibernateSearchOperations.count(query) > 0);
     } else {
-      Optional<?> optional = hibernateSearchOperations.findSingle(query);
-      if (Optional.class.equals(getQueryMethod().getReturnedObjectType())) {
-        return optional;
-      } else {
-        return optional.get();
-      }
+      return hibernateSearchOperations.findSingle(query);
     }
   }
 }
