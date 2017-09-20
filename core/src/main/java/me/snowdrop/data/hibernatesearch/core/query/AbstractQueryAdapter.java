@@ -71,7 +71,6 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   public Optional<T> single(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     initialize(query);
-    setMaxResults(1);
     return single();
   }
 

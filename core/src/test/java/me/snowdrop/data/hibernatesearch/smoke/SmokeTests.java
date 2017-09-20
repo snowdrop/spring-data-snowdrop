@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -148,5 +149,12 @@ public class SmokeTests {
 
     Optional<SmokeEntity> optional = repository.findByNameBefore("az");
     Assert.assertEquals("aa", optional.get().getName());
+
+    try {
+      repository.findByNameBefore("bz"); // should be 2
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertEquals(IncorrectResultSizeDataAccessException.class, e.getClass());
+    }
   }
 }
