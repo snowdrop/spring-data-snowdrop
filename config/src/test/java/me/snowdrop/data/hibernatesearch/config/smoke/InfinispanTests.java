@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.config.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
+import me.snowdrop.data.hibernatesearch.config.EntityToCacheMapper;
 import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataJpaAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.InfinispanConfiguration;
 import me.snowdrop.data.hibernatesearch.config.smoke.hibernatesearch.FruitHibernateSearchRepository;
@@ -46,11 +47,13 @@ public class InfinispanTests {
   FruitHibernateSearchRepository hsRepository;
 
   @Autowired
-  Cache cache;
+  EntityToCacheMapper entityToCacheMapper;
 
   @SuppressWarnings("unchecked")
   @Before
   public void setUp() {
+    Cache cache = entityToCacheMapper.getCache(Fruit.class);
+
     Fruit fruit = new Fruit(1L, "Cherry");
     cache.put(fruit.getId(), fruit);
     fruit = new Fruit(2L, "Apple");
@@ -61,6 +64,7 @@ public class InfinispanTests {
 
   @After
   public void tearDown() {
+    Cache cache = entityToCacheMapper.getCache(Fruit.class);
     cache.clear();
   }
 

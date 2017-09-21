@@ -49,7 +49,7 @@ public class DatasourceMapperForTest<T> extends AbstractHSQueryAdapter<T> implem
   }
 
   @Override
-  public <U> QueryAdapter<U> createQueryAdapter() {
+  public <U> QueryAdapter<U> createQueryAdapter(Class<U> entityClass) {
     //noinspection unchecked
     return (QueryAdapter<U>) this;
   }

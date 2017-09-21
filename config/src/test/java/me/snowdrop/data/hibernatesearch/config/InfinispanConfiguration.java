@@ -28,8 +28,6 @@ import org.infinispan.configuration.cache.Index;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
-import org.infinispan.query.Search;
-import org.infinispan.query.SearchManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -57,18 +55,8 @@ public class InfinispanConfiguration {
   }
 
   @Bean
-  public Cache createCache(EmbeddedCacheManager cacheManager) {
-    return cacheManager.getCache();
-  }
-
-  @Bean
-  public TestsAction testsAction(Cache cache) {
-    return new InfinispanOpsTestsAction(cache);
-  }
-
-  @Bean
-  public SearchManager searchManager(Cache cache) {
-    return Search.getSearchManager(cache);
+  public TestsAction testsAction(EntityToCacheMapper entityToCacheMapper) {
+    return new InfinispanOpsTestsAction(entityToCacheMapper.getCache(SimpleEntity.class));
   }
 
   private class InfinispanOpsTestsAction extends OpsTestsActionBase {

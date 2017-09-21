@@ -25,29 +25,43 @@ import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.infinispan.Cache;
 import org.infinispan.query.CacheQuery;
 import org.infinispan.query.FetchOptions;
 import org.infinispan.query.ResultIterator;
+import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
+import org.springframework.util.Assert;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class InfinispanDatasourceMapper implements DatasourceMapper {
 
-  private final SearchManager searchManager;
+  private final EntityToCacheMapper entityToCacheMapper;
 
-  public InfinispanDatasourceMapper(SearchManager searchManager) {
-    this.searchManager = searchManager;
+  public InfinispanDatasourceMapper(EntityToCacheMapper entityToCacheMapper) {
+    Assert.notNull(entityToCacheMapper, "Null EntityToCacheMapper!");
+    this.entityToCacheMapper = entityToCacheMapper;
   }
 
   @Override
-  public <T> QueryAdapter<T> createQueryAdapter() {
-    return new InfinispanQueryAdapter<>();
+  public <T> QueryAdapter<T> createQueryAdapter(Class<T> entityClass) {
+    Cache<?, T> cache = entityToCacheMapper.getCache(entityClass);
+    if (cache == null) {
+      throw new IllegalArgumentException("No cache mapped to entity class: " + entityClass);
+    }
+    SearchManager searchManager = Search.getSearchManager(cache);
+    return new InfinispanQueryAdapter<>(searchManager);
   }
 
   private class InfinispanQueryAdapter<T> extends AbstractQueryAdapter<T> {
+    private final SearchManager searchManager;
     private CacheQuery<T> cacheQuery;
+
+    public InfinispanQueryAdapter(SearchManager searchManager) {
+      this.searchManager = searchManager;
+    }
 
     @Override
     protected long size() {

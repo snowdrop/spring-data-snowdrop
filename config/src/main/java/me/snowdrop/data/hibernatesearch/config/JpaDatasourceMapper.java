@@ -51,7 +51,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
     this.emf = emf;
   }
 
-  public <T> QueryAdapter<T> createQueryAdapter() {
+  public <T> QueryAdapter<T> createQueryAdapter(Class<T> entityClass) {
     return new OrmQueryAdapter<>();
   }
 

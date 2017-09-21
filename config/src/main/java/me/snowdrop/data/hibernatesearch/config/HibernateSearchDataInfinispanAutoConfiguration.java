@@ -18,6 +18,8 @@ package me.snowdrop.data.hibernatesearch.config;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.infinispan.Cache;
+import org.infinispan.manager.EmbeddedCacheManager;
 import org.infinispan.query.CacheQuery;
 import org.infinispan.query.SearchManager;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -41,11 +43,22 @@ import org.springframework.context.annotation.Configuration;
 @AutoConfigureAfter({CacheAutoConfiguration.class})
 public class HibernateSearchDataInfinispanAutoConfiguration {
 
+  @Bean
+  @ConditionalOnMissingBean(EntityToCacheMapper.class)
+  @ConditionalOnBean(EmbeddedCacheManager.class)
+  public EntityToCacheMapper createDefaultEntityToCacheMapper(final EmbeddedCacheManager cacheManager) {
+    return new EntityToCacheMapper() {
+      public <T> Cache<?, T> getCache(Class<T> entityClass) {
+        return cacheManager.getCache(); // always return default cache
+      }
+    };
+  }
+
   @Bean(name = "datasourceMapper")
   @ConditionalOnMissingBean(DatasourceMapper.class)
-  @ConditionalOnBean(SearchManager.class)
-  public DatasourceMapper createInfinispanDatasourceMapper(SearchManager searchManager) {
-    return new InfinispanDatasourceMapper(searchManager);
+  @ConditionalOnBean(EntityToCacheMapper.class)
+  public DatasourceMapper createInfinispanDatasourceMapper(EntityToCacheMapper entityToCacheMapper) {
+    return new InfinispanDatasourceMapper(entityToCacheMapper);
   }
 
 }

@@ -44,7 +44,7 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
   }
 
   private <T> List<T> findAllInternal(Query<T> query) {
-    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    QueryAdapter<T> queryAdapter = createQueryAdapter(query);
     return queryAdapter.list(query);
   }
 
@@ -56,19 +56,23 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
     return mappingContext;
   }
 
+  private <T> QueryAdapter<T> createQueryAdapter(Query<T> query) {
+    return datasourceMapper.createQueryAdapter(query.getEntityClass());
+  }
+
   private <T> long total(Query<T> query) {
     return count(new BaseQuery<>(query.getEntityClass()));
   }
 
   @Override
   public <T> long count(Query<T> countQuery) {
-    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    QueryAdapter<T> queryAdapter = createQueryAdapter(countQuery);
     return queryAdapter.size(countQuery);
   }
 
   @Override
   public <T> T findSingle(Query<T> query) {
-    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    QueryAdapter<T> queryAdapter = createQueryAdapter(query);
     return queryAdapter.single(query);
   }
 
@@ -102,7 +106,7 @@ public class HibernateSearchTemplate implements HibernateSearchOperations {
 
   @Override
   public <T> Stream<T> stream(Query<T> query) {
-    QueryAdapter<T> queryAdapter = datasourceMapper.createQueryAdapter();
+    QueryAdapter<T> queryAdapter = createQueryAdapter(query);
     return queryAdapter.stream(query);
   }
 }

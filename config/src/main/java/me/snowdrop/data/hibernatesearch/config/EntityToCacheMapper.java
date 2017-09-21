@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.spi;
+package me.snowdrop.data.hibernatesearch.config;
+
+import org.infinispan.Cache;
 
 /**
+ * We need to know how to map entity classes to their caches.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface DatasourceMapper {
-  <T> QueryAdapter<T> createQueryAdapter(Class<T> entityClass);
+public interface EntityToCacheMapper {
+  /**
+   * Map entity class to its cache.
+   *
+   * @param entityClass the entity class
+   * @return cache which holds entity class's (indexed) data
+   */
+  <T> Cache<?, T> getCache(Class<T> entityClass);
 }
