@@ -25,7 +25,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.EntityInfo;
 import org.hibernate.search.query.engine.spi.HSQuery;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -45,18 +44,6 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
       list.add(get(entityClass, ei.getId()));
     }
     return list;
-  }
-
-  protected T single() {
-    List<T> list = list();
-    switch (list.size()) {
-      case 0:
-        return null;
-      case 1:
-        return list.get(0);
-      default:
-        throw new IncorrectResultSizeDataAccessException(String.format("Found %s results, expected 1.", list.size()), 1);
-    }
   }
 
   protected Stream<T> stream() {

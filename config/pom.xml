@@ -65,6 +65,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-query</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>me.snowdrop.data</groupId>
       <artifactId>spring-data-hibernate-search</artifactId>
       <type>test-jar</type>

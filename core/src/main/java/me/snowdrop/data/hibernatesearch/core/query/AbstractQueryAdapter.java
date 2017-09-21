@@ -16,6 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,6 +30,7 @@ import org.apache.lucene.search.Sort;
 import org.hibernate.search.spi.IndexedTypeIdentifier;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.StreamUtils;
 
@@ -53,14 +55,28 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   protected abstract long size();
 
-  protected abstract T single();
-
   protected abstract List<T> list();
 
   protected abstract Stream<T> stream();
 
-  protected Stream<T> toStream(Iterable<T> iterator) {
-    return StreamUtils.createStreamFromIterator(iterator.iterator());
+  protected T single() {
+    List<T> list = list();
+    switch (list.size()) {
+      case 0:
+        return null;
+      case 1:
+        return list.get(0);
+      default:
+        throw new IncorrectResultSizeDataAccessException(String.format("Found %s results, expected 1.", list.size()), 1);
+    }
+  }
+
+  protected Stream<T> toStream(Iterable<T> iterable) {
+    return toStream(iterable.iterator());
+  }
+
+  protected Stream<T> toStream(Iterator<T> iterator) {
+    return StreamUtils.createStreamFromIterator(iterator);
   }
 
   public long size(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {

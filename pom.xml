@@ -42,6 +42,7 @@
     <hibernate>5.2.11.Final</hibernate>
     <lucene>5.5.4</lucene>
     <springboot>1.5.7.RELEASE</springboot>
+    <infinispan>9.1.1.Final</infinispan>
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
@@ -124,6 +125,12 @@
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-queryparser</artifactId>
         <version>${lucene}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-query</artifactId>
+        <version>${infinispan}</version>
       </dependency>
 
       <dependency>

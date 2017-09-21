@@ -16,39 +16,36 @@
 
 package me.snowdrop.data.hibernatesearch.config;
 
-import javax.persistence.EntityManagerFactory;
-
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import org.hibernate.search.jpa.Search;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.infinispan.query.CacheQuery;
+import org.infinispan.query.SearchManager;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Configuration
 @ConditionalOnClass({
-  EntityManagerFactory.class,
+  SearchManager.class,
+  CacheQuery.class,
   SearchIntegrator.class,
-  DatasourceMapper.class,
-  Search.class,
-  EntityManagerFactoryUtils.class
+  DatasourceMapper.class
 })
-@AutoConfigureAfter({HibernateJpaAutoConfiguration.class})
-public class HibernateSearchDataAutoConfiguration {
+@AutoConfigureAfter({CacheAutoConfiguration.class})
+public class HibernateSearchDataInfinispanAutoConfiguration {
 
   @Bean(name = "datasourceMapper")
   @ConditionalOnMissingBean(DatasourceMapper.class)
-  @ConditionalOnBean(EntityManagerFactory.class)
-  public DatasourceMapper createDatasourceMapper(EntityManagerFactory emf) {
-    return new JpaDatasourceMapper(emf);
+  @ConditionalOnBean(SearchManager.class)
+  public DatasourceMapper createInfinispanDatasourceMapper(SearchManager searchManager) {
+    return new InfinispanDatasourceMapper(searchManager);
   }
 
 }

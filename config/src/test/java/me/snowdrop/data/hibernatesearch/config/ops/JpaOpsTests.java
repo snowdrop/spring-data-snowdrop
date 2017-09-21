@@ -16,6 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.config.ops;
 
+import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataInfinispanAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.ops.OpsDefaultBase;
 import me.snowdrop.data.hibernatesearch.ops.OpsRepository;
@@ -30,7 +31,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest(classes = JpaConfiguration.class)
 @RunWith(SpringRunner.class)
-@EnableAutoConfiguration
+@EnableAutoConfiguration(exclude = HibernateSearchDataInfinispanAutoConfiguration.class)
 @EnableHibernateSearchRepositories(basePackageClasses = OpsRepository.class)
 public class JpaOpsTests extends OpsDefaultBase {
 }

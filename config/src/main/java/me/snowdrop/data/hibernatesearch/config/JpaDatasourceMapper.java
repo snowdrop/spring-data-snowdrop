@@ -125,9 +125,9 @@ public class JpaDatasourceMapper implements DatasourceMapper {
     }
 
     protected Stream<T> stream() {
-      Stream stream = fullTextQuery.stream();
       //noinspection unchecked
-      return (Stream<T>) stream.onClose(this::close);
+      Stream<T> stream = fullTextQuery.stream();
+      return stream.onClose(this::close);
     }
   }
 }

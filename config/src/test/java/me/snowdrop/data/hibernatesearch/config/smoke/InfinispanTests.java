@@ -17,45 +17,60 @@
 package me.snowdrop.data.hibernatesearch.config.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataInfinispanAutoConfiguration;
-import me.snowdrop.data.hibernatesearch.config.JpaConfiguration;
+import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataJpaAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.InfinispanConfiguration;
 import me.snowdrop.data.hibernatesearch.config.smoke.hibernatesearch.FruitHibernateSearchRepository;
-import me.snowdrop.data.hibernatesearch.config.smoke.jpa.FruitRepository;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
+import org.infinispan.Cache;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@SpringBootTest(classes = JpaConfiguration.class, properties = "debug=false")
+@SpringBootTest(classes = InfinispanConfiguration.class, properties = "debug=false")
 @RunWith(SpringRunner.class)
-@EnableAutoConfiguration(exclude = HibernateSearchDataInfinispanAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {HibernateSearchDataJpaAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class})
 @EnableHibernateSearchRepositories(basePackageClasses = FruitHibernateSearchRepository.class)
-@EnableJpaRepositories(basePackageClasses = FruitRepository.class)
-public class JpaTests {
+public class InfinispanTests {
   @Autowired
   FruitHibernateSearchRepository hsRepository;
 
   @Autowired
-  FruitRepository jpaRepository;
+  Cache cache;
+
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    Fruit fruit = new Fruit(1L, "Cherry");
+    cache.put(fruit.getId(), fruit);
+    fruit = new Fruit(2L, "Apple");
+    cache.put(fruit.getId(), fruit);
+    fruit = new Fruit(3L, "Banana");
+    cache.put(fruit.getId(), fruit);
+  }
+
+  @After
+  public void tearDown() {
+    cache.clear();
+  }
 
   @Test
   public void testDefault() {
     Assert.assertNotNull(hsRepository);
-    Assert.assertNotNull(jpaRepository);
 
     Assert.assertEquals(3, hsRepository.count());
-    Assert.assertEquals(3, jpaRepository.count());
 
     Assert.assertEquals(3, TestUtils.size(hsRepository.findAll()));
-    Assert.assertEquals(3, TestUtils.size(jpaRepository.findAll()));
 
     Fruit apple = hsRepository.findByName("Apple");
     Assert.assertNotNull(apple);

@@ -39,6 +39,14 @@ public class Fruit {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Long id;
 
+  public Fruit() {
+  }
+
+  public Fruit(Long id, String name) {
+    this.id = id;
+    this.name = name;
+  }
+
   @Field
   String name;
 
