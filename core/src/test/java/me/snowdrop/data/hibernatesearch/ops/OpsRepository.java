@@ -62,7 +62,7 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   Stream<SimpleEntity> findByColor(String color);
 
-  Optional<SimpleEntity> findByNumber(int number);
+  Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
 
   //List<SimpleEntity> findByAddressZipcode(int zipcode);
 

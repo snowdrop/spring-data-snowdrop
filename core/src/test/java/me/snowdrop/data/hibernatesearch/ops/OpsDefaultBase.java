@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.PageRequest;
 
 /**
@@ -122,12 +123,19 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testOptional() {
-    Optional<SimpleEntity> optional = repository.findByNumber(10);
+    Optional<SimpleEntity> optional = repository.findByNumberBetweenOrderByHero(9, 11);
     Assert.assertTrue(optional.isPresent());
     Assert.assertEquals(new Long(4), optional.get().getId());
 
-    optional = repository.findByNumber(1234);
+    optional = repository.findByNumberBetweenOrderByHero(1234, 2000);
     Assert.assertFalse(optional.isPresent());
+
+    try {
+      repository.findByNumberBetweenOrderByHero(-5, 15);
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertEquals(IncorrectResultSizeDataAccessException.class, e.getClass());
+    }
   }
 
   @Test
