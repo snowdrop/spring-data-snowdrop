@@ -19,7 +19,7 @@ package me.snowdrop.data.hibernatesearch.config;
 import javax.persistence.EntityManagerFactory;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import org.hibernate.search.jpa.Search;
+import org.hibernate.search.Search;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
