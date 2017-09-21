@@ -22,4 +22,5 @@
                  version="2.0">
   <entity class="me.snowdrop.data.hibernatesearch.config.smoke.Fruit"/>
   <entity class="me.snowdrop.data.hibernatesearch.ops.SimpleEntity"/>
+  <entity class="me.snowdrop.data.hibernatesearch.ops.ContainedEntity"/>
 </entity-mappings>
