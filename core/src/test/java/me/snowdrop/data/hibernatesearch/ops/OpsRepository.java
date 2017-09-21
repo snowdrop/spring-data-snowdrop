@@ -104,13 +104,13 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByColorOrderByNameDesc(String color);
 
-  List<SimpleEntity> findByIdentity_Name(String name);
+//  List<SimpleEntity> findByIdentity_Name(String name);
 
-  List<SimpleEntity> findByBridge_Custom_Name(String name);
+//  List<SimpleEntity> findByBridge_Custom_Name(String name);
 
-  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
+//  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
 
-  List<SimpleEntity> findByContainedList_SomePrefixContainedName(String containedName);
+//  List<SimpleEntity> findByContainedList_SomePrefixContainedName(String containedName);
 
-  List<SimpleEntity> findByContainedList_SomePrefixNumberAsStringBetween(int min, int max);
+//  List<SimpleEntity> findByContainedList_SomePrefixNumberAsStringBetween(int min, int max);
 }
