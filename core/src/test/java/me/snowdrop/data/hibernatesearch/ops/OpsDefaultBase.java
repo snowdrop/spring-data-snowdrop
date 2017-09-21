@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.hibernatesearch.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -119,6 +120,32 @@ public class OpsDefaultBase extends OpsTestsBase {
   @Test
   public void testNestedProps() {
     //assertSize(repository.findByAddressZipcode(1360), 2);
+  }
+
+  @Test
+  public void testNonDefaultCompositeFieldName() {
+    assertSize(repository.findByIdentity_Name("ann"), 1);
+  }
+
+  @Test
+  public void testBridgeDefinedField() {
+    assertSize(repository.findByBridge_Custom_Name("ann"), 1);
+  }
+
+  @Test
+  public void testBridgeDefinedDynamicField() {
+    assertSize(repository.findByBridge_Custom_DynamicName("ann"), 1);
+  }
+
+  @Test
+  public void testNestedComplexFieldName() {
+    assertSize(repository.findByContainedList_SomePrefixContainedName("Frank"), 1);
+  }
+
+  @Test
+  public void testMisleadingFieldType() {
+    // Should match "42", since the numbers are indexed as strings
+    assertSize(repository.findByContainedList_SomePrefixNumberAsStringBetween(4, 5), 1);
   }
 
   @Test
