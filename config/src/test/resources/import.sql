@@ -10,3 +10,18 @@ insert into simple (name, text, number, buul, hero, color, latitude, longitude) 
     ('doug', 'Doug likes to sleeps.', 10, false, 'Batman', 'black', -10.0, -10.0),
     ('eva', 'Eva is running in circles.', 20, false, 'Ironman', 'gold', -20.0, 5.0),
     ('fanny', 'Fanny is reading a good book.', 30, false, 'Aquaman', 'blue', 5.0, -20.0);
+
+insert into contained (name, number) values
+    ('Frank Dalton', 12),
+    ('Emmett Dalton', 42),
+    ('Oliver Twist', 55);
+
+insert into simple_contained (simple_entity_id, contained_id)
+    (
+    select s.id, c.id
+    from simple s, contained c
+    where
+        s.name = 'ann' and c.name = 'Frank Dalton'
+        or s.name = 'ann' and c.name = 'Emmett Dalton'
+        or s.name = 'eva' and c.name = 'Oliver Twist'
+    );

@@ -16,10 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.ops;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,13 +25,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.snowdrop.data.hibernatesearch.AbstractEntity;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.SortableField;
-import org.hibernate.search.annotations.Spatial;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.*;
 import org.springframework.data.annotation.Id;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -56,6 +50,8 @@ public class SimpleEntity implements AbstractEntity {
   private Long id;
   @Field(store = Store.NO)
   @SortableField
+  @Field(name = "identity.name")
+  @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
   private String name;
   @Field(store = Store.NO)
   private String text;
@@ -72,4 +68,7 @@ public class SimpleEntity implements AbstractEntity {
   @Spatial
   @Embedded
   private Location location;
+  @IndexedEmbedded(prefix = "containedList.somePrefix_")
+  @OneToMany
+  private List<ContainedEntity> contained;
 }
