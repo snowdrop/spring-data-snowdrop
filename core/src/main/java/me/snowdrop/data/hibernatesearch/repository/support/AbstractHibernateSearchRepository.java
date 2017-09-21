@@ -29,10 +29,8 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractHibernateSearchRepository<T, ID extends Serializable> implements HibernateSearchRepository<T, ID> {
-
-  private HibernateSearchOperations hibernateSearchOperations;
-
-  protected Class<T> entityClass;
+  protected final HibernateSearchOperations hibernateSearchOperations;
+  private final Class<T> entityClass;
 
   public AbstractHibernateSearchRepository(HibernateSearchOperations hibernateSearchOperations, HibernateSearchEntityInformation<T, ID> entityInformation) {
     this.hibernateSearchOperations = hibernateSearchOperations;
