@@ -19,10 +19,10 @@ package me.snowdrop.data.hibernatesearch.core.query;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class SimpleField implements Field {
+public class SimpleProperty implements Property {
   private final String name;
 
-  public SimpleField(String name) {
+  public SimpleProperty(String name) {
     this.name = name;
   }
 

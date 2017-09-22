@@ -44,7 +44,7 @@ public class Criteria {
   @Override
   public String toString() {
     return "Criteria{" +
-      "field=" + field.getName() +
+      "property=" + property.getName() +
       ", boost=" + boost +
       ", negating=" + negating +
       ", queryCriteria=" + StringUtils.join(queryCriteria, '|') +
@@ -57,7 +57,7 @@ public class Criteria {
   private static final String OR_OPERATOR = " OR ";
   private static final String AND_OPERATOR = " AND ";
 
-  private Field field;
+  private Property property;
   private float boost = Float.NaN;
   private boolean negating = false;
 
@@ -69,78 +69,78 @@ public class Criteria {
   }
 
   /**
-   * Creates a new Criteria with provided field name
+   * Creates a new Criteria with provided property name
    *
-   * @param fieldname
+   * @param propertyName the property name
    */
-  public Criteria(String fieldname) {
-    this(new SimpleField(fieldname));
+  public Criteria(String propertyName) {
+    this(new SimpleProperty(propertyName));
   }
 
   /**
    * Creates a new Criteria for the given field
    *
-   * @param field
+   * @param property the property
    */
-  public Criteria(Field field) {
-    Assert.notNull(field, "Field for criteria must not be null");
-    Assert.hasText(field.getName(), "Field.name for criteria must not be null/empty");
+  public Criteria(Property property) {
+    Assert.notNull(property, "Field for criteria must not be null");
+    Assert.hasText(property.getName(), "Field.name for criteria must not be null/empty");
     this.criteriaChain.add(this);
-    this.field = field;
+    this.property = property;
   }
 
   protected Criteria(List<Criteria> criteriaChain, String fieldname) {
-    this(criteriaChain, new SimpleField(fieldname));
+    this(criteriaChain, new SimpleProperty(fieldname));
   }
 
-  protected Criteria(List<Criteria> criteriaChain, Field field) {
+  protected Criteria(List<Criteria> criteriaChain, Property property) {
     Assert.notNull(criteriaChain, "CriteriaChain must not be null");
-    Assert.notNull(field, "Field for criteria must not be null");
-    Assert.hasText(field.getName(), "Field.name for criteria must not be null/empty");
+    Assert.notNull(property, "Field for criteria must not be null");
+    Assert.hasText(property.getName(), "Field.name for criteria must not be null/empty");
 
     this.criteriaChain.addAll(criteriaChain);
     this.criteriaChain.add(this);
-    this.field = field;
+    this.property = property;
   }
 
   /**
-   * Static factory method to create a new Criteria for field with given name
+   * Static factory method to create a new Criteria for propertyName with given name
    *
-   * @param field
+   * @param propertyName the propertyName
    * @return new criteria instance
    */
-  public static Criteria where(String field) {
-    return where(new SimpleField(field));
+  public static Criteria where(String propertyName) {
+    return where(new SimpleProperty(propertyName));
   }
 
   /**
    * Static factory method to create a new Criteria for provided field
    *
-   * @param field
+   * @param property the prooperty
    * @return new criteria instance
    */
-  public static Criteria where(Field field) {
-    return new Criteria(field);
+  public static Criteria where(Property property) {
+    return new Criteria(property);
   }
 
   /**
    * Chain using {@code AND}
    *
-   * @param field
+   * @param property
    * @return new criteria instance
    */
-  public Criteria and(Field field) {
-    return new Criteria(this.criteriaChain, field);
+  public Criteria and(Property property) {
+    return new Criteria(this.criteriaChain, property);
   }
 
   /**
    * Chain using {@code AND}
    *
-   * @param fieldName
+   * @param propertyName the property name
    * @return new criteria instance
    */
-  public Criteria and(String fieldName) {
-    return new Criteria(this.criteriaChain, fieldName);
+  public Criteria and(String propertyName) {
+    return new Criteria(this.criteriaChain, propertyName);
   }
 
   /**
@@ -168,11 +168,11 @@ public class Criteria {
   /**
    * Chain using {@code OR}
    *
-   * @param field
+   * @param property
    * @return new criteria instance
    */
-  public Criteria or(Field field) {
-    return new OrCriteria(this.criteriaChain, field);
+  public Criteria or(Property property) {
+    return new OrCriteria(this.criteriaChain, property);
   }
 
   /**
@@ -184,7 +184,7 @@ public class Criteria {
   public Criteria or(Criteria criteria) {
     Assert.notNull(criteria, "Cannot chain 'null' criteria.");
 
-    Criteria orConnectedCritiera = new OrCriteria(this.criteriaChain, criteria.getField());
+    Criteria orConnectedCritiera = new OrCriteria(this.criteriaChain, criteria.getProperty());
     orConnectedCritiera.queryCriteria.addAll(criteria.queryCriteria);
     return orConnectedCritiera;
   }
@@ -196,7 +196,7 @@ public class Criteria {
    * @return new criteria instance
    */
   public Criteria or(String fieldName) {
-    return or(new SimpleField(fieldName));
+    return or(new SimpleProperty(fieldName));
   }
 
   /**
@@ -463,12 +463,12 @@ public class Criteria {
   }
 
   /**
-   * Field targeted by this Criteria
+   * Property targeted by this Criteria
    *
    * @return new criteria instance
    */
-  public Field getField() {
-    return this.field;
+  public Property getProperty() {
+    return this.property;
   }
 
   public Set<CriteriaEntry> getQueryCriteriaEntries() {
@@ -510,12 +510,12 @@ public class Criteria {
       super();
     }
 
-    public OrCriteria(Field field) {
-      super(field);
+    public OrCriteria(Property property) {
+      super(property);
     }
 
-    public OrCriteria(List<Criteria> criteriaChain, Field field) {
-      super(criteriaChain, field);
+    public OrCriteria(List<Criteria> criteriaChain, Property property) {
+      super(criteriaChain, property);
     }
 
     public OrCriteria(List<Criteria> criteriaChain, String fieldname) {

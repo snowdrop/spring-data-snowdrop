@@ -16,7 +16,13 @@
 
 package me.snowdrop.data.hibernatesearch.ops;
 
-import javax.persistence.*;
+import java.util.List;
+
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +31,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.snowdrop.data.hibernatesearch.AbstractEntity;
-import org.hibernate.search.annotations.*;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Spatial;
+import org.hibernate.search.annotations.Store;
 import org.springframework.data.annotation.Id;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -48,16 +58,16 @@ public class SimpleEntity implements AbstractEntity {
   @javax.persistence.Id
   @GeneratedValue
   private Long id;
-  @Field(store = Store.NO)
-  @SortableField
+  //@Field(store = Store.NO)
+  @SortableField(forField = "identity.name")
   @Field(name = "identity.name")
-  @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
+  //@Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
   private String name;
   @Field(store = Store.NO)
   private String text;
   @Field(store = Store.NO)
   private int number;
-  @Field(store = Store.NO)
+  @Field(name = "boool", store = Store.NO)
   private boolean buul;
   @Field(store = Store.NO)
   @SortableField

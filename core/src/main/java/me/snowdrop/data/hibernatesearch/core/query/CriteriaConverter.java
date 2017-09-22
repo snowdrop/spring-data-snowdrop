@@ -21,9 +21,14 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
+import org.hibernate.search.metadata.FieldDescriptor;
+import org.hibernate.search.metadata.IndexedTypeDescriptor;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metric;
 import org.springframework.data.geo.Metrics;
@@ -35,10 +40,60 @@ import org.springframework.data.geo.Metrics;
  */
 public class CriteriaConverter {
 
-  private LuceneQueryBuilder queryBuilder;
+  private final IndexedTypeDescriptor indexedTypeDescriptor;
+  private final LuceneQueryBuilder queryBuilder;
 
-  public CriteriaConverter(LuceneQueryBuilder queryBuilder) {
+  public CriteriaConverter(IndexedTypeDescriptor indexedTypeDescriptor, LuceneQueryBuilder queryBuilder) {
+    this.indexedTypeDescriptor = indexedTypeDescriptor;
     this.queryBuilder = queryBuilder;
+  }
+
+  private FieldDescriptor getFieldDescriptor(Property property) {
+    Set<FieldDescriptor> fieldsForProperty = indexedTypeDescriptor.getFieldsForProperty(property.getName());
+    if (fieldsForProperty.size() != 1) {
+      // TODO - we could pass in some hint from Query in case of multiple fields, on which field to use
+      throw new IllegalArgumentException("Invalid fields size: " + fieldsForProperty);
+    }
+    return fieldsForProperty.iterator().next();
+  }
+
+  private String getFieldName(Property property) {
+    FieldDescriptor fieldDescriptor = getFieldDescriptor(property);
+    return fieldDescriptor.getName();
+  }
+
+  private SortField.Type getFieldType(Property property) {
+    FieldDescriptor fieldDescriptor = getFieldDescriptor(property);
+    switch (fieldDescriptor.getType()) {
+      case NUMERIC:
+        return SortField.Type.DOUBLE; // TODO -- ?
+      default:
+        return SortField.Type.STRING;
+    }
+  }
+
+  private SortField[] toArray(List<SortField> sortFields) {
+    return sortFields.toArray(new SortField[sortFields.size()]);
+  }
+
+  private List<SortField> convertToSortFields(org.springframework.data.domain.Sort sort) {
+    List<SortField> sortFields = new ArrayList<>();
+    for (org.springframework.data.domain.Sort.Order order : sort) {
+      sortFields.add(convertToSortField(order));
+    }
+    return sortFields;
+  }
+
+  private SortField convertToSortField(org.springframework.data.domain.Sort.Order order) {
+    boolean reverse = (order.getDirection() == org.springframework.data.domain.Sort.Direction.DESC);
+    Property property = new SimpleProperty(order.getProperty());
+    String fieldName = getFieldName(property);
+    SortField.Type type = getFieldType(property);
+    return new SortField(fieldName, type, reverse);
+  }
+
+  public Sort convert(org.springframework.data.domain.Sort sort) {
+    return new Sort(toArray(convertToSortFields(sort)));
   }
 
   public Query convert(Criteria criteria) {
@@ -102,7 +157,7 @@ public class CriteriaConverter {
   public Query processCriteriaEntries(Criteria criteria) {
     List<Query> queries = new ArrayList<>();
     for (Criteria.CriteriaEntry criteriaEntry : criteria.getQueryCriteriaEntries()) {
-      Query subQuery = processCriteriaEntry(criteria.getField().getName(), criteriaEntry);
+      Query subQuery = processCriteriaEntry(criteria.getProperty(), criteriaEntry);
       if (!Float.isNaN(criteria.getBoost())) {
         subQuery = new BoostQuery(subQuery, criteria.getBoost());
       }
@@ -111,8 +166,10 @@ public class CriteriaConverter {
     return queryBuilder.all(queries);
   }
 
-  public Query processCriteriaEntry(String fieldName, Criteria.CriteriaEntry criteriaEntry) {
+  public Query processCriteriaEntry(Property property, Criteria.CriteriaEntry criteriaEntry) {
     Object value = criteriaEntry.getValue();
+
+    String fieldName = getFieldName(property);
 
     switch (criteriaEntry.getKey()) {
       case EQUALS:

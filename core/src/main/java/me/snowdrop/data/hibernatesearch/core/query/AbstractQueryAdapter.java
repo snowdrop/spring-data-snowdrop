@@ -42,15 +42,18 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   private LuceneQueryBuilder queryBuilder;
   private CriteriaConverter criteriaConverter;
-  private OrderConverter orderConverter = OrderConverter.INSTANCE;
 
   protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     this.entityClass = query.getEntityClass();
     this.queryBuilder = new LuceneQueryBuilder(getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get());
-    this.criteriaConverter = new CriteriaConverter(queryBuilder);
+    this.criteriaConverter = new CriteriaConverter(getSearchIntegrator().getIndexedTypeDescriptor(getIndexedTypeIdentifier()), queryBuilder);
 
     BaseQuery<T> baseQuery = (BaseQuery<T>) query;
     baseQuery.apply(this);
+  }
+
+  protected IndexedTypeIdentifier getIndexedTypeIdentifier() {
+    return PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
   }
 
   protected abstract long size();
@@ -120,7 +123,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
   void string(StringQuery query) {
     try {
       String[] fields = query.getFields();
-      IndexedTypeIdentifier iti = PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
+      IndexedTypeIdentifier iti = getIndexedTypeIdentifier();
       Analyzer analyzer = getSearchIntegrator().getAnalyzer(iti);
       QueryParser parser = new MultiFieldQueryParser(fields, analyzer);
       org.apache.lucene.search.Query luceneQuery = parser.parse(query.getQuery());
@@ -154,7 +157,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   private void addSortToQuery(org.springframework.data.domain.Sort sort) {
     if (sort != null) {
-      Sort hsSort = orderConverter.convert(sort);
+      Sort hsSort = criteriaConverter.convert(sort);
       setSort(hsSort);
     }
   }
