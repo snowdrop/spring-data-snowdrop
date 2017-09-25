@@ -138,6 +138,16 @@ public class OpsDefaultBase extends OpsTestsBase {
   }
 
   @Test
+  public void testClassBridgeDefinedField() {
+    assertSize(repository.findByClassBridge_Custom_Name("ann"), 1);
+  }
+
+  @Test
+  public void testClassBridgeDefinedDynamicField() {
+    assertSize(repository.findByClassBridge_Custom_DynamicName("ann"), 1);
+  }
+
+  @Test
   public void testNestedComplexFieldName() {
 //    assertSize(repository.findByContainedList_SomePrefixContainedName("Frank"), 1);
   }

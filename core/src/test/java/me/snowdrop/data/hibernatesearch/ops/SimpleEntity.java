@@ -31,13 +31,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import me.snowdrop.data.hibernatesearch.AbstractEntity;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.SortableField;
-import org.hibernate.search.annotations.Spatial;
-import org.hibernate.search.annotations.Store;
+import org.hibernate.search.annotations.*;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -52,6 +46,7 @@ import org.springframework.data.annotation.Id;
 @Indexed
 @Entity
 @Table(name = "simple")
+@ClassBridge(name = "classBridge", impl = MyCustomClassBridge.class)
 public class SimpleEntity implements AbstractEntity {
   @Id
   @DocumentId

@@ -110,6 +110,10 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
 //  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
 
+  List<SimpleEntity> findByClassBridge_Custom_Name(String name);
+
+  List<SimpleEntity> findByClassBridge_Custom_DynamicName(String name);
+
 //  List<SimpleEntity> findByContainedList_SomePrefixContainedName(String containedName);
 
 //  List<SimpleEntity> findByContainedList_SomePrefixNumberAsStringBetween(int min, int max);
