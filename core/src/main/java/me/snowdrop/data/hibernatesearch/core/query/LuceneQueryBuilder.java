@@ -58,11 +58,17 @@ public class LuceneQueryBuilder {
       } else {
         currentContext = currentContext.andByField(fieldName);
       }
+      org.springframework.data.domain.Sort.NullHandling nullHandling = order.getNullHandling();
+      if (nullHandling == org.springframework.data.domain.Sort.NullHandling.NULLS_FIRST) {
+        currentContext = currentContext.onMissingValue().sortFirst();
+      } else if (nullHandling == org.springframework.data.domain.Sort.NullHandling.NULLS_LAST) {
+        currentContext = currentContext.onMissingValue().sortLast();
+      }
       boolean desc = (order.getDirection() == org.springframework.data.domain.Sort.Direction.DESC);
       if (desc) {
-        currentContext.desc();
+        currentContext = currentContext.desc();
       } else {
-        currentContext.asc();
+        currentContext = currentContext.asc();
       }
     }
     return (currentContext != null) ? currentContext.createSort() : null;

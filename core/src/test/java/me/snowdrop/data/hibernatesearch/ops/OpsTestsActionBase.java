@@ -76,6 +76,13 @@ public abstract class OpsTestsActionBase implements TestsAction {
       Collections.emptyList()
     );
     entities.add(entity);
+    entity = new SimpleEntity(
+      7L, "gwen", "Gwen is cooking.", 1, false,
+      null, "grey", new Location(175.0, -120.0),
+      new Address(4260, "Bled", "Slovenia"),
+      Collections.emptyList()
+    );
+    entities.add(entity);
 
     setUp(entities);
   }

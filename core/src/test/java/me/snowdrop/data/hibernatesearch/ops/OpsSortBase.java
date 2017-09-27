@@ -28,7 +28,7 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindAllSort() {
-    assertIds(repository.findAll(new Sort("color")), 4, 6, 5, 1, 2, 3);
+    assertIds(repository.findAll(new Sort("color")), 4, 6, 5, 7, 1, 2, 3);
   }
 
   @Test
@@ -38,12 +38,12 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindByNameNot() {
-    assertIds(repository.findByNameNot("doug", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 5, 3, 6);
+    assertIds(repository.findByNameNot("doug", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 5, 3, 6, 7);
   }
 
   @Test
   public void testFindByNumberBetween() {
-    assertIds(repository.findByNumberBetween(-5, 11, new Sort("hero")), 4, 3);
+    assertIds(repository.findByNumberBetween(-5, 11, new Sort(new Sort.Order("hero").nullsFirst())), 7, 4, 3);
   }
 
   @Test
@@ -53,7 +53,7 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindByNumberBefore() {
-    assertIds(repository.findByNumberBefore(10, new Sort(new Sort.Order("color"), new Sort.Order(Sort.Direction.DESC, "hero"))), 4, 1, 2, 3);
+    assertIds(repository.findByNumberBefore(10, new Sort(new Sort.Order("color"), new Sort.Order(Sort.Direction.DESC, "hero"))), 4, 7, 1, 2, 3);
   }
 
   @Test
@@ -88,7 +88,7 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindByTextNotContaining() {
-    assertIds(repository.findByTextNotContaining("running", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 4, 6);
+    assertIds(repository.findByTextNotContaining("running", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 4, 6, 7);
   }
 
   @Test
@@ -98,7 +98,7 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindByNameNotIn() {
-    assertIds(repository.findByNameNotIn(Collections.singleton("carl"), new Sort("hero")), 6, 4, 5, 2, 1);
+    assertIds(repository.findByNameNotIn(Collections.singleton("carl"), new Sort(new Sort.Order("hero").nullsLast())), 6, 4, 5, 2, 1, 7);
   }
 
   @Test
@@ -108,7 +108,7 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindByBuulFalse() {
-    assertIds(repository.findByBuulFalse(new Sort("hero")), 6, 4, 5);
+    assertIds(repository.findByBuulFalse(new Sort("hero")), 7, 6, 4, 5);
   }
 
   @Test

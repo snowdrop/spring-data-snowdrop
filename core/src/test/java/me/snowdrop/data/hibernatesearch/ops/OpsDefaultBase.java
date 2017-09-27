@@ -32,7 +32,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testDefaults() {
-    assertSize(repository.findAll(), 6);
+    assertSize(repository.findAll(), 7);
     assertSize(repository.findAll(new PageRequest(1, 3)), 3);
   }
 
@@ -43,12 +43,12 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testFindByNameNot() {
-    assertSize(repository.findByNameNot("doug"), 5);
+    assertSize(repository.findByNameNot("doug"), 6);
   }
 
   @Test
   public void testFindByNumberBetween() {
-    assertSize(repository.findByNumberBetween(-5, 11), 2);
+    assertSize(repository.findByNumberBetween(-5, 11), 3);
   }
 
   @Test
@@ -58,7 +58,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testFindByNumberBefore() {
-    assertSize(repository.findByNumberBefore(10), 4);
+    assertSize(repository.findByNumberBefore(10), 5);
   }
 
   @Test
@@ -93,7 +93,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testFindByTextNotContaining() {
-    assertSize(repository.findByTextNotContaining("running"), 4);
+    assertSize(repository.findByTextNotContaining("running"), 5);
   }
 
   @Test
@@ -103,7 +103,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testFindByNameNotIn() {
-    assertSize(repository.findByNameNotIn(Collections.singleton("carl")), 5);
+    assertSize(repository.findByNameNotIn(Collections.singleton("carl")), 6);
   }
 
   @Test
@@ -113,7 +113,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testFindByBuulFalse() {
-    assertSize(repository.findByBuulFalse(), 3);
+    assertSize(repository.findByBuulFalse(), 4);
   }
 
   @Test
