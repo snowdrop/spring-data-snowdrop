@@ -27,6 +27,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.spi.IndexedTypeIdentifier;
 import org.hibernate.search.spi.SearchIntegrator;
 import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
@@ -40,13 +41,20 @@ import org.springframework.data.util.StreamUtils;
 public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
   protected Class<T> entityClass;
 
-  private LuceneQueryBuilder queryBuilder;
+  private LuceneQueryBuilder luceneQueryBuilder;
   private CriteriaConverter criteriaConverter;
 
   protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
     this.entityClass = query.getEntityClass();
-    this.queryBuilder = new LuceneQueryBuilder(getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get());
-    this.criteriaConverter = new CriteriaConverter(getSearchIntegrator().getIndexedTypeDescriptor(getIndexedTypeIdentifier()), queryBuilder);
+
+    EntityMetadataContext entityMetadataContext = new EntityMetadataContext(
+      getSearchIntegrator().getIndexBinding(getIndexedTypeIdentifier()),
+      getSearchIntegrator().getIndexedTypeDescriptor(getIndexedTypeIdentifier())
+    );
+    QueryBuilder queryBuilder = getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get();
+
+    this.luceneQueryBuilder = new LuceneQueryBuilder(entityMetadataContext, queryBuilder);
+    this.criteriaConverter = new CriteriaConverter(entityMetadataContext, this.luceneQueryBuilder);
 
     BaseQuery<T> baseQuery = (BaseQuery<T>) query;
     baseQuery.apply(this);
@@ -134,7 +142,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
   }
 
   void query(me.snowdrop.data.hibernatesearch.spi.Query query) {
-    fillQuery(query, queryBuilder.matchAll());
+    fillQuery(query, luceneQueryBuilder.matchAll());
   }
 
   private void fillQuery(me.snowdrop.data.hibernatesearch.spi.Query query, org.apache.lucene.search.Query luceneQuery) {
@@ -157,7 +165,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   private void addSortToQuery(org.springframework.data.domain.Sort sort) {
     if (sort != null) {
-      Sort hsSort = criteriaConverter.convert(sort);
+      Sort hsSort = luceneQueryBuilder.convert(sort);
       setSort(hsSort);
     }
   }

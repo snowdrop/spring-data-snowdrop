@@ -18,11 +18,14 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import java.io.Serializable;
 
+import javax.persistence.Embeddable;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.search.annotations.Field;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -32,10 +35,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Embeddable
 public class Address implements Serializable {
-  private String path;
-  private int number;
+  @Field
   private int zipcode;
+  @Field
   private String city;
+  @Field
   private String country;
 }

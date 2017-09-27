@@ -24,22 +24,48 @@ import org.apache.lucene.queryparser.flexible.core.util.StringUtils;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RegexpQuery;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.WildcardQuery;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.RangeMatchingContext;
 import org.hibernate.search.query.dsl.TermMatchingContext;
 import org.hibernate.search.query.dsl.Unit;
+import org.hibernate.search.query.dsl.sort.SortContext;
+import org.hibernate.search.query.dsl.sort.SortFieldContext;
 
 /**
  * @author <a href="mailto:mluksa@redhat.com">Marko Luksa</a>
+ * @author Ales Justin
  */
 public class LuceneQueryBuilder {
 
-  private QueryBuilder queryBuilder;
+  private final EntityMetadataContext entityMetadataContext;
+  private final QueryBuilder queryBuilder;
 
-  public LuceneQueryBuilder(QueryBuilder queryBuilder) {
+  public LuceneQueryBuilder(EntityMetadataContext entityMetadataContext, QueryBuilder queryBuilder) {
+    this.entityMetadataContext = entityMetadataContext;
     this.queryBuilder = queryBuilder;
+  }
+
+  public Sort convert(org.springframework.data.domain.Sort sort) {
+    SortContext context = queryBuilder.sort();
+    SortFieldContext currentContext = null;
+    for (org.springframework.data.domain.Sort.Order order : sort) {
+      String fieldName = entityMetadataContext.getFieldName(order.getProperty());
+      if (currentContext == null) {
+        currentContext = context.byField(fieldName);
+      } else {
+        currentContext = currentContext.andByField(fieldName);
+      }
+      boolean desc = (order.getDirection() == org.springframework.data.domain.Sort.Direction.DESC);
+      if (desc) {
+        currentContext.desc();
+      } else {
+        currentContext.asc();
+      }
+    }
+    return (currentContext != null) ? currentContext.createSort() : null;
   }
 
   public Query matchAll() {

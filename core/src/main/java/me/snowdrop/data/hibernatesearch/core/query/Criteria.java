@@ -415,10 +415,10 @@ public class Criteria {
   /**
    * Creates new CriteriaEntry for {@code location WITHIN distance}
    *
-   * @param latitude {@link org.springframework.data.geo.Point} latitude
+   * @param latitude  {@link org.springframework.data.geo.Point} latitude
    * @param longitude {@link org.springframework.data.geo.Point} longitude
-   * @param distance {@link org.springframework.data.geo.Distance} dostance
-   *                 .
+   * @param distance  {@link org.springframework.data.geo.Distance} distance
+   *
    * @return new criteria instance Criteria the chaind criteria with the new 'within' criteria included.
    */
   public Criteria within(Double latitude, Double longitude, Distance distance) {

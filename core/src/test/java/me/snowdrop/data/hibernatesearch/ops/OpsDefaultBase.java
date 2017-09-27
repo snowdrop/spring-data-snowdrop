@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -119,7 +118,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testNestedProps() {
-    //assertSize(repository.findByAddressZipcode(1360), 2);
+    assertSize(repository.findByAddressZipcode(1360), 2);
   }
 
   @Test

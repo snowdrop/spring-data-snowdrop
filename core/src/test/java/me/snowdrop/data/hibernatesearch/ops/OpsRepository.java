@@ -64,7 +64,7 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
 
-  //List<SimpleEntity> findByAddressZipcode(int zipcode);
+  List<SimpleEntity> findByAddressZipcode(int zipcode);
 
   List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
