@@ -33,6 +33,7 @@ import lombok.ToString;
 import me.snowdrop.data.hibernatesearch.AbstractEntity;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.SortableField;
@@ -58,14 +59,15 @@ public class SimpleEntity implements AbstractEntity {
   @javax.persistence.Id
   @GeneratedValue
   private Long id;
-  //@Field(store = Store.NO)
+  @Field(store = Store.NO)
   @SortableField(forField = "identity.name")
   @Field(name = "identity.name")
-  //@Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
+  @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
   private String name;
   @Field(store = Store.NO)
   private String text;
   @Field(store = Store.NO)
+  @Field(name = "var")
   private int number;
   @Field(name = "boool", store = Store.NO)
   private boolean buul;

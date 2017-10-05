@@ -16,6 +16,8 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
+import java.util.Map;
+
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,6 +29,7 @@ public class BaseQuery<T> implements Query<T> {
   private Class<T> entityClass;
   private Pageable pageable;
   private Sort sort;
+  private Map<String, String> queryHints;
 
   public BaseQuery(Class<T> entityClass) {
     this.entityClass = entityClass;
@@ -54,5 +57,13 @@ public class BaseQuery<T> implements Query<T> {
 
   public void setSort(Sort sort) {
     this.sort = sort;
+  }
+
+  public Map<String, String> getQueryHints() {
+    return queryHints;
+  }
+
+  public void setQueryHints(Map<String, String> queryHints) {
+    this.queryHints = queryHints;
   }
 }

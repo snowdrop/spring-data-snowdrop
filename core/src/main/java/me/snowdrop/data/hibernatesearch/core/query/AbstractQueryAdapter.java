@@ -49,7 +49,7 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
     EntityMetadataContext entityMetadataContext = new EntityMetadataContext(
       getSearchIntegrator().getIndexBinding(getIndexedTypeIdentifier()),
-      getSearchIntegrator().getIndexedTypeDescriptor(getIndexedTypeIdentifier())
+      query.getQueryHints()
     );
     QueryBuilder queryBuilder = getSearchIntegrator().buildQueryBuilder().forEntity(entityClass).get();
 

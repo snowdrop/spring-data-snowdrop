@@ -21,23 +21,21 @@ import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractHibernateSearchRepositoryQuery implements RepositoryQuery {
-  private final QueryMethod queryMethod;
+  private final HibernateSearchQueryMethod queryMethod;
   protected final HibernateSearchOperations hibernateSearchOperations;
 
-  public AbstractHibernateSearchRepositoryQuery(QueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
+  public AbstractHibernateSearchRepositoryQuery(HibernateSearchQueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
     this.queryMethod = queryMethod;
     this.hibernateSearchOperations = hibernateSearchOperations;
   }
 
-  @Override
-  public QueryMethod getQueryMethod() {
+  public HibernateSearchQueryMethod getQueryMethod() {
     return queryMethod;
   }
 

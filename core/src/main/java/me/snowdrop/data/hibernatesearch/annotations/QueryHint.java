@@ -14,24 +14,37 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.spi;
+package me.snowdrop.data.hibernatesearch.annotations;
 
-import java.util.Map;
-
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * Used when there are multiple fields on the same property.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Query<T> {
-  Class<T> getEntityClass();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Documented
+@Repeatable(QueryHints.class)
+public @interface QueryHint {
 
-  Pageable getPageable();
+  /**
+   * Property to map to.
+   *
+   * @return property
+   */
+  String property();
 
-  Sort getSort();
-
-  Map<String, String> getQueryHints();
+  /**
+   * Mapped field.
+   *
+   * @return mapped field
+   */
+  String field();
 }

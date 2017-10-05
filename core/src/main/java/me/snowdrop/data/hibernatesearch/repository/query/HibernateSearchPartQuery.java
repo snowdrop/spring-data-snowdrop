@@ -16,6 +16,12 @@
 
 package me.snowdrop.data.hibernatesearch.repository.query;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
+import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
@@ -24,7 +30,6 @@ import me.snowdrop.data.hibernatesearch.repository.query.parser.HibernateSearchQ
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
 
 /**
@@ -34,7 +39,7 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
   private final PartTree tree;
   private final MappingContext<?, HibernateSearchPersistentProperty> mappingContext;
 
-  public HibernateSearchPartQuery(QueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
+  public HibernateSearchPartQuery(HibernateSearchQueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
     super(queryMethod, hibernateSearchOperations);
     this.tree = new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType());
     this.mappingContext = hibernateSearchOperations.getMappingContext();
@@ -56,9 +61,23 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
     CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
 
+    query.setQueryHints(getQueryHints());
+
     query.setMaxResults(tree.getMaxResults());
     query.setDistinct(tree.isDistinct());
 
     return query;
+  }
+
+  private Map<String, String> getQueryHints() {
+    QueryHints queryHints = getQueryMethod().getQueryHints();
+    if (queryHints == null) {
+      return Collections.emptyMap();
+    }
+    Map<String, String> map = new HashMap<>();
+    for (QueryHint queryHint : queryHints.value()) {
+      map.put(queryHint.property(), queryHint.field());
+    }
+    return Collections.unmodifiableMap(map);
   }
 }

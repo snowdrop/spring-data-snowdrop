@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.spi;
+package me.snowdrop.data.hibernatesearch.annotations;
 
-import java.util.Map;
-
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface Query<T> {
-  Class<T> getEntityClass();
-
-  Pageable getPageable();
-
-  Sort getSort();
-
-  Map<String, String> getQueryHints();
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+@Documented
+public @interface QueryHints {
+  QueryHint[] value();
 }

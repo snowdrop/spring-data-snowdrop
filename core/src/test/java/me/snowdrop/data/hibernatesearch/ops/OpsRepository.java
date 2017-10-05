@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.springframework.data.domain.Sort;
 
@@ -28,18 +29,26 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long> {
+  @QueryHint(property = "dummy1", field = "aaa")
+  @QueryHint(property = "dummy2", field = "bbb")
   long countByColor(String color);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBetween(int min, int max);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberLessThan(int number);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBefore(int number);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberGreaterThan(int number);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberAfter(int number);
 
   List<SimpleEntity> findByTextRegex(String text);
@@ -52,8 +61,10 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByTextNotContaining(String text);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameIn(Collection<String> names);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNotIn(Collection<String> names);
 
   List<SimpleEntity> findByBuulTrue();
@@ -62,24 +73,32 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   Stream<SimpleEntity> findByColor(String color);
 
+  @QueryHint(property = "number", field = "number")
   Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
 
   List<SimpleEntity> findByAddressZipcode(int zipcode);
 
   List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberLessThan(int number, Sort sort);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBefore(int number, Sort sort);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberGreaterThan(int number, Sort sort);
 
+  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberAfter(int number, Sort sort);
 
   List<SimpleEntity> findByTextRegex(String text, Sort sort);
@@ -92,16 +111,20 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByTextNotContaining(String text, Sort sort);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameIn(Collection<String> names, Sort sort);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNotIn(Collection<String> names, Sort sort);
 
   List<SimpleEntity> findByBuulTrue(Sort sort);
 
   List<SimpleEntity> findByBuulFalse(Sort sort);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByColorOrderByNameAsc(String color);
 
+  @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByColorOrderByNameDesc(String color);
 
 //  List<SimpleEntity> findByIdentity_Name(String name);

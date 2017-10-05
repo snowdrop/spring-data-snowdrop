@@ -25,7 +25,6 @@ import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
-import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.format.support.DefaultFormattingConversionService;
 
 /**
@@ -35,7 +34,7 @@ public class HibernateSearchStringQuery extends AbstractHibernateSearchRepositor
   private static final Pattern PARAMETER_PLACEHOLDER = Pattern.compile("\\?(\\d+)");
   private final String query;
 
-  public HibernateSearchStringQuery(QueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations, String queryString) {
+  public HibernateSearchStringQuery(HibernateSearchQueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations, String queryString) {
     super(queryMethod, hibernateSearchOperations);
     this.query = queryString;
   }
