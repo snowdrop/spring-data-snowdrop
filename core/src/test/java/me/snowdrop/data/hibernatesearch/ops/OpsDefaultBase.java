@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -174,5 +175,18 @@ public class OpsDefaultBase extends OpsTestsBase {
   @Test
   public void testGeoLocation() {
     assertSize(repository.findByLocationWithin(24.0, 31.5, 55), 1);
+  }
+
+  @Test
+  public void testProjection() {
+    List<SimpleProjection> projections = repository.findByNameOrderByHero("ann");
+    Assert.assertEquals(1, projections.size());
+    Assert.assertEquals("ann", projections.get(0).getName());
+    Assert.assertEquals(-20, projections.get(0).getNumber());
+
+    projections = repository.findByName("ann", SimpleProjection.class);
+    Assert.assertEquals(1, projections.size());
+    Assert.assertEquals("ann", projections.get(0).getName());
+    Assert.assertEquals(-20, projections.get(0).getNumber());
   }
 }

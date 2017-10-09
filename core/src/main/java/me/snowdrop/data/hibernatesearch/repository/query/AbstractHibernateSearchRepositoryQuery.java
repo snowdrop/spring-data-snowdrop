@@ -22,6 +22,7 @@ import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ResultProcessor;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -50,7 +51,12 @@ public abstract class AbstractHibernateSearchRepositoryQuery implements Reposito
   @Override
   public Object execute(Object[] parameters) {
     ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+    ResultProcessor resultProcessor = getQueryMethod().getResultProcessor().withDynamicProjection(accessor);
+    Object source = executeInternal(accessor);
+    return resultProcessor.processResult(source);
+  }
 
+  private Object executeInternal(ParametersParameterAccessor accessor) {
     BaseQuery<?> query = createQuery(accessor);
 
     Sort sort = query.getSort();

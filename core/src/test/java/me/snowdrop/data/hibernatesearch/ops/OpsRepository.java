@@ -74,6 +74,10 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
+  List<SimpleProjection> findByNameOrderByHero(String name);
+
+  <T> List<T> findByName(String name, Class<T> type);
+
   List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
 
   @QueryHint(property = "name", field = "identity.name")
