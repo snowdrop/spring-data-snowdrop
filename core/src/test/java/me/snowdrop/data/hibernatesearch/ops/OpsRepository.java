@@ -36,19 +36,14 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
   @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBetween(int min, int max);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberLessThan(int number);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBefore(int number);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberGreaterThan(int number);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberAfter(int number);
 
   List<SimpleEntity> findByTextRegex(String text);
@@ -73,32 +68,25 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   Stream<SimpleEntity> findByColor(String color);
 
-  @QueryHint(property = "number", field = "number")
   Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
 
   List<SimpleEntity> findByAddressZipcode(int zipcode);
 
   List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
 
   @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberLessThan(int number, Sort sort);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberBefore(int number, Sort sort);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberGreaterThan(int number, Sort sort);
 
-  @QueryHint(property = "number", field = "number")
   List<SimpleEntity> findByNumberAfter(int number, Sort sort);
 
   List<SimpleEntity> findByTextRegex(String text, Sort sort);
@@ -127,13 +115,16 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
   @QueryHint(property = "name", field = "identity.name")
   List<SimpleEntity> findByColorOrderByNameDesc(String color);
 
-//  List<SimpleEntity> findByIdentity_Name(String name);
+  @QueryHint(property = "name", field = "identity.name")
+  List<SimpleEntity> findByName(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_Name(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
 
-//  List<SimpleEntity> findByContainedList_SomePrefixContainedName(String containedName);
+  @QueryHint(property = "contained.name", field = "containedList.somePrefix_containedName")
+  List<SimpleEntity> findByContainedName(String containedName);
 
-//  List<SimpleEntity> findByContainedList_SomePrefixNumberAsStringBetween(int min, int max);
+  @QueryHint(property = "contained.number", field = "containedList.somePrefix_numberAsText")
+  List<SimpleEntity> findByContainedNumberBetween(int min, int max);
 }

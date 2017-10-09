@@ -30,9 +30,9 @@ public abstract class OpsTestsActionBase implements TestsAction {
   public void setUp() {
     List<SimpleEntity> entities = new ArrayList<>();
 
-    ContainedEntity frankDalton = new ContainedEntity(1L, "Frank Dalton", 41);
+    ContainedEntity frankDalton = new ContainedEntity(1L, "Frank Dalton", 31);
     ContainedEntity emmettDalton = new ContainedEntity(2L, "Emmett Dalton", 42);
-    ContainedEntity oliverTwist = new ContainedEntity(3L, "Oliver Twist", 43);
+    ContainedEntity oliverTwist = new ContainedEntity(3L, "Oliver Twist", 53);
 
     SimpleEntity entity = new SimpleEntity(
       1L, "ann", "Does Ann like good red apples?", -20, true,

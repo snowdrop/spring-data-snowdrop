@@ -123,7 +123,7 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testNonDefaultCompositeFieldName() {
-//    assertSize(repository.findByIdentity_Name("ann"), 1);
+    assertSize(repository.findByName("ann"), 1);
   }
 
   @Test
@@ -138,13 +138,13 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testNestedComplexFieldName() {
-//    assertSize(repository.findByContainedList_SomePrefixContainedName("Frank"), 1);
+    assertSize(repository.findByContainedName("Frank"), 1);
   }
 
   @Test
   public void testMisleadingFieldType() {
     // Should match "42", since the numbers are indexed as strings
-//    assertSize(repository.findByContainedList_SomePrefixNumberAsStringBetween(4, 5), 1);
+    assertSize(repository.findByContainedNumberBetween(4, 5), 1);
   }
 
   @Test

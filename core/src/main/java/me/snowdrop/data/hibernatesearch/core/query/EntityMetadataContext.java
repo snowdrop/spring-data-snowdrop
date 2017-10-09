@@ -48,16 +48,13 @@ class EntityMetadataContext {
         case 1:
           return fieldsForProperty.iterator().next().getAbsoluteName();
         default:
-          String hint = queryHints.get(property);
-          if (hint == null) {
-            throw new IllegalArgumentException("Missing @QueryHint for property: " + property);
-          }
+          String field = queryHints.getOrDefault(property, property);
           for (DocumentFieldMetadata fd : fieldsForProperty) {
-            if (hint.equals(fd.getAbsoluteName())) {
-              return hint;
+            if (field.equals(fd.getAbsoluteName())) {
+              return field;
             }
           }
-          throw new IllegalArgumentException(String.format("No such hint '%s' found on property: %s", hint, property));
+          throw new IllegalArgumentException(String.format("No such field '%s' found on property: %s", field, property));
       }
     }
     // handle nested / inner
