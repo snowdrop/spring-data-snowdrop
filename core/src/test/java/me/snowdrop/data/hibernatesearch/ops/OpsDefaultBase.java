@@ -188,5 +188,9 @@ public class OpsDefaultBase extends OpsTestsBase {
     Assert.assertEquals(1, projections.size());
     Assert.assertEquals("ann", projections.get(0).getName());
     Assert.assertEquals(-20, projections.get(0).getNumber());
+
+    List<HeroProjection> hps = repository.findByHero("spiderman");
+    Assert.assertEquals(1, hps.size());
+    Assert.assertEquals("Spiderman [red]", hps.get(0).getInfo());
   }
 }
