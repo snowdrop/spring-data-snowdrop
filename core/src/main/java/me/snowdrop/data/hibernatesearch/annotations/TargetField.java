@@ -18,16 +18,33 @@ package me.snowdrop.data.hibernatesearch.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Used when there are multiple fields on the same property.
+ *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface QueryHints {
-  QueryHint[] value();
+@Repeatable(TargetFields.class)
+public @interface TargetField {
+
+  /**
+   * Property to map to.
+   *
+   * @return property
+   */
+  String property();
+
+  /**
+   * Mapped field.
+   *
+   * @return mapped field
+   */
+  String field();
 }

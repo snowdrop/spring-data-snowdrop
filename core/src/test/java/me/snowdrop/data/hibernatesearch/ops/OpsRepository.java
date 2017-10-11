@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
+import me.snowdrop.data.hibernatesearch.annotations.TargetField;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.springframework.data.domain.Sort;
 
@@ -29,11 +29,11 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long> {
-  @QueryHint(property = "dummy1", field = "aaa")
-  @QueryHint(property = "dummy2", field = "bbb")
+  @TargetField(property = "dummy1", field = "aaa")
+  @TargetField(property = "dummy2", field = "bbb")
   long countByColor(String color);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName);
 
   List<SimpleEntity> findByNumberBetween(int min, int max);
@@ -56,10 +56,10 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByTextNotContaining(String text);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameIn(Collection<String> names);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNotIn(Collection<String> names);
 
   List<SimpleEntity> findByBuulTrue();
@@ -82,7 +82,7 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
   List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);
@@ -105,32 +105,32 @@ public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, L
 
   List<SimpleEntity> findByTextNotContaining(String text, Sort sort);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameIn(Collection<String> names, Sort sort);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNotIn(Collection<String> names, Sort sort);
 
   List<SimpleEntity> findByBuulTrue(Sort sort);
 
   List<SimpleEntity> findByBuulFalse(Sort sort);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByColorOrderByNameAsc(String color);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByColorOrderByNameDesc(String color);
 
-  @QueryHint(property = "name", field = "identity.name")
+  @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByName(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_Name(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
 
-  @QueryHint(property = "contained.name", field = "containedList.somePrefix_containedName")
+  @TargetField(property = "contained.name", field = "containedList.somePrefix_containedName")
   List<SimpleEntity> findByContainedName(String containedName);
 
-  @QueryHint(property = "contained.number", field = "containedList.somePrefix_numberAsText")
+  @TargetField(property = "contained.number", field = "containedList.somePrefix_numberAsText")
   List<SimpleEntity> findByContainedNumberBetween(int min, int max);
 }

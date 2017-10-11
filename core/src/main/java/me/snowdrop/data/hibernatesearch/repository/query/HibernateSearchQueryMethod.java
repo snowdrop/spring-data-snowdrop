@@ -20,8 +20,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import me.snowdrop.data.hibernatesearch.annotations.Query;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
+import me.snowdrop.data.hibernatesearch.annotations.TargetField;
+import me.snowdrop.data.hibernatesearch.annotations.TargetFields;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
@@ -41,15 +41,15 @@ public class HibernateSearchQueryMethod extends QueryMethod {
     this.queryAnnotation = method.getAnnotation(Query.class);
   }
 
-  public QueryHints getQueryHints() {
-    QueryHints queryHints = method.getAnnotation(QueryHints.class);
-    if (queryHints == null) {
-      QueryHint queryHint = method.getAnnotation(QueryHint.class);
-      if (queryHint != null) {
-        queryHints = new QueryHintsImpl(queryHint);
+  public TargetFields getTargetFields() {
+    TargetFields targetFields = method.getAnnotation(TargetFields.class);
+    if (targetFields == null) {
+      TargetField targetField = method.getAnnotation(TargetField.class);
+      if (targetField != null) {
+        targetFields = new TargetFieldsImpl(targetField);
       }
     }
-    return queryHints;
+    return targetFields;
   }
 
   public boolean hasAnnotatedQuery() {
@@ -60,21 +60,21 @@ public class HibernateSearchQueryMethod extends QueryMethod {
     return (String) AnnotationUtils.getValue(queryAnnotation, "value");
   }
 
-  private static class QueryHintsImpl implements QueryHints {
-    private QueryHint queryHint;
+  private static class TargetFieldsImpl implements TargetFields {
+    private TargetField targetField;
 
-    public QueryHintsImpl(QueryHint queryHint) {
-      this.queryHint = queryHint;
+    public TargetFieldsImpl(TargetField targetField) {
+      this.targetField = targetField;
     }
 
     @Override
-    public QueryHint[] value() {
-      return new QueryHint[]{queryHint};
+    public TargetField[] value() {
+      return new TargetField[]{targetField};
     }
 
     @Override
     public Class<? extends Annotation> annotationType() {
-      return QueryHints.class;
+      return TargetFields.class;
     }
   }
 }

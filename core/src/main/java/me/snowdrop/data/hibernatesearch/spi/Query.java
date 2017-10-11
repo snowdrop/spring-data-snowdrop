@@ -18,8 +18,6 @@ package me.snowdrop.data.hibernatesearch.spi;
 
 import java.util.Map;
 
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
@@ -33,5 +31,5 @@ public interface Query<T> {
 
   Sort getSort();
 
-  Map<String, String> getQueryHints();
+  Map<String, String> getTargetFields();
 }

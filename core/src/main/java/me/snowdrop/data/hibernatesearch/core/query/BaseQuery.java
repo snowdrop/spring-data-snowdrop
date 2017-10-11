@@ -29,7 +29,7 @@ public class BaseQuery<T> implements Query<T> {
   private Class<T> entityClass;
   private Pageable pageable;
   private Sort sort;
-  private Map<String, String> queryHints;
+  private Map<String, String> targetFields;
 
   public BaseQuery(Class<T> entityClass) {
     this.entityClass = entityClass;
@@ -59,11 +59,11 @@ public class BaseQuery<T> implements Query<T> {
     this.sort = sort;
   }
 
-  public Map<String, String> getQueryHints() {
-    return queryHints;
+  public Map<String, String> getTargetFields() {
+    return targetFields;
   }
 
-  public void setQueryHints(Map<String, String> queryHints) {
-    this.queryHints = queryHints;
+  public void setTargetFields(Map<String, String> targetFields) {
+    this.targetFields = targetFields;
   }
 }

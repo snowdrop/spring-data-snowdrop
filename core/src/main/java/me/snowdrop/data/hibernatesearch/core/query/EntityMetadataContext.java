@@ -29,11 +29,11 @@ import org.hibernate.search.engine.spi.EntityIndexBinding;
  */
 class EntityMetadataContext {
   private final EntityIndexBinding binding;
-  private final Map<String, String> queryHints;
+  private final Map<String, String> targetFields;
 
-  EntityMetadataContext(EntityIndexBinding binding, Map<String, String> queryHints) {
+  EntityMetadataContext(EntityIndexBinding binding, Map<String, String> targetFields) {
     this.binding = binding;
-    this.queryHints = queryHints;
+    this.targetFields = targetFields;
   }
 
   String getFieldName(String property) {
@@ -48,7 +48,7 @@ class EntityMetadataContext {
         case 1:
           return fieldsForProperty.iterator().next().getAbsoluteName();
         default:
-          String field = queryHints.getOrDefault(property, property);
+          String field = targetFields.getOrDefault(property, property);
           for (DocumentFieldMetadata fd : fieldsForProperty) {
             if (field.equals(fd.getAbsoluteName())) {
               return field;
@@ -59,7 +59,7 @@ class EntityMetadataContext {
     }
     // handle nested / inner
     // first check for hint
-    String hint = queryHints.getOrDefault(property, property);
+    String hint = targetFields.getOrDefault(property, property);
     DocumentFieldMetadata field = typeMetadata.getDocumentFieldMetadataFor(hint);
     if (field != null) {
       return field.getAbsoluteName();

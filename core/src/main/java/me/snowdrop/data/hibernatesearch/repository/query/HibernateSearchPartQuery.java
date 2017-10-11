@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.snowdrop.data.hibernatesearch.annotations.QueryHint;
-import me.snowdrop.data.hibernatesearch.annotations.QueryHints;
+import me.snowdrop.data.hibernatesearch.annotations.TargetField;
+import me.snowdrop.data.hibernatesearch.annotations.TargetFields;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
@@ -61,7 +61,7 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
     CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
 
-    query.setQueryHints(getQueryHints());
+    query.setTargetFields(getTargetFields());
 
     query.setMaxResults(tree.getMaxResults());
     query.setDistinct(tree.isDistinct());
@@ -69,14 +69,14 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
     return query;
   }
 
-  private Map<String, String> getQueryHints() {
-    QueryHints queryHints = getQueryMethod().getQueryHints();
-    if (queryHints == null) {
+  private Map<String, String> getTargetFields() {
+    TargetFields targetFields = getQueryMethod().getTargetFields();
+    if (targetFields == null) {
       return Collections.emptyMap();
     }
     Map<String, String> map = new HashMap<>();
-    for (QueryHint queryHint : queryHints.value()) {
-      map.put(queryHint.property(), queryHint.field());
+    for (TargetField targetField : targetFields.value()) {
+      map.put(targetField.property(), targetField.field());
     }
     return Collections.unmodifiableMap(map);
   }
