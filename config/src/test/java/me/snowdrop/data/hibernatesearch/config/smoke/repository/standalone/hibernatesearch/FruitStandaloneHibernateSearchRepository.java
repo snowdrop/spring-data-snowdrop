@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.repository.cdi;
+package me.snowdrop.data.hibernatesearch.config.smoke.repository.standalone.hibernatesearch;
 
-import org.springframework.data.repository.cdi.CdiRepositoryExtensionSupport;
+import me.snowdrop.data.hibernatesearch.config.smoke.Fruit;
+import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 
-/**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- */
-public class HibernateSearchRepositoryExtension extends CdiRepositoryExtensionSupport {
-  // TODO
+public interface FruitStandaloneHibernateSearchRepository extends HibernateSearchRepository<Fruit, Long> {
+  Fruit findByName(String name);
 }

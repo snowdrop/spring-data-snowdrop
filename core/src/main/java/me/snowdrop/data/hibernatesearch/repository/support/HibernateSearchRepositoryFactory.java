@@ -22,9 +22,11 @@ import java.util.UUID;
 
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
+import me.snowdrop.data.hibernatesearch.repository.extension.RepositoryHibernateSearchExtension;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchPartQuery;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchQueryMethod;
 import me.snowdrop.data.hibernatesearch.repository.query.HibernateSearchStringQuery;
+import me.snowdrop.data.repository.extension.support.ExtendingRepositoryFactorySupport;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.EntityInformation;
@@ -39,7 +41,7 @@ import org.springframework.data.repository.query.RepositoryQuery;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateSearchRepositoryFactory extends RepositoryFactorySupport {
+public class HibernateSearchRepositoryFactory extends ExtendingRepositoryFactorySupport {
   private HibernateSearchOperations hibernateSearchOperations;
 
   public HibernateSearchRepositoryFactory(HibernateSearchOperations hibernateSearchOperations) {
@@ -75,6 +77,11 @@ public class HibernateSearchRepositoryFactory extends RepositoryFactorySupport {
   @Override
   protected Optional<QueryLookupStrategy> getQueryLookupStrategy(QueryLookupStrategy.Key key, EvaluationContextProvider evaluationContextProvider) {
     return Optional.of(new HibernateSearchQueryLookupStrategy());
+  }
+
+  @Override
+  protected Class<?> getRepositoryExtensionInterface() {
+    return RepositoryHibernateSearchExtension.class;
   }
 
   private class HibernateSearchQueryLookupStrategy implements QueryLookupStrategy {

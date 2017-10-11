@@ -64,4 +64,5 @@ public @interface EnableHibernateSearchRepositories {
    * discovered through this annotation. Defaults to {@code datasourceMapper}.
    */
   String datasourceMapperRef() default "datasourceMapper";
+
 }

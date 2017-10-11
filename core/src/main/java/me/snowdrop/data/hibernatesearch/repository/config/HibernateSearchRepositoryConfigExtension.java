@@ -16,10 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository.config;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Collections;
-
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import me.snowdrop.data.hibernatesearch.repository.support.HibernateSearchRepositoryFactoryBean;
 import org.hibernate.search.annotations.Indexed;
@@ -27,6 +23,10 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
+
+import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -44,7 +44,7 @@ public class HibernateSearchRepositoryConfigExtension extends RepositoryConfigur
 
   @Override
   protected Collection<Class<?>> getIdentifyingTypes() {
-    return Collections.singleton(HibernateSearchRepository.class);
+    return Collections.singletonList(HibernateSearchRepository.class);
   }
 
   @Override

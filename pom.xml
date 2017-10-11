@@ -50,6 +50,7 @@
   <modules>
     <module>core</module>
     <module>config</module>
+    <module>orm</module>
   </modules>
 
   <dependencyManagement>
@@ -58,6 +59,12 @@
       <dependency>
         <groupId>me.snowdrop.data</groupId>
         <artifactId>spring-data-hibernate-search</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>me.snowdrop.data</groupId>
+        <artifactId>spring-data-hibernate-search-orm</artifactId>
         <version>${project.version}</version>
       </dependency>
 

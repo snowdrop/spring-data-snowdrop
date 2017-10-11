@@ -16,8 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.config;
 
-import javax.persistence.EntityManagerFactory;
-
+import me.snowdrop.data.hibernatesearch.orm.JpaDatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import org.hibernate.search.Search;
 import org.hibernate.search.spi.SearchIntegrator;
@@ -29,6 +28,8 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
