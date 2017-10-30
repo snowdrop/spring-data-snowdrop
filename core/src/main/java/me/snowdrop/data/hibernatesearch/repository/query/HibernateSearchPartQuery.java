@@ -50,7 +50,7 @@ public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQ
   }
 
   protected boolean isExistsProjection(Query<?> query) {
-    return tree.isExistsProjection() != null && tree.isExistsProjection();
+    return tree.isExistsProjection();
   }
 
   protected boolean isCountProjection(Query<?> query) {

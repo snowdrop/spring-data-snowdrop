@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
+import me.snowdrop.data.hibernatesearch.util.Integers;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.spi.SearchIntegrator;
@@ -96,13 +97,13 @@ public class InfinispanDatasourceMapper implements DatasourceMapper {
     }
 
     @Override
-    protected void setFirstResult(int firstResult) {
-      cacheQuery.firstResult(firstResult);
+    protected void setFirstResult(long firstResult) {
+      cacheQuery.firstResult(Integers.safeCast(firstResult));
     }
 
     @Override
-    protected void setMaxResults(int maxResults) {
-      cacheQuery.maxResults(maxResults);
+    protected void setMaxResults(long maxResults) {
+      cacheQuery.maxResults(Integers.safeCast(maxResults));
     }
   }
 }

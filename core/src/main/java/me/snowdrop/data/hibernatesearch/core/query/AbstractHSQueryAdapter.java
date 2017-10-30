@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.hibernatesearch.util.Integers;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.engine.spi.EntityInfo;
@@ -58,11 +59,11 @@ public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> 
     hsQuery.sort(sort);
   }
 
-  protected void setFirstResult(int firstResult) {
-    hsQuery.firstResult(firstResult);
+  protected void setFirstResult(long firstResult) {
+    hsQuery.firstResult(Integers.safeCast(firstResult));
   }
 
-  protected void setMaxResults(int maxResults) {
-    hsQuery.maxResults(maxResults);
+  protected void setMaxResults(long maxResults) {
+    hsQuery.maxResults(Integers.safeCast(maxResults));
   }
 }

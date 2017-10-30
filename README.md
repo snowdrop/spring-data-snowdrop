@@ -14,6 +14,6 @@ Usage:
     @Test
     public void testOps() {
         assertSize(repository.findByLocationWithin(24.0, 31.5, 55), 1);
-        assertIds(repository.findByNameNot("doug", new Sort(Sort.Direction.DESC, "hero")), 1, 2, 5, 3, 6);
-        assertIds(repository.findByNumberBetween(-5, 11, new Sort("hero")), 4, 3);
+        assertIds(repository.findByNameNot("doug", Sort.by(Sort.Direction.DESC, "hero")), 1, 2, 5, 3, 6);
+        assertIds(repository.findByNumberBetween(-5, 11, Sort.by("hero")), 4, 3);
     }

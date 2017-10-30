@@ -116,9 +116,9 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   protected abstract void setSort(Sort sort);
 
-  protected abstract void setFirstResult(int firstResult);
+  protected abstract void setFirstResult(long firstResult);
 
-  protected abstract void setMaxResults(int maxResults);
+  protected abstract void setMaxResults(long maxResults);
 
   void convert(CriteriaQuery query) {
     fillQuery(query);
@@ -172,9 +172,9 @@ public abstract class AbstractQueryAdapter<T> implements QueryAdapter<T> {
 
   private void addPagingToQuery(me.snowdrop.data.hibernatesearch.spi.Query query) {
     Pageable pageable = query.getPageable();
-    if (pageable != null) {
+    if (pageable != null && pageable.isPaged()) {
       org.springframework.data.domain.Sort sort = pageable.getSort();
-      if (query.getSort() == null && sort != null) {
+      if (query.getSort() == null && sort.isSorted()) {
         addSortToQuery(sort);
       }
       setFirstResult(pageable.getOffset());

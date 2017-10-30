@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import org.springframework.data.mapping.Association;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.model.AnnotationBasedPersistentProperty;
+import org.springframework.data.mapping.model.Property;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 
 /**
@@ -30,8 +31,8 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
 public class SimpleHibernateSearchPersistentProperty<T> extends AnnotationBasedPersistentProperty<HibernateSearchPersistentProperty>
   implements HibernateSearchPersistentProperty {
 
-  public SimpleHibernateSearchPersistentProperty(Field field, PropertyDescriptor propertyDescriptor, PersistentEntity<?, HibernateSearchPersistentProperty> owner, SimpleTypeHolder simpleTypeHolder) {
-    super(field, propertyDescriptor, owner, simpleTypeHolder);
+  public SimpleHibernateSearchPersistentProperty(Property property, PersistentEntity<?, HibernateSearchPersistentProperty> owner, SimpleTypeHolder simpleTypeHolder) {
+    super(property, owner, simpleTypeHolder);
   }
 
   @Override

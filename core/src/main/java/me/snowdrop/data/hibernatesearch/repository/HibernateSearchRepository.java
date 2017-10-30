@@ -16,8 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository;
 
-import java.io.Serializable;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -28,7 +26,7 @@ import org.springframework.data.repository.Repository;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @NoRepositoryBean
-public interface HibernateSearchRepository<T, ID extends Serializable> extends Repository<T, ID> {
+public interface HibernateSearchRepository<T, ID> extends Repository<T, ID> {
 
   /**
    * Returns all instances of the type.

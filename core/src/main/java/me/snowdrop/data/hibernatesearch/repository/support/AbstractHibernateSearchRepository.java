@@ -16,8 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository.support;
 
-import java.io.Serializable;
-
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
@@ -28,7 +26,7 @@ import org.springframework.data.domain.Sort;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractHibernateSearchRepository<T, ID extends Serializable> implements HibernateSearchRepository<T, ID> {
+public abstract class AbstractHibernateSearchRepository<T, ID> implements HibernateSearchRepository<T, ID> {
   protected final HibernateSearchOperations hibernateSearchOperations;
   private final Class<T> entityClass;
 

@@ -111,10 +111,10 @@ public class SmokeTests {
 
     Assert.assertEquals(4L, repository.count());
 
-    Iterable<SmokeEntity> sorted = repository.findAll(new Sort(Sort.Direction.DESC, "name"));
+    Iterable<SmokeEntity> sorted = repository.findAll(Sort.by(Sort.Direction.DESC, "name"));
     Assert.assertEquals("4", sorted.iterator().next().getId());
 
-    Pageable pageable = new PageRequest(1, 2, new Sort(new Sort.Order("type")));
+    Pageable pageable = PageRequest.of(1, 2, Sort.by(Sort.Order.by("type")));
     Page<SmokeEntity> pageables = repository.findAll(pageable);
     Assert.assertEquals(2, pageables.getNumberOfElements());
   }

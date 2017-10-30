@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package me.snowdrop.data.hibernatesearch.util;
 
-package me.snowdrop.data.hibernatesearch.repository.support;
+public final class Integers {
 
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.repository.core.support.PersistentEntityInformation;
-
-/**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- */
-public class MappingHibernateSearchEntityInformation<T, ID> extends PersistentEntityInformation<T, ID> implements HibernateSearchEntityInformation<T, ID> {
-  public MappingHibernateSearchEntityInformation(PersistentEntity<T, ?> entity) {
-    super(entity);
+  private Integers() {
   }
+
+  public static int safeCast(long value) {
+    if ( value > Integer.MAX_VALUE ) {
+      return Integer.MAX_VALUE;
+    }
+    else if ( value < Integer.MIN_VALUE ) {
+      return Integer.MIN_VALUE;
+    }
+    else {
+      return (int) value;
+    }
+  }
+
 }

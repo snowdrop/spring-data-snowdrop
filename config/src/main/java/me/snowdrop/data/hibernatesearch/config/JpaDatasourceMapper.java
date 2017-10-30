@@ -25,6 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
+import me.snowdrop.data.hibernatesearch.util.Integers;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.NonUniqueResultException;
@@ -88,12 +89,12 @@ public class JpaDatasourceMapper implements DatasourceMapper {
       fullTextQuery.setSort(sort);
     }
 
-    protected void setFirstResult(int firstResult) {
-      fullTextQuery.setFirstResult(firstResult);
+    protected void setFirstResult(long firstResult) {
+      fullTextQuery.setFirstResult(Integers.safeCast(firstResult));
     }
 
-    protected void setMaxResults(int maxResults) {
-      fullTextQuery.setMaxResults(maxResults);
+    protected void setMaxResults(long maxResults) {
+      fullTextQuery.setMaxResults(Integers.safeCast(maxResults));
     }
 
     protected long size() {

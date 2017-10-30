@@ -16,8 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository.support;
 
-import java.io.Serializable;
-
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchTemplate;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
@@ -29,7 +27,7 @@ import org.springframework.util.Assert;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends RepositoryFactoryBeanSupport<T, S, ID> {
+public class HibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends RepositoryFactoryBeanSupport<T, S, ID> {
 
   private DatasourceMapper datasourceMapper;
   private HibernateSearchOperations hibernateSearchOperations;

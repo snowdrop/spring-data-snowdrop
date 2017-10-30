@@ -20,6 +20,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
 import org.springframework.data.mapping.context.AbstractMappingContext;
+import org.springframework.data.mapping.model.Property;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.TypeInformation;
 
@@ -33,7 +34,7 @@ public class SimpleHibernateSearchMappingContext<T> extends AbstractMappingConte
   }
 
   @Override
-  protected HibernateSearchPersistentProperty createPersistentProperty(Field field, PropertyDescriptor descriptor, HibernateSearchPersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
-    return new SimpleHibernateSearchPersistentProperty<>(field, descriptor, owner, simpleTypeHolder);
+  protected HibernateSearchPersistentProperty createPersistentProperty(Property property, HibernateSearchPersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
+    return new SimpleHibernateSearchPersistentProperty<>(property, owner, simpleTypeHolder);
   }
 }
