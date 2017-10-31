@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.ops;
+package me.snowdrop.data.hibernatesearch.config.jpa.extension.smoke.repository.hibernatesearch;
 
-import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
-import org.springframework.data.domain.Sort;
+import me.snowdrop.data.hibernatesearch.config.Fruit;
+import me.snowdrop.data.hibernatesearch.repository.extension.RepositoryHibernateSearchExtension;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-/**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- */
-public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+public interface FruitRepositoryHibernateSearchExtension extends RepositoryHibernateSearchExtension<Fruit, Long> {
+  Fruit findByName(String name);
 }

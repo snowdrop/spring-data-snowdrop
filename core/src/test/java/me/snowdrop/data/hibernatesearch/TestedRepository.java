@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package me.snowdrop.data.hibernatesearch;
 
-package me.snowdrop.data.hibernatesearch.ops;
+public class TestedRepository<T> {
 
-import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
-import org.springframework.data.domain.Sort;
+  private final T repository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+  public TestedRepository(T repository) {
+    this.repository = repository;
+  }
 
-/**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- */
-public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+  public T getRepository() {
+    return repository;
+  }
 }

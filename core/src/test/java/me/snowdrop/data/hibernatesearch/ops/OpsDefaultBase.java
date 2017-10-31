@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -33,8 +35,14 @@ public class OpsDefaultBase extends OpsTestsBase {
 
   @Test
   public void testDefaults() {
-    assertSize(repository.findAll(), 7);
-    assertSize(repository.findAll(new PageRequest(1, 3)), 3);
+    Assume.assumeTrue(
+            "This test is only relevant on standalone Hibernate Search repositories",
+            repository instanceof HibernateSearchRepository
+    );
+    @SuppressWarnings("unchecked")
+    HibernateSearchRepository<SimpleEntity, Long> hibernateSearchRepository = (HibernateSearchRepository<SimpleEntity, Long>) repository;
+    assertSize(hibernateSearchRepository.findAll(), 7);
+    assertSize(hibernateSearchRepository.findAll(new PageRequest(1, 3)), 3);
   }
 
   @Test

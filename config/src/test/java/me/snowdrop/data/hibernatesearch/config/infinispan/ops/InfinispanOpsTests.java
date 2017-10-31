@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.ops;
+package me.snowdrop.data.hibernatesearch.config.infinispan.ops;
 
-import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
-import org.springframework.data.domain.Sort;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
+import me.snowdrop.data.hibernatesearch.ops.OpsDefaultBase;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+@SpringBootTest(classes = InfinispanOpsConfiguration.class)
+@RunWith(SpringRunner.class)
+public class InfinispanOpsTests extends OpsDefaultBase {
 }

@@ -18,6 +18,8 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.Collections;
 
+import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+import org.junit.Assume;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 
@@ -28,7 +30,13 @@ public class OpsSortBase extends OpsTestsBase {
 
   @Test
   public void testFindAllSort() {
-    assertIds(repository.findAll(Sort.by("color")), 4, 6, 5, 7, 1, 2, 3);
+    Assume.assumeTrue(
+            "This test is only relevant on standalone Hibernate Search repositories",
+            repository instanceof HibernateSearchRepository
+    );
+    @SuppressWarnings("unchecked")
+    HibernateSearchRepository<SimpleEntity, Long> hibernateSearchRepository = (HibernateSearchRepository<SimpleEntity, Long>) repository;
+    assertIds(hibernateSearchRepository.findAll(Sort.by("color")), 4, 6, 5, 7, 1, 2, 3);
   }
 
   @Test

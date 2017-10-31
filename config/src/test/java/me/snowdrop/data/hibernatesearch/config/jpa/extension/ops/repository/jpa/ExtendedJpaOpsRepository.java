@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package me.snowdrop.data.hibernatesearch.config.jpa.extension.ops.repository.jpa;
 
-package me.snowdrop.data.hibernatesearch.ops;
+import me.snowdrop.data.hibernatesearch.config.jpa.extension.ops.repository.hibernatesearch.OpsRepositoryHibernateSearchExtension;
+import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
-import org.springframework.data.domain.Sort;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-/**
- * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
- */
-public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+public interface ExtendedJpaOpsRepository
+        extends PagingAndSortingRepository<SimpleEntity, Long>, OpsRepositoryHibernateSearchExtension {
 }

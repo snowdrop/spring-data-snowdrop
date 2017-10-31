@@ -19,11 +19,13 @@ package me.snowdrop.data.hibernatesearch.ops;
 import java.util.List;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
+import me.snowdrop.data.hibernatesearch.TestedRepository;
 import me.snowdrop.data.hibernatesearch.TestsAction;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -31,7 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OpsTestsBase {
 
   @Autowired
-  OpsRepository repository;
+  TestedRepository<Ops> testedRepository;
+
+  Ops repository;
 
   @Autowired
   TestsAction testsAction;
@@ -39,6 +43,7 @@ public class OpsTestsBase {
   @Before
   public void setUp() {
     testsAction.setUp();
+    repository = testedRepository.getRepository();
   }
 
   @After
