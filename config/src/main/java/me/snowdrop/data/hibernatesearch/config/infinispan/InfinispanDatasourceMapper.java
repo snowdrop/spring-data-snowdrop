@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config;
+package me.snowdrop.data.hibernatesearch.config.infinispan;
 
 import java.util.List;
 import java.util.stream.Stream;

@@ -17,8 +17,8 @@
 package me.snowdrop.data.hibernatesearch.config.infinispan.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.config.EntityToCacheMapper;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
+import me.snowdrop.data.hibernatesearch.config.infinispan.EntityToCacheMapper;
 import me.snowdrop.data.hibernatesearch.config.infinispan.smoke.repository.StandaloneInfinispanHibernateSearchFruitRepository;
 import org.infinispan.Cache;
 import org.junit.After;

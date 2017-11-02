@@ -16,8 +16,9 @@
 
 package me.snowdrop.data.hibernatesearch.config.infinispan;
 
+import java.util.List;
+
 import me.snowdrop.data.hibernatesearch.TestsAction;
-import me.snowdrop.data.hibernatesearch.config.EntityToCacheMapper;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
 import me.snowdrop.data.hibernatesearch.ops.OpsTestsActionBase;
 import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
@@ -29,8 +30,6 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.manager.EmbeddedCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>

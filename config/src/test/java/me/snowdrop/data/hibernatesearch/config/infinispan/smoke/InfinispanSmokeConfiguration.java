@@ -15,9 +15,9 @@
  */
 package me.snowdrop.data.hibernatesearch.config.infinispan.smoke;
 
-import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataJpaAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.infinispan.InfinispanConfiguration;
 import me.snowdrop.data.hibernatesearch.config.infinispan.smoke.repository.StandaloneInfinispanHibernateSearchFruitRepository;
+import me.snowdrop.data.hibernatesearch.config.jpa.HibernateSearchDataJpaAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;

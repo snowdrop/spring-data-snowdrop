@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config;
+package me.snowdrop.data.hibernatesearch.config.infinispan;
 
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import org.hibernate.search.spi.SearchIntegrator;

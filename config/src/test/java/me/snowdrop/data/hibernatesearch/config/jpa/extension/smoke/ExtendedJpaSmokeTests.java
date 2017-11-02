@@ -18,18 +18,12 @@ package me.snowdrop.data.hibernatesearch.config.jpa.extension.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
-import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataInfinispanAutoConfiguration;
-import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataJpaAutoConfiguration;
-import me.snowdrop.data.hibernatesearch.config.jpa.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.extension.smoke.repository.jpa.ExtendedJpaFruitRepository;
-import me.snowdrop.data.hibernatesearch.orm.repository.support.JpaWithHibernateSearchRepositoryFactoryBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.Repository;
 import org.springframework.test.context.junit4.SpringRunner;
 

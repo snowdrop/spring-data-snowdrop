@@ -15,6 +15,11 @@
  */
 package me.snowdrop.data.hibernatesearch.orm.repository.support;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import javax.persistence.EntityManager;
+
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchTemplate;
 import me.snowdrop.data.hibernatesearch.orm.JpaDatasourceMapper;
@@ -25,10 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
-
-import javax.persistence.EntityManager;
-import java.util.Collection;
-import java.util.Collections;
 
 public class JpaWithHibernateSearchRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
         extends JpaRepositoryFactoryBean<T, S, ID> {
@@ -47,9 +48,6 @@ public class JpaWithHibernateSearchRepositoryFactoryBean<T extends Repository<S,
 
     postProcessors.forEach(p -> p.postProcess(hibernateSearchRepositoryFactory));
 
-    JpaWithHibernateSearchRepositoryFactory factory =
-            new JpaWithHibernateSearchRepositoryFactory(entityManager, hibernateSearchRepositoryFactory);
-
-    return factory;
+    return new JpaWithHibernateSearchRepositoryFactory(entityManager, hibernateSearchRepositoryFactory);
   }
 }

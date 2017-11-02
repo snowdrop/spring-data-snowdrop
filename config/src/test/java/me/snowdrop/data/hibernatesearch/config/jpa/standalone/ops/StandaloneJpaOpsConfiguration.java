@@ -16,7 +16,7 @@
 package me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops;
 
 import me.snowdrop.data.hibernatesearch.TestedRepository;
-import me.snowdrop.data.hibernatesearch.config.HibernateSearchDataInfinispanAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.HibernateSearchDataInfinispanAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops.repository.hibernatesearch.StandaloneJpaHibernateSearchOpsRepository;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops.repository.jpa.StandaloneJpaOpsRepository;
