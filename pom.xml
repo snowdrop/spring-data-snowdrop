@@ -42,7 +42,7 @@
     <hibernate>5.2.11.Final</hibernate>
     <lucene>5.5.4</lucene>
     <springboot>2.0.0.M5</springboot>
-    <infinispan>9.1.1.Final</infinispan>
+    <infinispan>9.1.3.Final</infinispan>
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
