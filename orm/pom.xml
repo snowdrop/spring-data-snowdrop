@@ -51,6 +51,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
+            <version>${springdata}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -59,7 +60,6 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>spring-data-hibernate-search</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

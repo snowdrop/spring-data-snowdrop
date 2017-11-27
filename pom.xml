@@ -24,25 +24,30 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <parent>
-    <groupId>org.springframework.data.build</groupId>
-    <artifactId>spring-data-parent</artifactId>
-    <version>2.0.0.RELEASE</version>
-  </parent>
-
   <name>Spring Data Hibernate Search Build</name>
   <description>Spring Data Implementation for Hibernate Search</description>
   <url>https://github.com/snowdrop/spring-data-hibernate-search</url>
 
   <properties>
-    <bundlor.enabled>false</bundlor.enabled>
-    <commonscollections>3.2.1</commonscollections>
-    <commonslang>2.6</commonslang>
+    <spring>5.0.0.RELEASE</spring>
+    <springboot>2.0.0.M5</springboot>
+    <springdata>2.0.0.RELEASE</springdata>
+
     <hibernatesearch>5.8.0.Final</hibernatesearch>
     <hibernate>5.2.11.Final</hibernate>
+
     <lucene>5.5.4</lucene>
-    <springboot>2.0.0.M5</springboot>
     <infinispan>9.1.3.Final</infinispan>
+
+    <jackson>2.9.1</jackson>
+    <jodatime>2.9.9</jodatime>
+    <lombok>1.16.18</lombok>
+    <cdi>1.0</cdi>
+    <commonscollections>3.2.1</commonscollections>
+    <commonslang>2.6</commonslang>
+    <log4j>2.8.2</log4j>
+    <slf4j>1.7.25</slf4j>
+
     <!-- compiler -->
     <source.level>1.8</source.level>
   </properties>
@@ -83,13 +88,25 @@
         <scope>test</scope>
       </dependency>
 
-      <!-- SPRING BOOT -->
+      <!-- SPRING -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${springboot}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-commons</artifactId>
+        <version>${springdata}</version>
       </dependency>
 
       <!-- APACHE -->
@@ -106,7 +123,7 @@
         <version>${jodatime}</version>
       </dependency>
 
-      <!-- HibernateSearch -->
+      <!-- Hibernate Search -->
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-search-engine</artifactId>
@@ -182,23 +199,6 @@
         </exclusions>
       </dependency>
 
-      <!-- dependency>
-          <groupId>org.apache.openwebbeans.test</groupId>
-          <artifactId>cditest-owb</artifactId>
-          <version>${webbeans}</version>
-          <scope>test</scope>
-          <exclusions>
-              <exclusion>
-                  <groupId>org.apache.geronimo.specs</groupId>
-                  <artifactId>geronimo-jcdi_1.0_spec</artifactId>
-              </exclusion>
-              <exclusion>
-                  <groupId>org.apache.geronimo.specs</groupId>
-                  <artifactId>geronimo-atinject_1.0_spec</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency -->
-
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -213,20 +213,49 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>${slf4j}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <!-- build>
+  <build>
+    <pluginManagement>
       <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-assembly-plugin</artifactId>
-          </plugin>
-          <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>wagon-maven-plugin</artifactId>
-          </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>${source.level}</source>
+            <target>${source.level}</target>
+          </configuration>
+        </plugin>
       </plugins>
-  </build -->
+    </pluginManagement>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>repository.spring.release</id>
+      <name>Spring GA Repository</name>
+      <url>http://repo.spring.io/release</url>
+    </repository>
+    <!-- Spring Boot dependency -->
+    <repository>
+      <id>repository.spring.milestone</id>
+      <name>Spring Milestone Repository</name>
+      <url>http://repo.spring.io/milestone</url>
+    </repository>
+  </repositories>
 
 </project>
