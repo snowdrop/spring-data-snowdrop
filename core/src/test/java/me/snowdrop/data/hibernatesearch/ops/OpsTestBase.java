@@ -25,12 +25,11 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OpsTestsBase {
+public class OpsTestBase {
 
   @Autowired
   TestedRepository<Ops> testedRepository;

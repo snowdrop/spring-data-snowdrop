@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke;
+package me.snowdrop.data.hibernatesearch.config.infinispan.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
-import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.hibernatesearch.StandaloneJpaHibernateSearchFruitRepository;
-import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.jpa.StandaloneJpaFruitRepository;
+import me.snowdrop.data.hibernatesearch.config.infinispan.EntityToCacheMapper;
+import me.snowdrop.data.hibernatesearch.config.infinispan.smoke.repository.StandaloneInfinispanHibernateSearchFruitRepository;
+import org.infinispan.Cache;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,28 +33,43 @@ import org.springframework.test.context.junit4.SpringRunner;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@SpringBootTest(classes = StandaloneJpaSmokeConfiguration.class, properties = "debug=false")
+@SpringBootTest(classes = InfinispanSmokeConfiguration.class, properties = "debug=false")
 @RunWith(SpringRunner.class)
-public class StandaloneJpaSmokeTests {
+public class InfinispanSmokeTest {
   @Autowired
-  StandaloneJpaHibernateSearchFruitRepository hsRepository;
+  StandaloneInfinispanHibernateSearchFruitRepository hsRepository;
 
   @Autowired
-  StandaloneJpaFruitRepository jpaRepository;
+  EntityToCacheMapper entityToCacheMapper;
+
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    Cache cache = entityToCacheMapper.getCache(Fruit.class);
+
+    Fruit fruit = new Fruit(1L, "Cherry");
+    cache.put(fruit.getId(), fruit);
+    fruit = new Fruit(2L, "Apple");
+    cache.put(fruit.getId(), fruit);
+    fruit = new Fruit(3L, "Banana");
+    cache.put(fruit.getId(), fruit);
+  }
+
+  @After
+  public void tearDown() {
+    Cache cache = entityToCacheMapper.getCache(Fruit.class);
+    cache.clear();
+  }
 
   @Test
   public void testDefault() {
     Assert.assertNotNull(hsRepository);
-    Assert.assertNotNull(jpaRepository);
 
     Assert.assertEquals(3, hsRepository.count());
-    Assert.assertEquals(3, jpaRepository.count());
 
     Assert.assertEquals(3, TestUtils.size(hsRepository.findAll()));
-    Assert.assertEquals(3, TestUtils.size(jpaRepository.findAll()));
 
-    // Ask for a lowercase match, which would only work with Hibernate Search, not with the JPQL 'equals'
-    Fruit apple = hsRepository.findByName("apple");
+    Fruit apple = hsRepository.findByName("Apple");
     Assert.assertNotNull(apple);
     Assert.assertEquals("Apple", apple.getName());
   }

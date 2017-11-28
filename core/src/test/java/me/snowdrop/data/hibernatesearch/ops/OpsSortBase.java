@@ -26,7 +26,7 @@ import org.springframework.data.domain.Sort;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OpsSortBase extends OpsTestsBase {
+public class OpsSortBase extends OpsTestBase {
 
   @Test
   public void testFindAllSort() {

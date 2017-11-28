@@ -16,7 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops;
 
-import me.snowdrop.data.hibernatesearch.ops.OpsSortBase;
+import me.snowdrop.data.hibernatesearch.ops.OpsDefaultBase;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,5 +26,5 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest(classes = StandaloneJpaOpsConfiguration.class)
 @RunWith(SpringRunner.class)
-public class StandaloneJpaOpsSortTests extends OpsSortBase {
+public class StandaloneJpaOpsTest extends OpsDefaultBase {
 }

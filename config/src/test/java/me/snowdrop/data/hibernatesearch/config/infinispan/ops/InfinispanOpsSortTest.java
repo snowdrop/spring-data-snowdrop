@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.ops;
+package me.snowdrop.data.hibernatesearch.config.infinispan.ops;
 
+import me.snowdrop.data.hibernatesearch.ops.OpsSortBase;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@SpringBootTest(classes = InfinispanOpsConfiguration.class)
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = OpsConfiguration.class)
-public class OpsSortTests extends OpsSortBase {
+public class InfinispanOpsSortTest extends OpsSortBase {
 }

@@ -30,12 +30,12 @@ import org.hibernate.search.spi.SearchIntegrator;
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperForTest<T> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
+public class DatasourceMapperTester<T> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
   private final SearchIntegrator searchIntegrator;
 
   private Map<Serializable, Object> map = new HashMap<>();
 
-  public DatasourceMapperForTest(SearchIntegrator searchIntegrator) {
+  public DatasourceMapperTester(SearchIntegrator searchIntegrator) {
     this.searchIntegrator = searchIntegrator;
   }
 

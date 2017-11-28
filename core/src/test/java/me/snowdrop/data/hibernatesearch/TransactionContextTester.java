@@ -28,7 +28,7 @@ import org.hibernate.search.backend.TransactionContext;
  * @author Emmanuel Bernard
  * @author Ales Justin
  */
-public class TransactionContextForTest implements TransactionContext {
+public class TransactionContextTester implements TransactionContext {
   private boolean progress = true;
   private List<Synchronization> syncs = new ArrayList<>();
 

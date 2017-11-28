@@ -14,45 +14,44 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.jpa.extension.smoke;
+package me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke;
 
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
-import me.snowdrop.data.hibernatesearch.config.jpa.extension.smoke.repository.jpa.ExtendedJpaFruitRepository;
+import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.hibernatesearch.StandaloneJpaHibernateSearchFruitRepository;
+import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.jpa.StandaloneJpaFruitRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.repository.Repository;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@SpringBootTest(classes = ExtendedJpaSmokeConfiguration.class, properties = "debug=false")
+@SpringBootTest(classes = StandaloneJpaSmokeConfiguration.class, properties = "debug=false")
 @RunWith(SpringRunner.class)
-public class ExtendedJpaSmokeTests {
-  /*
-   * This makes sure that there is only one matching repository implementation
-   * (which seems to be necessary for the Spring Data REST integration to work properly)
-   */
+public class StandaloneJpaSmokeTest {
   @Autowired
-  Repository<Fruit, Long> singleRepositoryImplementation;
+  StandaloneJpaHibernateSearchFruitRepository hsRepository;
 
   @Autowired
-  ExtendedJpaFruitRepository jpaRepository;
+  StandaloneJpaFruitRepository jpaRepository;
 
   @Test
   public void testDefault() {
+    Assert.assertNotNull(hsRepository);
     Assert.assertNotNull(jpaRepository);
 
+    Assert.assertEquals(3, hsRepository.count());
     Assert.assertEquals(3, jpaRepository.count());
 
+    Assert.assertEquals(3, TestUtils.size(hsRepository.findAll()));
     Assert.assertEquals(3, TestUtils.size(jpaRepository.findAll()));
 
     // Ask for a lowercase match, which would only work with Hibernate Search, not with the JPQL 'equals'
-    Fruit apple = jpaRepository.findByName("apple");
+    Fruit apple = hsRepository.findByName("apple");
     Assert.assertNotNull(apple);
     Assert.assertEquals("Apple", apple.getName());
   }

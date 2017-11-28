@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops;
+package me.snowdrop.data.hibernatesearch.config.infinispan.ops;
 
 import me.snowdrop.data.hibernatesearch.ops.OpsDefaultBase;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@SpringBootTest(classes = StandaloneJpaOpsConfiguration.class)
+@SpringBootTest(classes = InfinispanOpsConfiguration.class)
 @RunWith(SpringRunner.class)
-public class StandaloneJpaOpsTests extends OpsDefaultBase {
+public class InfinispanOpsTest extends OpsDefaultBase {
 }

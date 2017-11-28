@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.DatasourceMapperForTest;
+import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
 import me.snowdrop.data.hibernatesearch.TestUtils;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.junit.After;
@@ -48,14 +48,14 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration
-public class SmokeTests {
+public class SmokeTest {
 
   @Configuration
   @EnableHibernateSearchRepositories
   @EnableAsync
   public static class Config {
     @Bean(destroyMethod = "close")
-    public DatasourceMapperForTest datasourceMapper() {
+    public DatasourceMapperTester datasourceMapper() {
       return TestUtils.createDatasourceMapper(SmokeEntity.class);
     }
   }
@@ -64,7 +64,7 @@ public class SmokeTests {
   SmokeRepository repository;
 
   @Autowired
-  DatasourceMapperForTest datasourceMapper;
+  DatasourceMapperTester datasourceMapper;
 
   @Before
   public void setUp() {

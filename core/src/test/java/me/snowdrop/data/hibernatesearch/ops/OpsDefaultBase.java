@@ -31,7 +31,7 @@ import org.springframework.data.domain.PageRequest;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OpsDefaultBase extends OpsTestsBase {
+public class OpsDefaultBase extends OpsTestBase {
 
   @Test
   public void testDefaults() {

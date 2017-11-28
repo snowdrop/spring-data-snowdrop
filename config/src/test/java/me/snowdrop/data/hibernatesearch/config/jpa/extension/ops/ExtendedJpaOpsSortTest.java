@@ -26,5 +26,5 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @SpringBootTest(classes = ExtendedJpaOpsConfiguration.class)
 @RunWith(SpringRunner.class)
-public class ExtendedJpaOpsSortTests extends OpsSortBase {
+public class ExtendedJpaOpsSortTest extends OpsSortBase {
 }

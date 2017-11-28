@@ -32,73 +32,73 @@ import org.hibernate.search.spi.impl.PojoIndexedTypeIdentifier;
  */
 public class TestUtils {
 
-  private static void println(String line) {
-    System.out.println(line);
-  }
-
-  public static <T> int size(Iterable<T> iter) {
-    return toList(iter).size();
-  }
-
-  public static <T> List<T> toList(final Iterable<T> iter) {
-    if (iter instanceof List) {
-      return (List<T>) iter;
-    } else {
-      List<T> list = new ArrayList<>();
-      iter.forEach(list::add);
-      return list;
+    private static void println(String line) {
+        System.out.println(line);
     }
-  }
 
-  public static SearchIntegrator createSearchIntegrator(Class<?>... classes) {
-    SearchConfigurationForTest configuration = SearchConfigurationForTest.noTestDefaults();
-    configuration.addClasses(classes);
-    SearchIntegratorBuilder builder = new SearchIntegratorBuilder();
-    builder.configuration(configuration);
-    return builder.buildSearchIntegrator();
-  }
+    public static <T> int size(Iterable<T> iter) {
+        return toList(iter).size();
+    }
 
-  public static <T> DatasourceMapperForTest<T> createDatasourceMapper(Class<T> entityClass) {
-    SearchIntegrator searchIntegrator = createSearchIntegrator(entityClass);
-    return new DatasourceMapperForTest<T>(searchIntegrator);
-  }
+    public static <T> List<T> toList(final Iterable<T> iter) {
+        if (iter instanceof List) {
+            return (List<T>) iter;
+        } else {
+            List<T> list = new ArrayList<>();
+            iter.forEach(list::add);
+            return list;
+        }
+    }
 
-  public static void preindexEntities(DatasourceMapperForTest datasourceMapper, AbstractEntity... entities) {
-    println("Starting index creation...");
-    SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
-    Worker worker = searchIntegrator.getWorker();
-    TransactionContextForTest tc = new TransactionContextForTest();
-    boolean needsFlush = false;
-    int i = 1;
-    for (; i <= entities.length; i++) {
-      AbstractEntity entity = entities[i - 1];
-      Work work = new Work(entity, entity.getId(), WorkType.ADD, false);
-      worker.performWork(work, tc);
-      datasourceMapper.put(entity);
-      needsFlush = true;
-      if (i % 1000 == 0) {
-        //commit in batches of 1000:
+    public static SearchIntegrator createSearchIntegrator(Class<?>... classes) {
+        SearchConfigurationTester configuration = SearchConfigurationTester.noTestDefaults();
+        configuration.addClasses(classes);
+        SearchIntegratorBuilder builder = new SearchIntegratorBuilder();
+        builder.configuration(configuration);
+        return builder.buildSearchIntegrator();
+    }
+
+    public static <T> DatasourceMapperTester<T> createDatasourceMapper(Class<T> entityClass) {
+        SearchIntegrator searchIntegrator = createSearchIntegrator(entityClass);
+        return new DatasourceMapperTester<T>(searchIntegrator);
+    }
+
+    public static void preindexEntities(DatasourceMapperTester datasourceMapper, AbstractEntity... entities) {
+        println("Starting index creation...");
+        SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
+        Worker worker = searchIntegrator.getWorker();
+        TransactionContextTester tc = new TransactionContextTester();
+        boolean needsFlush = false;
+        int i = 1;
+        for (; i <= entities.length; i++) {
+            AbstractEntity entity = entities[i - 1];
+            Work work = new Work(entity, entity.getId(), WorkType.ADD, false);
+            worker.performWork(work, tc);
+            datasourceMapper.put(entity);
+            needsFlush = true;
+            if (i % 1000 == 0) {
+                //commit in batches of 1000:
+                tc.end();
+                needsFlush = false;
+                tc = new TransactionContextTester();
+            }
+        }
+        if (needsFlush) {
+            //commit remaining work
+            tc.end();
+        }
+        println(" ... created an index of " + (i - 1) + " entities.");
+    }
+
+    public static void purgeAll(DatasourceMapperTester datasourceMapper, Class<?> entityClass) {
+        println("Purging index - " + entityClass.getSimpleName() + " ...");
+        SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
+        Worker worker = searchIntegrator.getWorker();
+        TransactionContextTester tc = new TransactionContextTester();
+        IndexedTypeIdentifier indexedTypeIdentifier = PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
+        Work work = new Work(indexedTypeIdentifier, null, WorkType.PURGE_ALL);
+        worker.performWork(work, tc);
         tc.end();
-        needsFlush = false;
-        tc = new TransactionContextForTest();
-      }
+        datasourceMapper.clear();
     }
-    if (needsFlush) {
-      //commit remaining work
-      tc.end();
-    }
-    println(" ... created an index of " + (i - 1) + " entities.");
-  }
-
-  public static void purgeAll(DatasourceMapperForTest datasourceMapper, Class<?> entityClass) {
-    println("Purging index - " + entityClass.getSimpleName() + " ...");
-    SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
-    Worker worker = searchIntegrator.getWorker();
-    TransactionContextForTest tc = new TransactionContextForTest();
-    IndexedTypeIdentifier indexedTypeIdentifier = PojoIndexedTypeIdentifier.convertFromLegacy(entityClass);
-    Work work = new Work(indexedTypeIdentifier, null, WorkType.PURGE_ALL);
-    worker.performWork(work, tc);
-    tc.end();
-    datasourceMapper.clear();
-  }
 }
