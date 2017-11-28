@@ -1,0 +1,49 @@
+= Preface
+
+The Spring Data Hibernate Search project allows to implement Spring Data repositories
+backed by Hibernate Search.
+
+If you are not familiar with Spring Data,
+we recommend you have a look at the
+https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/[Spring Data Commons documentation] first,
+In particular the section about https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories[working with repositories].
+
+This project currently covers integrations of Hibernate Search to two technologies:
+Hibernate ORM (`org.hibernate:hibernate-search-orm`)
+and Infinispan Query (`org.infinispan:infinispan-query`).
+
+[NOTE]
+====
+This project is mainly a bridge allowing to access Hibernate Search through Spring Data
+while enjoying the benefits of some Spring Data features such as query definition by derivation of method name.
+
+All the usual configuration of Hibernate Search (configuration properties, entity mapping, analyzer definitions, ...)
+still must be defined: only the query part is addressed by this project.
+You can find more information about Hibernate Search and its configuration
+https://docs.jboss.org/hibernate/search/{hibernateSearchMajorMinor}/reference/en-US/html_single/[in the Hibernate Search documentation].
+
+In particular, this project being a bridge means that
+it does not make any assumption as to what Hibernate Search backend is being used:
+indexes can be stored in an embedded Lucene index as well as in a remote Elasticsearch index.
+====
+
+[[project]]
+[preface]
+== Project Metadata
+
+* Version Control: https://github.com/snowdrop/spring-data-hibernate-search/
+* Bugtracker: https://github.com/snowdrop/spring-data-hibernate-search/issues
+* Maven repository: Maven Central
+
+[[requirements]]
+[preface]
+== Requirements
+
+This project was designed to work with:
+
+* https://docs.spring.io/spring-data/data-commons/docs/{springDataVersion}/reference/html/#project[Spring Data {springDataVersion}]
+* http://hibernate.org/search/releases/{hibernateSearchMajorMinor}/[Hibernate Search {hibernateSearchVersion}].
+* (optionally) http://infinispan.org/[Infinispan] Query {infinispanVersion}
+
+The project might work with older versions of these dependencies, especially older micros,
+but we recommend using the given versions or more recent micros.

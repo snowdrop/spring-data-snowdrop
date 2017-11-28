@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright 2017 Red Hat, Inc, and individual contributors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>spring-data-hibernate-search-documentation</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>me.snowdrop.data</groupId>
+        <artifactId>spring-data-hibernate-search-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <name>Spring Data Hibernate Search documentation</name>
+    <description>Documentation for the Spring Data / Hibernate Search integration</description>
+
+    <properties>
+        <asciidoctor.base-output-dir>${project.build.directory}/asciidoctor/en-US</asciidoctor.base-output-dir>
+        <asciidoctor.theme-dir>${project.build.directory}/hibernate-asciidoctor-theme</asciidoctor.theme-dir>
+        <asciidoctor.aggregated-resources-dir>${project.build.directory}/aggregated-resources</asciidoctor.aggregated-resources-dir>
+
+        <html.meta.description>Hibernate Search, full text search for your entities - Reference Documentation</html.meta.description>
+        <html.meta.keywords>hibernate, search, hibernate search, full text, lucene, elasticsearch</html.meta.keywords>
+        <html.meta.project-key>search</html.meta.project-key>
+
+        <!-- Skip artifact deployment -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <!-- This defines the properties 'hibernatesearch.majorVersion'
+                    and 'hibernatesearch.minorVersion' to be in synch with the current dependency version -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                        <configuration>
+                            <propertyPrefix>hibernatesearch</propertyPrefix>
+                            <versionString>${hibernatesearch}</versionString>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-asciidoctor-theme</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.hibernate.infra</groupId>
+                                    <artifactId>hibernate-asciidoctor-theme</artifactId>
+                                    <version>${hibernate-asciidoctor-theme.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-asciidoc-theme-to-aggregated-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${asciidoctor.theme-dir}</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${asciidoctor.aggregated-resources-dir}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-local-resources-to-aggregated-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${asciidoctor.aggregated-resources-dir}</outputDirectory>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-css-to-html-output</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${asciidoctor.aggregated-resources-dir}/css/</directory>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${asciidoctor.base-output-dir}/html_single/css/</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-images-to-html-output</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${asciidoctor.aggregated-resources-dir}/images/</directory>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${asciidoctor.base-output-dir}/html_single/images/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html5</backend>
+                            <outputDirectory>${asciidoctor.base-output-dir}/html_single</outputDirectory>
+                            <sourceHighlighter>prettify</sourceHighlighter>
+                            <attributes>
+                                <stylesdir>css</stylesdir>
+                                <iconfont-remote>false</iconfont-remote>
+                                <iconfont-name>font-awesome/css/font-awesome.min</iconfont-name>
+                            </attributes>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDocumentName>index.adoc</sourceDocumentName>
+                    <attributes>
+                        <docinfodir>${asciidoctor.aggregated-resources-dir}/docinfo/noorm-documentation</docinfodir>
+                        <icons>font</icons>
+                        <tabsize>4</tabsize>
+
+                        <version>${project.version}</version>
+                        <springDataVersion>${springdata}</springDataVersion>
+                        <hibernateSearchVersion>${hibernatesearch}</hibernateSearchVersion>
+                        <hibernateSearchMajorMinor>${hibernatesearch.majorVersion}.${hibernatesearch.minorVersion}</hibernateSearchMajorMinor>
+                        <infinispanVersion>${infinispan}</infinispanVersion>
+                    </attributes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>documentation-pdf</id>
+            <activation>
+                <property>
+                    <name>!skipPdfDocumentation</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>output-pdf</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>pdf</backend>
+                                    <outputDirectory>${asciidoctor.base-output-dir}/pdf</outputDirectory>
+                                    <sourceHighlighter>coderay</sourceHighlighter>
+                                    <attributes>
+                                        <imagesDir>${asciidoctor.aggregated-resources-dir}/images/</imagesDir>
+                                        <pdf-stylesdir>${asciidoctor.aggregated-resources-dir}/theme</pdf-stylesdir>
+                                        <pdf-style>hibernate</pdf-style>
+                                        <pdf-fontsdir>${asciidoctor.aggregated-resources-dir}/theme/fonts</pdf-fontsdir>
+                                        <pagenums/>
+                                        <idprefix/>
+                                        <idseparator>-</idseparator>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>ch.mfrey.maven.plugin</groupId>
+                        <artifactId>copy-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>${asciidoctor.base-output-dir}/pdf</directory>
+                                            <move>true</move>
+                                            <includes>
+                                                <include>index.pdf</include>
+                                            </includes>
+                                            <paths>
+                                                <path>
+                                                    <from>index.pdf</from>
+                                                    <to>hibernate_search_reference.pdf</to>
+                                                </path>
+                                            </paths>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

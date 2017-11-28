@@ -1,0 +1,18 @@
+= Hibernate Search integration for Spring Data
+Aleš Justin, Yoann Rodiere
+:revnumber: {version}
+:revdate: {localdate}
+:toc:
+:toc-placement!:
+
+toc::[]
+
+include::preface.adoc[]
+
+[[reference]]
+= Reference Documentation
+
+:leveloffset: +1
+include::reference/data-hibernatesearch.adoc[]
+:leveloffset: -1
+
