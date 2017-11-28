@@ -26,7 +26,7 @@ and set it to `me.snowdrop.data.hibernatesearch.orm.repository.support.JpaWithHi
 
 .Hibernate Search extension to JPA repositories using JavaConfig
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
 @Configuration
 @EnableJpaRepositories(
@@ -83,7 +83,7 @@ The configuration is simpler when using Spring Boot's auto-configuration:
 
 .Hibernate Search standalone repositories using JavaConfig when using Spring Boot's auto-configuration
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
 @Configuration
 @EnableAutoConfiguration
@@ -150,15 +150,13 @@ In order to add a Hibernate Search extension to a JPA repository, you need to:
 
 .Extending a JPA repository with Hibernate Search query methods
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
-public interface BookRepositoryHibernateSearchExtension extends RepositoryHibernateSearchExtension<Book, String>
-{
+public interface BookRepositoryHibernateSearchExtension extends RepositoryHibernateSearchExtension<Book, String> {
     List<Book> findByName(String name);
 }
 
-public interface BookRepository extends JpaRepository<Book, String>, BookRepositoryHibernateSearchExtension
-{
+public interface BookRepository extends JpaRepository<Book, String>, BookRepositoryHibernateSearchExtension {
     List<Book> findByPrice(Integer price);
 }
 
@@ -207,10 +205,9 @@ Here's a short example of what a Hibernate Search query method translates into:
 
 .Query creation from method names
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
-public interface BookRepository extends Repository<Book, String>
-{
+public interface BookRepository extends Repository<Book, String> {
     List<Book> findByNameAndPrice(String name, Integer price);
 }                
 ----
@@ -218,7 +215,7 @@ public interface BookRepository extends Repository<Book, String>
 
 The method name above will be translated into the following call to a Hibernate Search query builder:
 
-[source,java]
+[source,java,options="nowrap"]
 ----
 Query query = queryBuilder.bool()
         .must(
@@ -246,7 +243,7 @@ A list of supported keywords for Hibernate Search is shown below.
 | `And`
 | `findByNameAndPrice`
 a|
-[source,java]
+[source,java,options="nowrap"]
 ----
 queryBuilder.bool()
         .must(
@@ -261,7 +258,7 @@ queryBuilder.bool()
 | `Or`
 | `findByNameOrPrice`
 a|
-[source,java]
+[source,java,options="nowrap"]
 ----
 queryBuilder.bool()
         .should(
@@ -276,7 +273,7 @@ queryBuilder.bool()
 | `Not`
 | `findByNameNot`
 a|
-[source,java]
+[source,java,options="nowrap"]
 ----
 queryBuilder.bool()
         .must(
@@ -333,7 +330,7 @@ queryBuilder.bool()
 | `In`
 | `findByNameIn(Collection<String>names)`
 a|
-[source,java]
+[source,java,options="nowrap"]
 ----
 queryBuilder.bool()
         .should(
@@ -352,7 +349,7 @@ queryBuilder.bool()
 | `NotIn`
 | `findByNameNotIn(Collection<String>names)`
 a|
-[source,java]
+[source,java,options="nowrap"]
 ----
 queryBuilder.bool()
         .must(
@@ -410,7 +407,7 @@ You can use the `@me.snowdrop.data.hibernatesearch.annotations.TargetField` anno
 
 .Target non-default fields using the `@TargetField` annotation.
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
 public interface BookRepository extends HibernateSearchRepository<Book, String> {
     @TargetField(property = "name", field = "name_sort")
@@ -433,7 +430,7 @@ Alternatively, the queries can be assigned to the method directly using `@Query(
 
 .Declare query at the method using the `@Query` annotation.
 ====
-[source,java]
+[source,java,options="nowrap"]
 ----
 public interface BookRepository extends HibernateSearchRepository<Book, String> {
     @Query("+name:?0")
