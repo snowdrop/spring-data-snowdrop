@@ -183,6 +183,8 @@ To declare repository interfaces, you can extend either the generic `org.springf
 (if there is no ambiguity as to which Spring Data module should implement the repository)
 or the more specific `me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository<T, ID>`.
 
+If you also need simple CRUD operations, extend `me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository<T, ID>`.
+
 [[hibernatesearch.query-methods]]
 = Query methods
 
