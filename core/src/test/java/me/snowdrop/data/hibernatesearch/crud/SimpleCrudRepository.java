@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch;
+package me.snowdrop.data.hibernatesearch.crud;
 
-import java.io.Serializable;
+import me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository;
 
 /**
- * @author Ales Justin
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface AbstractEntity<T extends Serializable> {
-    T getId();
+public interface SimpleCrudRepository extends HibernateSearchCrudRepository<CEntity, Integer> {
+    CEntity findByCtype(String ctype);
 }

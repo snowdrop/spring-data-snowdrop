@@ -20,6 +20,7 @@ import java.util.List;
 
 import me.snowdrop.data.hibernatesearch.TestsAction;
 import me.snowdrop.data.hibernatesearch.config.Fruit;
+import me.snowdrop.data.hibernatesearch.crud.CEntity;
 import me.snowdrop.data.hibernatesearch.ops.OpsTestsActionBase;
 import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
 import org.infinispan.Cache;
@@ -37,44 +38,45 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class InfinispanConfiguration {
 
-  @Bean(destroyMethod = "stop")
-  public EmbeddedCacheManager createCacheManager() {
-    GlobalConfigurationBuilder globalCfg = new GlobalConfigurationBuilder();
-    globalCfg.globalJmxStatistics().allowDuplicateDomains(true).disable(); // get rid of this?
+    @Bean(destroyMethod = "stop")
+    public EmbeddedCacheManager createCacheManager() {
+        GlobalConfigurationBuilder globalCfg = new GlobalConfigurationBuilder();
+        globalCfg.globalJmxStatistics().allowDuplicateDomains(true).disable(); // get rid of this?
 
-    ConfigurationBuilder cacheCfg = new ConfigurationBuilder();
-    cacheCfg.jmxStatistics().disable();
-    cacheCfg.indexing()
-      .index(Index.ALL)
-      .addIndexedEntity(Fruit.class)
-      .addIndexedEntity(SimpleEntity.class)
-      .addProperty("default.directory_provider", "local-heap")
-      .addProperty("lucene_version", "LUCENE_CURRENT");
+        ConfigurationBuilder cacheCfg = new ConfigurationBuilder();
+        cacheCfg.jmxStatistics().disable();
+        cacheCfg.indexing()
+            .index(Index.ALL)
+            .addIndexedEntity(Fruit.class)
+            .addIndexedEntity(CEntity.class)
+            .addIndexedEntity(SimpleEntity.class)
+            .addProperty("default.directory_provider", "local-heap")
+            .addProperty("lucene_version", "LUCENE_CURRENT");
 
-    return new DefaultCacheManager(globalCfg.build(), cacheCfg.build());
-  }
-
-  @Bean
-  public TestsAction testsAction(EntityToCacheMapper entityToCacheMapper) {
-    return new InfinispanOpsTestsAction(entityToCacheMapper.getCache(SimpleEntity.class));
-  }
-
-  private class InfinispanOpsTestsAction extends OpsTestsActionBase {
-    private Cache cache;
-
-    public InfinispanOpsTestsAction(Cache cache) {
-      this.cache = cache;
+        return new DefaultCacheManager(globalCfg.build(), cacheCfg.build());
     }
 
-    protected void setUp(List<SimpleEntity> entities) {
-      for (SimpleEntity entity : entities) {
-        //noinspection unchecked
-        cache.put(entity.getId(), entity);
-      }
+    @Bean
+    public TestsAction testsAction(EntityToCacheMapper entityToCacheMapper) {
+        return new InfinispanOpsTestsAction(entityToCacheMapper.getCache(SimpleEntity.class));
     }
 
-    public void tearDown() {
-      cache.clear();
+    private class InfinispanOpsTestsAction extends OpsTestsActionBase {
+        private Cache cache;
+
+        public InfinispanOpsTestsAction(Cache cache) {
+            this.cache = cache;
+        }
+
+        protected void setUp(List<SimpleEntity> entities) {
+            for (SimpleEntity entity : entities) {
+                //noinspection unchecked
+                cache.put(entity.getId(), entity);
+            }
+        }
+
+        public void tearDown() {
+            cache.clear();
+        }
     }
-  }
 }

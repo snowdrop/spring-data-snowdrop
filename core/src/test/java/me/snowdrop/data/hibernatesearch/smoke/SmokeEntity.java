@@ -38,7 +38,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @Builder
 @Indexed
-public class SmokeEntity implements AbstractEntity {
+public class SmokeEntity implements AbstractEntity<String> {
   @Id
   @DocumentId
   private String id;

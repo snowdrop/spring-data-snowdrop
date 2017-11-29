@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class OpsTestBase {
+public abstract class OpsTestBase {
 
   @Autowired
   TestedRepository<Ops> testedRepository;

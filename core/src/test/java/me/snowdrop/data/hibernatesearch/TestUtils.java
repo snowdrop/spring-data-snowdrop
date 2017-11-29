@@ -74,6 +74,7 @@ public class TestUtils {
             AbstractEntity entity = entities[i - 1];
             Work work = new Work(entity, entity.getId(), WorkType.ADD, false);
             worker.performWork(work, tc);
+            //noinspection unchecked
             datasourceMapper.put(entity);
             needsFlush = true;
             if (i % 1000 == 0) {
@@ -88,6 +89,32 @@ public class TestUtils {
             tc.end();
         }
         println(" ... created an index of " + (i - 1) + " entities.");
+    }
+
+    public static void deleteEntities(DatasourceMapperTester datasourceMapper, AbstractEntity... entities) {
+        println("Starting index removal...");
+        SearchIntegrator searchIntegrator = datasourceMapper.getSearchIntegrator();
+        Worker worker = searchIntegrator.getWorker();
+        TransactionContextTester tc = new TransactionContextTester();
+        boolean needsFlush = false;
+        int i = 1;
+        for (; i <= entities.length; i++) {
+            AbstractEntity entity = entities[i - 1];
+            Work work = new Work(entity, entity.getId(), WorkType.DELETE, false);
+            worker.performWork(work, tc);
+            needsFlush = true;
+            if (i % 1000 == 0) {
+                //commit in batches of 1000:
+                tc.end();
+                needsFlush = false;
+                tc = new TransactionContextTester();
+            }
+        }
+        if (needsFlush) {
+            //commit remaining work
+            tc.end();
+        }
+        println(" ... removed an index of " + (i - 1) + " entities.");
     }
 
     public static void purgeAll(DatasourceMapperTester datasourceMapper, Class<?> entityClass) {

@@ -13,42 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package me.snowdrop.data.hibernatesearch.ops;
+
+package me.snowdrop.data.hibernatesearch.crud;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import me.snowdrop.data.hibernatesearch.AbstractEntity;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FieldBridge;
-import org.hibernate.search.bridge.builtin.IntegerBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.SortableField;
+import org.hibernate.search.annotations.Store;
 import org.springframework.data.annotation.Id;
 
+/**
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
+ */
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@EqualsAndHashCode(callSuper = false)
+@Indexed
 @Entity
-@Table(name = "contained")
-public class ContainedEntity implements AbstractEntity<Long> {
-  @Id
-  @DocumentId
-  @javax.persistence.Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  @Field(name = "containedName")
-  private String name;
-  @Field(name = "numberAsText", bridge = @FieldBridge(impl = IntegerBridge.class))
-  private Integer number;
+public class CEntity implements AbstractEntity<Integer> {
+    @Id
+    @DocumentId
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Field(store = Store.NO)
+    @SortableField
+    String ctype;
 }

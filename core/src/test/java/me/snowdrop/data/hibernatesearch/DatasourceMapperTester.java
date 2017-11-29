@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.snowdrop.data.hibernatesearch.core.query.AbstractHSQueryAdapter;
+import me.snowdrop.data.hibernatesearch.crud.CEntity;
 import me.snowdrop.data.hibernatesearch.spi.AbstractCrudAdapter;
 import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
@@ -82,6 +83,8 @@ public class DatasourceMapperTester<T extends AbstractEntity> extends AbstractHS
         }
 
         protected void save(ID id, U entity) {
+            AbstractEntity ae = (AbstractEntity) entity;
+            TestUtils.preindexEntities(DatasourceMapperTester.this, ae);
             map.put((Serializable) id, (T) entity);
         }
 
@@ -90,10 +93,15 @@ public class DatasourceMapperTester<T extends AbstractEntity> extends AbstractHS
         }
 
         public void deleteById(ID id) {
-            map.remove(id);
+            AbstractEntity ae = map.get(id);
+            if (ae != null) {
+                TestUtils.deleteEntities(DatasourceMapperTester.this, ae);
+                map.remove(id);
+            }
         }
 
         public void deleteAll() {
+            TestUtils.purgeAll(DatasourceMapperTester.this, CEntity.class);
             map.clear();
         }
     }

@@ -18,7 +18,12 @@ package me.snowdrop.data.hibernatesearch.ops;
 
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +54,7 @@ import org.springframework.data.annotation.Id;
 @Indexed
 @Entity
 @Table(name = "simple")
-public class SimpleEntity implements AbstractEntity {
+public class SimpleEntity implements AbstractEntity<Long> {
   @Id
   @DocumentId
   @javax.persistence.Id

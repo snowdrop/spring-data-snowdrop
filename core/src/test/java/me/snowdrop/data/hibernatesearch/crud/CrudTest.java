@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch;
+package me.snowdrop.data.hibernatesearch.crud;
 
-import java.io.Serializable;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * @author Ales Justin
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface AbstractEntity<T extends Serializable> {
-    T getId();
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = CrudConfiguration.class)
+public class CrudTest extends CrudTestBase {
+    protected CEntity create() {
+        return new CEntity(1, "foobar");
+    }
 }
