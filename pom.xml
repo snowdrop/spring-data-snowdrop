@@ -59,14 +59,6 @@
     <source.level>1.8</source.level>
   </properties>
 
-  <modules>
-    <module>core</module>
-    <module>config</module>
-    <module>orm</module>
-    <module>starters</module>
-    <module>documentation</module>
-  </modules>
-
   <dependencyManagement>
     <dependencies>
 
@@ -302,4 +294,35 @@
     </repository>
   </repositories>
 
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>core</module>
+        <module>config</module>
+        <module>orm</module>
+        <module>starters</module>
+        <module>documentation</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>code</id>
+      <modules>
+        <module>core</module>
+        <module>config</module>
+        <module>orm</module>
+        <module>starters</module>
+      </modules>
+    </profile>
+    <!-- Just docs -->
+    <profile>
+      <id>docs</id>
+      <modules>
+        <module>documentation</module>
+      </modules>
+    </profile>
+  </profiles>
 </project>
