@@ -27,42 +27,46 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class AbstractHibernateSearchRepository<T, ID> implements HibernateSearchRepository<T, ID> {
-  protected final HibernateSearchOperations hibernateSearchOperations;
-  private final Class<T> entityClass;
+    protected final HibernateSearchOperations hibernateSearchOperations;
+    protected final HibernateSearchEntityInformation<T, ID> entityInformation;
 
-  public AbstractHibernateSearchRepository(HibernateSearchOperations hibernateSearchOperations, HibernateSearchEntityInformation<T, ID> entityInformation) {
-    this.hibernateSearchOperations = hibernateSearchOperations;
-    this.entityClass = entityInformation.getJavaType();
-  }
+    public AbstractHibernateSearchRepository(HibernateSearchOperations hibernateSearchOperations, HibernateSearchEntityInformation<T, ID> entityInformation) {
+        this.hibernateSearchOperations = hibernateSearchOperations;
+        this.entityInformation = entityInformation;
+    }
 
-  @Override
-  public Iterable<T> findAll() {
-    BaseQuery<T> query = new BaseQuery<>(getEntityClass());
-    return hibernateSearchOperations.findAll(query);
-  }
+    protected HibernateSearchEntityInformation<T, ID> getEntityInformation() {
+        return entityInformation;
+    }
 
-  @Override
-  public long count() {
-    BaseQuery<T> countQuery = new BaseQuery<>(getEntityClass());
-    return hibernateSearchOperations.count(countQuery);
-  }
+    @Override
+    public Iterable<T> findAll() {
+        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        return hibernateSearchOperations.findAll(query);
+    }
 
-  @Override
-  public Iterable<T> findAll(Sort sort) {
-    BaseQuery<T> query = new BaseQuery<>(getEntityClass());
-    query.setSort(sort);
-    return hibernateSearchOperations.findAll(query);
-  }
+    @Override
+    public long count() {
+        BaseQuery<T> countQuery = new BaseQuery<>(getEntityClass());
+        return hibernateSearchOperations.count(countQuery);
+    }
 
-  @Override
-  public Page<T> findAll(Pageable pageable) {
-    BaseQuery<T> query = new BaseQuery<>(getEntityClass());
-    query.setPageable(pageable);
-    return hibernateSearchOperations.findPageable(query);
-  }
+    @Override
+    public Iterable<T> findAll(Sort sort) {
+        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        query.setSort(sort);
+        return hibernateSearchOperations.findAll(query);
+    }
 
-  @Override
-  public Class<T> getEntityClass() {
-    return entityClass;
-  }
+    @Override
+    public Page<T> findAll(Pageable pageable) {
+        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        query.setPageable(pageable);
+        return hibernateSearchOperations.findPageable(query);
+    }
+
+    @Override
+    public Class<T> getEntityClass() {
+        return entityInformation.getJavaType();
+    }
 }

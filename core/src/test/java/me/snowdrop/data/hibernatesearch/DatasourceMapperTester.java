@@ -23,47 +23,78 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.snowdrop.data.hibernatesearch.core.query.AbstractHSQueryAdapter;
+import me.snowdrop.data.hibernatesearch.spi.AbstractCrudAdapter;
+import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.hibernate.search.spi.SearchIntegrator;
+import org.springframework.data.repository.core.EntityInformation;
 
 /**
  * @author Ales Justin
  */
-public class DatasourceMapperTester<T> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
-  private final SearchIntegrator searchIntegrator;
+public class DatasourceMapperTester<T extends AbstractEntity> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
+    private final SearchIntegrator searchIntegrator;
 
-  private Map<Serializable, Object> map = new HashMap<>();
+    private Map<Serializable, T> map = new HashMap<>();
 
-  public DatasourceMapperTester(SearchIntegrator searchIntegrator) {
-    this.searchIntegrator = searchIntegrator;
-  }
+    public DatasourceMapperTester(SearchIntegrator searchIntegrator) {
+        this.searchIntegrator = searchIntegrator;
+    }
 
-  public SearchIntegrator getSearchIntegrator() {
-    return searchIntegrator;
-  }
+    public SearchIntegrator getSearchIntegrator() {
+        return searchIntegrator;
+    }
 
-  @Override
-  public void close() throws IOException {
-    searchIntegrator.close();
-  }
+    @Override
+    public void close() throws IOException {
+        searchIntegrator.close();
+    }
 
-  @Override
-  public <U> QueryAdapter<U> createQueryAdapter(Class<U> entityClass) {
-    //noinspection unchecked
-    return (QueryAdapter<U>) this;
-  }
+    @Override
+    public <U> QueryAdapter<U> createQueryAdapter(Class<U> entityClass) {
+        //noinspection unchecked
+        return (QueryAdapter<U>) this;
+    }
 
-  public void put(AbstractEntity entity) {
-    map.put(entity.getId(), entity);
-  }
+    @Override
+    public <U, ID> CrudAdapter<U, ID> createCrudAdapter(EntityInformation<U, ID> ei) {
+        return new TesterCrudAdapter<>(ei);
+    }
 
-  public void clear() {
-    map.clear();
-  }
+    public void put(T entity) {
+        map.put(entity.getId(), entity);
+    }
 
-  protected T get(Class<T> entityClass, Serializable id) {
-    Object entity = map.get(id);
-    return entity != null ? entityClass.cast(entity) : null;
-  }
+    public void clear() {
+        map.clear();
+    }
+
+    protected T get(Class<T> entityClass, Serializable id) {
+        Object entity = map.get(id);
+        return entity != null ? entityClass.cast(entity) : null;
+    }
+
+    @SuppressWarnings({"unchecked", "SuspiciousMethodCalls"})
+    private class TesterCrudAdapter<U, ID> extends AbstractCrudAdapter<U, ID> {
+        public TesterCrudAdapter(EntityInformation<U, ID> entityInformation) {
+            super(entityInformation);
+        }
+
+        protected void save(ID id, U entity) {
+            map.put((Serializable) id, (T) entity);
+        }
+
+        protected U find(ID id) {
+            return (U) map.get(id);
+        }
+
+        public void deleteById(ID id) {
+            map.remove(id);
+        }
+
+        public void deleteAll() {
+            map.clear();
+        }
+    }
 }

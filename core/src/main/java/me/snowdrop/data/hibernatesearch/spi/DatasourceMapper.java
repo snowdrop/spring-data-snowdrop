@@ -16,9 +16,13 @@
 
 package me.snowdrop.data.hibernatesearch.spi;
 
+import org.springframework.data.repository.core.EntityInformation;
+
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface DatasourceMapper {
-  <T> QueryAdapter<T> createQueryAdapter(Class<T> entityClass);
+    <T> QueryAdapter<T> createQueryAdapter(Class<T> entityClass);
+
+    <T, ID> CrudAdapter<T, ID> createCrudAdapter(EntityInformation<T, ID> ei);
 }

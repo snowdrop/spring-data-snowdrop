@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.infinispan;
+package me.snowdrop.data.hibernatesearch.repository.support;
 
-import org.infinispan.Cache;
+import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 
 /**
- * We need to know how to map entity classes to their caches.
- *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EntityToCacheMapper {
-  /**
-   * Map entity class to its cache.
-   *
-   * @param entityClass the entity class
-   * @return cache which holds entity class's (indexed) data
-   */
-  <ID, T> Cache<ID, T> getCache(Class<T> entityClass);
+public class SimpleCrudRepository<T, ID> extends AbstractHibernateSearchCrudRepository<T, ID> {
+  public SimpleCrudRepository(HibernateSearchOperations hibernateSearchOperations, HibernateSearchEntityInformation<T, ID> entityInformation) {
+    super(hibernateSearchOperations, entityInformation);
+  }
 }

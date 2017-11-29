@@ -48,7 +48,7 @@ public class HibernateSearchDataInfinispanAutoConfiguration {
   @ConditionalOnBean(EmbeddedCacheManager.class)
   public EntityToCacheMapper createDefaultEntityToCacheMapper(final EmbeddedCacheManager cacheManager) {
     return new EntityToCacheMapper() {
-      public <T> Cache<?, T> getCache(Class<T> entityClass) {
+      public <ID, T> Cache<ID, T> getCache(Class<T> entityClass) {
         return cacheManager.getCache(); // always return default cache
       }
     };

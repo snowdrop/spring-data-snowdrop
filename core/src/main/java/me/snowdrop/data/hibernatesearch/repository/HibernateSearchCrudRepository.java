@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.config.infinispan;
+package me.snowdrop.data.hibernatesearch.repository;
 
-import org.infinispan.Cache;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * We need to know how to map entity classes to their caches.
- *
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EntityToCacheMapper {
-  /**
-   * Map entity class to its cache.
-   *
-   * @param entityClass the entity class
-   * @return cache which holds entity class's (indexed) data
-   */
-  <ID, T> Cache<ID, T> getCache(Class<T> entityClass);
+@NoRepositoryBean
+public interface HibernateSearchCrudRepository<T, ID> extends HibernateSearchRepository<T, ID>, CrudRepository<T, ID> {
 }

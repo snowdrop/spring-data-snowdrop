@@ -58,7 +58,7 @@ public class TestUtils {
         return builder.buildSearchIntegrator();
     }
 
-    public static <T> DatasourceMapperTester<T> createDatasourceMapper(Class<T> entityClass) {
+    public static <T extends AbstractEntity> DatasourceMapperTester<T> createDatasourceMapper(Class<T> entityClass) {
         SearchIntegrator searchIntegrator = createSearchIntegrator(entityClass);
         return new DatasourceMapperTester<T>(searchIntegrator);
     }
