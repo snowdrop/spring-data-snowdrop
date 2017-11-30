@@ -285,6 +285,10 @@ queryBuilder.bool()
         .createQuery();
 ----
 
+| `Null`
+| `findByPokeNull`
+| `queryBuilder.range().onField("poke").matching(null).createQuery()`
+
 | `Between`
 | `findByPriceBetween`
 | `queryBuilder.range().onField("price").from(lower).to(upper).createQuery()`
@@ -395,6 +399,8 @@ queryBuilder.bool()
 | `queryBuilder.keyword().wildcard().onField("available").matching(true)` and
 `queryBuilder.sort().byField("name").desc().createSort()`
 |===
+
+When doing isNull or isNotNull queries, you must index the null fields properly -- see @Field::indexNullAs property.
 
 [[hibernatesearch.query-methods.fieldnames]]
 === Targeting specific fields

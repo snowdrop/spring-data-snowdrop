@@ -55,36 +55,38 @@ import org.springframework.data.annotation.Id;
 @Entity
 @Table(name = "simple")
 public class SimpleEntity implements AbstractEntity<Long> {
-  @Id
-  @DocumentId
-  @javax.persistence.Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  @Field(store = Store.NO)
-  @SortableField(forField = "identity.name")
-  @Field(name = "identity.name")
-  @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
-  private String name;
-  @Field(store = Store.NO)
-  private String text;
-  @Field(store = Store.NO)
-  @Field(name = "var")
-  private int number;
-  @Field(name = "boool", store = Store.NO)
-  private boolean buul;
-  @Field(store = Store.NO)
-  @SortableField
-  private String hero;
-  @Field(store = Store.NO)
-  @SortableField
-  private String color;
-  @Spatial
-  @Embedded
-  private Location location;
-  @IndexedEmbedded
-  @Embedded
-  private Address address;
-  @IndexedEmbedded(prefix = "containedList.somePrefix_")
-  @OneToMany
-  private List<ContainedEntity> contained;
+    @Id
+    @DocumentId
+    @javax.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Field(store = Store.NO)
+    @SortableField(forField = "identity.name")
+    @Field(name = "identity.name")
+    @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
+    private String name;
+    @Field(store = Store.NO)
+    private String text;
+    @Field(store = Store.NO)
+    @Field(name = "var")
+    private int number;
+    @Field(name = "boool", store = Store.NO)
+    private boolean buul;
+    @Field(store = Store.NO)
+    @SortableField
+    private String hero;
+    @Field(store = Store.NO)
+    @SortableField
+    private String color;
+    @Spatial
+    @Embedded
+    private Location location;
+    @IndexedEmbedded
+    @Embedded
+    private Address address;
+    @IndexedEmbedded(prefix = "containedList.somePrefix_")
+    @OneToMany
+    private List<ContainedEntity> contained;
+    @Field(store = Store.NO, indexNullAs = Field.DEFAULT_NULL_TOKEN)
+    private String poke;
 }

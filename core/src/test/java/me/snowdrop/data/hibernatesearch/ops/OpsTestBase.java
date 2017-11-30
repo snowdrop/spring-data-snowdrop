@@ -56,7 +56,7 @@ public abstract class OpsTestBase {
 
   protected void assertIds(Iterable<SimpleEntity> iter, long... ids) {
     List<SimpleEntity> list = TestUtils.toList(iter);
-    Assert.assertEquals(list.size(), ids.length);
+      Assert.assertEquals(ids.length, list.size());
     for (int i = 0; i < list.size(); i++) {
       Assert.assertEquals(new Long(ids[i]), list.get(i).getId());
     }

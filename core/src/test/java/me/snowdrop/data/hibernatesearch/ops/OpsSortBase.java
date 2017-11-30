@@ -61,7 +61,7 @@ public class OpsSortBase extends OpsTestBase {
 
   @Test
   public void testFindByNumberBefore() {
-    assertIds(repository.findByNumberBefore(10, Sort.by(Sort.Order.by("color"), Sort.Order.desc("hero"))), 4, 7, 1, 2, 3);
+      assertIds(repository.findByNumberBefore(10, Sort.by(Sort.Order.by("color"), Sort.Order.desc("hero"))), 7, 1, 2, 3);
   }
 
   @Test
@@ -71,7 +71,7 @@ public class OpsSortBase extends OpsTestBase {
 
   @Test
   public void testFindByNumberAfter() {
-    assertIds(repository.findByNumberAfter(20, Sort.by("hero")), 6, 5);
+      assertIds(repository.findByNumberAfter(20, Sort.by("hero")), 6);
   }
 
   @Test

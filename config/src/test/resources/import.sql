@@ -3,14 +3,14 @@ insert into fruit (name) values
     ('Apple'),
     ('Banana');
 
-insert into simple (name, text, number, buul, hero, color, latitude, longitude, zipCode, city, country) values
-    ('ann', 'Does Ann like good red apples?', -20, true, 'Superman', 'red', 10.0, 10.0, 1360, 'Vrhnika', 'Slovenia'),
-    ('barb', 'Why is Barb dancing twist?', -10, true, 'Spiderman', 'red', 24.0, 32.0, 1360, 'Vrhnika', 'Slovenia'),
-    ('carl', 'Carl is good at running and jumping.', 0, true, 'Flash', 'red', 20.0, 20.0, 1000, 'Ljubljana', 'Slovenia'),
-    ('doug', 'Doug likes to sleeps.', 10, false, 'Batman', 'black', -10.0, -10.0, 4000, 'Kranj', 'Slovenia'),
-    ('eva', 'Eva is running in circles.', 20, false, 'Ironman', 'gold', -20.0, 5.0, 2000, 'Maribor', 'Slovenia'),
-    ('fanny', 'Fanny is reading a good book.', 30, false, 'Aquaman', 'blue', 5.0, -20.0, 3000, 'Celje', 'Slovenia'),
-    ('gwen', 'Gwen is cooking.', 1, false, NULL, 'grey', 175.0, -120.0, 4260, 'Bled', 'Slovenia');
+insert into simple (name, text, number, buul, hero, color, latitude, longitude, zipCode, city, country, poke) values
+    ('ann', 'Does Ann like good red apples?', -20, true, 'Superman', 'red', 10.0, 10.0, 1360, 'Vrhnika', 'Slovenia', NULL),
+    ('barb', 'Why is Barb dancing twist?', -10, true, 'Spiderman', 'red', 24.0, 32.0, 1360, 'Vrhnika', 'Slovenia', 'fun'),
+    ('carl', 'Carl is good at running and jumping.', 0, true, 'Flash', 'red', 20.0, 20.0, 1000, 'Ljubljana', 'Slovenia', ''),
+    ('doug', 'Doug likes to sleeps.', 10, false, 'Batman', 'black', -10.0, -10.0, 4000, 'Kranj', 'Slovenia', 'street'),
+    ('eva', 'Eva is running in circles.', 20, false, 'Ironman', 'gold', -20.0, 5.0, 2000, 'Maribor', 'Slovenia', NULL),
+    ('fanny', 'Fanny is reading a good book.', 30, false, 'Aquaman', 'blue', 5.0, -20.0, 3000, 'Celje', 'Slovenia', 'army'),
+    ('gwen', 'Gwen is cooking.', 1, false, NULL, 'grey', 175.0, -120.0, 4260, 'Bled', 'Slovenia', NULL);
 
 insert into contained (name, number) values
     ('Frank Dalton', 12),

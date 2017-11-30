@@ -33,6 +33,12 @@ public interface Ops {
   @TargetField(property = "dummy2", field = "bbb")
   long countByColor(String color);
 
+  List<SimpleEntity> findByPokeNotNullAndTextNotLike(String text);
+
+  List<SimpleEntity> findByPokeIsNull();
+
+  List<SimpleEntity> findByPokeIsNotNull();
+
   @TargetField(property = "name", field = "identity.name")
   List<SimpleEntity> findByNameNot(String notName);
 
@@ -49,6 +55,8 @@ public interface Ops {
   List<SimpleEntity> findByTextRegex(String text);
 
   List<SimpleEntity> findByTextLike(String text);
+
+  List<SimpleEntity> findByTextNotLike(String text);
 
   List<SimpleEntity> findByTextStartingWith(String text);
 

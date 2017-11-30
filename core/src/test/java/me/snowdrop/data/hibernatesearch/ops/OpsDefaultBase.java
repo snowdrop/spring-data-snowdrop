@@ -42,12 +42,27 @@ public class OpsDefaultBase extends OpsTestBase {
     @SuppressWarnings("unchecked")
     HibernateSearchRepository<SimpleEntity, Long> hibernateSearchRepository = (HibernateSearchRepository<SimpleEntity, Long>) repository;
     assertSize(hibernateSearchRepository.findAll(), 7);
-    assertSize(hibernateSearchRepository.findAll(new PageRequest(1, 3)), 3);
+    assertSize(hibernateSearchRepository.findAll(PageRequest.of(1, 3)), 3);
   }
 
   @Test
   public void testCountBy() {
     Assert.assertEquals(3L, repository.countByColor("red"));
+  }
+
+  @Test
+  public void testDupNot() {
+    assertSize(repository.findByPokeNotNullAndTextNotLike("good"), 2);
+  }
+
+  @Test
+  public void testIsNull() {
+    assertSize(repository.findByPokeIsNull(), 3);
+  }
+
+  @Test
+  public void testIsNotNull() {
+    assertSize(repository.findByPokeIsNotNull(), 4);
   }
 
   @Test
@@ -67,7 +82,7 @@ public class OpsDefaultBase extends OpsTestBase {
 
   @Test
   public void testFindByNumberBefore() {
-    assertSize(repository.findByNumberBefore(10), 5);
+      assertSize(repository.findByNumberBefore(10), 4);
   }
 
   @Test
@@ -77,7 +92,7 @@ public class OpsDefaultBase extends OpsTestBase {
 
   @Test
   public void testFindByNumberAfter() {
-    assertSize(repository.findByNumberAfter(20), 2);
+      assertSize(repository.findByNumberAfter(20), 1);
   }
 
   @Test
@@ -88,6 +103,11 @@ public class OpsDefaultBase extends OpsTestBase {
   @Test
   public void testFindByTextLike() {
     assertSize(repository.findByTextLike("read"), 1);
+  }
+
+  @Test
+  public void testFindByTextNotLike() {
+    assertSize(repository.findByTextNotLike("good"), 4);
   }
 
   @Test
