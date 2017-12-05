@@ -36,7 +36,7 @@ public class OpsSortBase extends OpsTestBase {
     );
     @SuppressWarnings("unchecked")
     HibernateSearchRepository<SimpleEntity, Long> hibernateSearchRepository = (HibernateSearchRepository<SimpleEntity, Long>) repository;
-    assertIds(hibernateSearchRepository.findAll(Sort.by("color")), 4, 6, 5, 7, 1, 2, 3);
+    assertIds(hibernateSearchRepository.findAll(Sort.by("color", "name")), 4, 6, 5, 7, 1, 2, 3);
   }
 
   @Test

@@ -16,11 +16,11 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.hibernatesearch.core.query.lucene.LuceneQueryAdapter;
 import me.snowdrop.data.hibernatesearch.util.Integers;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
@@ -30,40 +30,40 @@ import org.hibernate.search.query.engine.spi.HSQuery;
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public abstract class AbstractHSQueryAdapter<T> extends AbstractQueryAdapter<T> {
-  private HSQuery hsQuery;
+public abstract class AbstractHSQueryAdapter<T> extends LuceneQueryAdapter<T> {
+    private HSQuery hsQuery;
 
-  protected abstract T get(Class<T> entityClass, Serializable id);
+    protected abstract T get(Class<T> entityClass, Object id);
 
-  protected long size() {
-    return hsQuery.queryResultSize();
-  }
-
-  protected List<T> list() {
-    List<T> list = new ArrayList<>();
-    for (EntityInfo ei : hsQuery.queryEntityInfos()) {
-      list.add(get(entityClass, ei.getId()));
+    protected long size() {
+        return hsQuery.queryResultSize();
     }
-    return list;
-  }
 
-  protected Stream<T> stream() {
-    return toStream(list());
-  }
+    protected List<T> list() {
+        List<T> list = new ArrayList<>();
+        for (EntityInfo ei : hsQuery.queryEntityInfos()) {
+            list.add(get(entityClass, ei.getId()));
+        }
+        return list;
+    }
 
-  protected void applyLuceneQuery(Query query) {
-    hsQuery = getSearchIntegrator().createHSQuery(query, entityClass);
-  }
+    protected Stream<T> stream() {
+        return toStream(list());
+    }
 
-  protected void setSort(Sort sort) {
-    hsQuery.sort(sort);
-  }
+    protected void applyQueryImpl(Query query) {
+        hsQuery = getSearchIntegrator().createHSQuery(query, entityClass);
+    }
 
-  protected void setFirstResult(long firstResult) {
-    hsQuery.firstResult(Integers.safeCast(firstResult));
-  }
+    protected void setSort(Sort sort) {
+        hsQuery.sort(sort);
+    }
 
-  protected void setMaxResults(long maxResults) {
-    hsQuery.maxResults(Integers.safeCast(maxResults));
-  }
+    protected void setFirstResult(long firstResult) {
+        hsQuery.firstResult(Integers.safeCast(firstResult));
+    }
+
+    protected void setMaxResults(long maxResults) {
+        hsQuery.maxResults(Integers.safeCast(maxResults));
+    }
 }

@@ -17,19 +17,17 @@ package me.snowdrop.data.hibernatesearch.util;
 
 public final class Integers {
 
-  private Integers() {
-  }
+    private Integers() {
+    }
 
-  public static int safeCast(long value) {
-    if ( value > Integer.MAX_VALUE ) {
-      return Integer.MAX_VALUE;
+    public static int safeCast(long value) {
+        if (value > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        } else if (value < Integer.MIN_VALUE) {
+            return Integer.MIN_VALUE;
+        } else {
+            return (int) value;
+        }
     }
-    else if ( value < Integer.MIN_VALUE ) {
-      return Integer.MIN_VALUE;
-    }
-    else {
-      return (int) value;
-    }
-  }
 
 }

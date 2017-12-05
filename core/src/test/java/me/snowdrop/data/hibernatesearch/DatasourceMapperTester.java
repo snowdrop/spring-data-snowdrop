@@ -37,7 +37,7 @@ import org.springframework.data.repository.core.EntityInformation;
 public class DatasourceMapperTester<T extends AbstractEntity> extends AbstractHSQueryAdapter<T> implements DatasourceMapper, Closeable {
     private final SearchIntegrator searchIntegrator;
 
-    private Map<Serializable, T> map = new HashMap<>();
+    private Map<Object, T> map = new HashMap<>();
 
     public DatasourceMapperTester(SearchIntegrator searchIntegrator) {
         this.searchIntegrator = searchIntegrator;
@@ -71,7 +71,7 @@ public class DatasourceMapperTester<T extends AbstractEntity> extends AbstractHS
         map.clear();
     }
 
-    protected T get(Class<T> entityClass, Serializable id) {
+    protected T get(Class<T> entityClass, Object id) {
         Object entity = map.get(id);
         return entity != null ? entityClass.cast(entity) : null;
     }

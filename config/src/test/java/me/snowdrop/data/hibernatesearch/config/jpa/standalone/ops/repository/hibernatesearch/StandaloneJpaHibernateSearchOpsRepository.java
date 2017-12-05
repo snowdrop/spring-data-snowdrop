@@ -15,10 +15,15 @@
  */
 package me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops.repository.hibernatesearch;
 
+import me.snowdrop.data.hibernatesearch.annotations.TargetField;
 import me.snowdrop.data.hibernatesearch.ops.Ops;
 import me.snowdrop.data.hibernatesearch.ops.SimpleEntity;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+import org.springframework.data.domain.Sort;
 
 public interface StandaloneJpaHibernateSearchOpsRepository
         extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+
+    @TargetField(property = "name", field = "identity.name")
+    Iterable<SimpleEntity> findAll(Sort sort);
 }

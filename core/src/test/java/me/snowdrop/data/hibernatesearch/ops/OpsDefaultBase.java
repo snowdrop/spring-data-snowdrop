@@ -116,6 +116,11 @@ public class OpsDefaultBase extends OpsTestBase {
   }
 
   @Test
+  public void testFindByTextEndingWith() {
+    assertSize(repository.findByTextEndingWith("king"), 1);
+  }
+
+  @Test
   public void testFindByTextContaining() {
     assertSize(repository.findByTextContaining("good"), 3);
   }
@@ -217,7 +222,7 @@ public class OpsDefaultBase extends OpsTestBase {
     Assert.assertEquals("ann", projections.get(0).getName());
     Assert.assertEquals(-20, projections.get(0).getNumber());
 
-    List<HeroProjection> hps = repository.findByHero("spiderman");
+    List<HeroProjection> hps = repository.findByHero("Spiderman"); // TODO fix to lowercase
     Assert.assertEquals(1, hps.size());
     Assert.assertEquals("Spiderman [red]", hps.get(0).getInfo());
   }

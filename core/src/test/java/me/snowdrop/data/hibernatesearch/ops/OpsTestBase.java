@@ -31,35 +31,34 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class OpsTestBase {
 
-  @Autowired
-  TestedRepository<Ops> testedRepository;
+    @Autowired
+    TestedRepository<Ops> testedRepository;
 
-  Ops repository;
+    Ops repository;
 
-  @Autowired
-  TestsAction testsAction;
+    @Autowired
+    TestsAction testsAction;
 
-  @Before
-  public void setUp() {
-    testsAction.setUp();
-    repository = testedRepository.getRepository();
-  }
-
-  @After
-  public void tearDown() {
-    testsAction.tearDown();
-  }
-
-  protected void assertSize(Iterable<SimpleEntity> iter, int expectedSize) {
-    Assert.assertEquals(expectedSize, TestUtils.size(iter));
-  }
-
-  protected void assertIds(Iterable<SimpleEntity> iter, long... ids) {
-    List<SimpleEntity> list = TestUtils.toList(iter);
-      Assert.assertEquals(ids.length, list.size());
-    for (int i = 0; i < list.size(); i++) {
-      Assert.assertEquals(new Long(ids[i]), list.get(i).getId());
+    @Before
+    public void setUp() {
+        testsAction.setUp();
+        repository = testedRepository.getRepository();
     }
-  }
 
+    @After
+    public void tearDown() {
+        testsAction.tearDown();
+    }
+
+    protected void assertSize(Iterable<SimpleEntity> iter, int expectedSize) {
+        Assert.assertEquals("Invalid result size.", expectedSize, TestUtils.size(iter));
+    }
+
+    protected void assertIds(Iterable<SimpleEntity> iter, long... ids) {
+        List<SimpleEntity> list = TestUtils.toList(iter);
+        Assert.assertEquals("Invalid result size.", ids.length, list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Assert.assertEquals("Invalid order, wrong id.", new Long(ids[i]), list.get(i).getId());
+        }
+    }
 }

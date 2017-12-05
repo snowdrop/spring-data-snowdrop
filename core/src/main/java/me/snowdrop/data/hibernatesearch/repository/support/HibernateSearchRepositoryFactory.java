@@ -46,6 +46,7 @@ public class HibernateSearchRepositoryFactory extends ExtendingRepositoryFactory
 
     public HibernateSearchRepositoryFactory(HibernateSearchOperations hibernateSearchOperations) {
         this.hibernateSearchOperations = hibernateSearchOperations;
+        addRepositoryProxyPostProcessor(new HibernateSearchRepositoryProxyPostProcessor());
     }
 
     private Class<?> getExactRepositoryBaseClass(RepositoryMetadata metadata) {

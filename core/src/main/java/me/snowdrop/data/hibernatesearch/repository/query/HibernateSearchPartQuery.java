@@ -16,12 +16,6 @@
 
 package me.snowdrop.data.hibernatesearch.repository.query;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.annotations.TargetFields;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
@@ -36,48 +30,36 @@ import org.springframework.data.repository.query.parser.PartTree;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class HibernateSearchPartQuery extends AbstractHibernateSearchRepositoryQuery {
-  private final PartTree tree;
-  private final MappingContext<?, HibernateSearchPersistentProperty> mappingContext;
+    private final PartTree tree;
+    private final MappingContext<?, HibernateSearchPersistentProperty> mappingContext;
 
-  public HibernateSearchPartQuery(HibernateSearchQueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
-    super(queryMethod, hibernateSearchOperations);
-    this.tree = new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType());
-    this.mappingContext = hibernateSearchOperations.getMappingContext();
-  }
-
-  protected boolean isModify(Query<?> query) {
-    return tree.isDelete();
-  }
-
-  protected boolean isExistsProjection(Query<?> query) {
-    return tree.isExistsProjection();
-  }
-
-  protected boolean isCountProjection(Query<?> query) {
-    return tree.isCountProjection();
-  }
-
-  protected BaseQuery<?> createQuery(ParametersParameterAccessor accessor) {
-    Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
-    CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
-
-    query.setTargetFields(getTargetFields());
-
-    query.setMaxResults(tree.getMaxResults());
-    query.setDistinct(tree.isDistinct());
-
-    return query;
-  }
-
-  private Map<String, String> getTargetFields() {
-    TargetFields targetFields = getQueryMethod().getTargetFields();
-    if (targetFields == null) {
-      return Collections.emptyMap();
+    public HibernateSearchPartQuery(HibernateSearchQueryMethod queryMethod, HibernateSearchOperations hibernateSearchOperations) {
+        super(queryMethod, hibernateSearchOperations);
+        this.tree = new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType());
+        this.mappingContext = hibernateSearchOperations.getMappingContext();
     }
-    Map<String, String> map = new HashMap<>();
-    for (TargetField targetField : targetFields.value()) {
-      map.put(targetField.property(), targetField.field());
+
+    protected boolean isModify(Query<?> query) {
+        return tree.isDelete();
     }
-    return Collections.unmodifiableMap(map);
-  }
+
+    protected boolean isExistsProjection(Query<?> query) {
+        return tree.isExistsProjection();
+    }
+
+    protected boolean isCountProjection(Query<?> query) {
+        return tree.isCountProjection();
+    }
+
+    protected BaseQuery<?> createQuery(ParametersParameterAccessor accessor) {
+        Class<?> entityClass = getQueryMethod().getEntityInformation().getJavaType();
+        CriteriaQuery<?> query = new HibernateSearchQueryCreator(entityClass, tree, accessor, mappingContext).createQuery();
+
+        query.setTargetFields(TargetFieldsUtils.getTargetFieldsMap(getQueryMethod()));
+
+        query.setMaxResults(tree.getMaxResults());
+        query.setDistinct(tree.isDistinct());
+
+        return query;
+    }
 }

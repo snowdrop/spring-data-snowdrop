@@ -31,7 +31,7 @@ public class StringQuery<T> extends BaseQuery<T> {
   }
 
   @Override
-  void apply(AbstractQueryAdapter<T> adapter) {
+  void apply(AbstractQueryAdapter<T, ?, ?> adapter) {
     adapter.string(this);
   }
 

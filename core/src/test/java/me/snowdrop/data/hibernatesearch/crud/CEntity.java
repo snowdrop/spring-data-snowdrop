@@ -32,6 +32,9 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Store;
+import org.infinispan.protostream.annotations.ProtoDoc;
+import org.infinispan.protostream.annotations.ProtoField;
+import org.infinispan.protostream.annotations.ProtoMessage;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -45,13 +48,20 @@ import org.springframework.data.annotation.Id;
 @EqualsAndHashCode(callSuper = false)
 @Indexed
 @Entity
+@ProtoDoc("@Indexed")
+@ProtoMessage(name = "CEntity")
 public class CEntity implements AbstractEntity<Integer> {
     @Id
     @DocumentId
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @ProtoDoc("@Field(index = Index.NO, store=Store.NO)")
+    @ProtoField(number = 1, required = true)
+    public Integer id;
+
     @Field(store = Store.NO)
     @SortableField
-    String ctype;
+    @ProtoDoc("@Field(store=Store.NO) @SortableField") // TODO -- add analyze=Analyze.YES
+    @ProtoField(number = 2)
+    public String ctype;
 }

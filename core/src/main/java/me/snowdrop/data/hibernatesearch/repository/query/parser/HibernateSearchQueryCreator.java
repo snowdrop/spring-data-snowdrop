@@ -102,7 +102,7 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
             case FALSE:
                 return criteria.is(false);
             case NEGATING_SIMPLE_PROPERTY:
-                return criteria.isNot(parameters.next());
+                return criteria.is(parameters.next()).not();
             case REGEX:
                 return criteria.regexp(parameters.next().toString());
             case LIKE:
@@ -115,7 +115,7 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
             case CONTAINING:
                 return criteria.contains(parameters.next().toString());
             case NOT_CONTAINING:
-                return criteria.notContains(parameters.next().toString());
+                return criteria.contains(parameters.next().toString()).not();
             case AFTER:
             case GREATER_THAN:
                 return criteria.greaterThan(parameters.next());
@@ -131,7 +131,7 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
             case IN:
                 return criteria.in(asArray(parameters.next()));
             case NOT_IN:
-                return criteria.notIn(asArray(parameters.next()));
+                return criteria.in(asArray(parameters.next())).not();
             case SIMPLE_PROPERTY:
                 return criteria.is(parameters.next());
             case WITHIN: {

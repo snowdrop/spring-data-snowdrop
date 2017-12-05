@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 me.snowdrop.data.hibernatesearch.config.jpa.HibernateSearchDataJpaAutoConfiguration,\
-me.snowdrop.data.hibernatesearch.config.infinispan.HibernateSearchDataInfinispanAutoConfiguration
+me.snowdrop.data.hibernatesearch.config.infinispan.embedded.HibernateSearchDataInfinispanEmbeddedAutoConfiguration,\
+me.snowdrop.data.hibernatesearch.config.infinispan.remote.HibernateSearchDataInfinispanRemoteAutoConfiguration

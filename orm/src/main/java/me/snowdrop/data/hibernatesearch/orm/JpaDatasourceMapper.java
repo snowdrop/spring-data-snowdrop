@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
+import me.snowdrop.data.hibernatesearch.core.query.lucene.LuceneQueryAdapter;
 import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;
 import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
@@ -72,7 +72,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
         return new OrmCrudAdapter<>(ei.getJavaType());
     }
 
-    private class OrmQueryAdapter<T> extends AbstractQueryAdapter<T> {
+    private class OrmQueryAdapter<T> extends LuceneQueryAdapter<T> {
         private SearchIntegrator searchIntegrator;
 
         private FullTextQuery fullTextQuery;
@@ -91,7 +91,7 @@ public class JpaDatasourceMapper implements DatasourceMapper {
             return searchIntegrator;
         }
 
-        protected void applyLuceneQuery(Query query) {
+        protected void applyQueryImpl(Query query) {
             EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(emf);
             if (em == null) {
                 entityManager = emf.createEntityManager();

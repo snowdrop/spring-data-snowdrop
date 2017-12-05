@@ -29,13 +29,14 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Spring Data Hibernate Search Starters</name>
+  <name>Spring Data HibernateSearch Starters</name>
   <description>Spring Data Implementation for Hibernate Search - Starters</description>
   <url>https://github.com/snowdrop/spring-data-hibernate-search</url>
 
   <modules>
-    <module>infinispan</module>
+    <module>embedded</module>
     <module>jpa</module>
+    <module>remote</module>
   </modules>
 
 </project>

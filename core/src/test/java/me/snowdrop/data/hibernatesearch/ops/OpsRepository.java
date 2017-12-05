@@ -20,13 +20,10 @@ import me.snowdrop.data.hibernatesearch.annotations.TargetField;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface OpsRepository extends HibernateSearchRepository<SimpleEntity, Long>, Ops {
+    @TargetField(property = "name", field = "identity.name")
+    Iterable<SimpleEntity> findAll(Sort sort);
 }

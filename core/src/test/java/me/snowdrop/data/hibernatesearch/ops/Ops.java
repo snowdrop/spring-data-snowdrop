@@ -22,123 +22,124 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.annotations.TargetField;
-import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import org.springframework.data.domain.Sort;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface Ops {
-  @TargetField(property = "dummy1", field = "aaa")
-  @TargetField(property = "dummy2", field = "bbb")
-  long countByColor(String color);
+    @TargetField(property = "dummy1", field = "aaa")
+    @TargetField(property = "dummy2", field = "bbb")
+    long countByColor(String color);
 
-  List<SimpleEntity> findByPokeNotNullAndTextNotLike(String text);
+    List<SimpleEntity> findByPokeNotNullAndTextNotLike(String text);
 
-  List<SimpleEntity> findByPokeIsNull();
+    List<SimpleEntity> findByPokeIsNull();
 
-  List<SimpleEntity> findByPokeIsNotNull();
+    List<SimpleEntity> findByPokeIsNotNull();
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameNot(String notName);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameNot(String notName);
 
-  List<SimpleEntity> findByNumberBetween(int min, int max);
+    List<SimpleEntity> findByNumberBetween(int min, int max);
 
-  List<SimpleEntity> findByNumberLessThan(int number);
+    List<SimpleEntity> findByNumberLessThan(int number);
 
-  List<SimpleEntity> findByNumberBefore(int number);
+    List<SimpleEntity> findByNumberBefore(int number);
 
-  List<SimpleEntity> findByNumberGreaterThan(int number);
+    List<SimpleEntity> findByNumberGreaterThan(int number);
 
-  List<SimpleEntity> findByNumberAfter(int number);
+    List<SimpleEntity> findByNumberAfter(int number);
 
-  List<SimpleEntity> findByTextRegex(String text);
+    List<SimpleEntity> findByTextRegex(String text);
 
-  List<SimpleEntity> findByTextLike(String text);
+    List<SimpleEntity> findByTextLike(String text);
 
-  List<SimpleEntity> findByTextNotLike(String text);
+    List<SimpleEntity> findByTextNotLike(String text);
 
-  List<SimpleEntity> findByTextStartingWith(String text);
+    List<SimpleEntity> findByTextStartingWith(String text);
 
-  List<SimpleEntity> findByTextContaining(String text);
+    List<SimpleEntity> findByTextEndingWith(String text);
 
-  List<SimpleEntity> findByTextNotContaining(String text);
+    List<SimpleEntity> findByTextContaining(String text);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameIn(Collection<String> names);
+    List<SimpleEntity> findByTextNotContaining(String text);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameNotIn(Collection<String> names);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameIn(Collection<String> names);
 
-  List<SimpleEntity> findByBuulTrue();
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameNotIn(Collection<String> names);
 
-  List<SimpleEntity> findByBuulFalse();
+    List<SimpleEntity> findByBuulTrue();
 
-  Stream<SimpleEntity> findByColor(String color);
+    List<SimpleEntity> findByBuulFalse();
 
-  Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
+    Stream<SimpleEntity> findByColor(String color);
 
-  List<SimpleEntity> findByAddressZipcode(int zipcode);
+    Optional<SimpleEntity> findByNumberBetweenOrderByHero(int min, int max);
 
-  List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
+    List<SimpleEntity> findByAddressZipcode(int zipcode);
 
-  List<SimpleProjection> findByNameOrderByHero(String name);
+    List<SimpleEntity> findByLocationWithin(double latitude, double longitude, double distance);
 
-  <T> List<T> findByName(String name, Class<T> type);
+    List<SimpleProjection> findByNameOrderByHero(String name);
 
-  List<HeroProjection> findByHero(String hero);
+    <T> List<T> findByName(String name, Class<T> type);
 
-  List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
+    List<HeroProjection> findByHero(String hero);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameNot(String notName, Sort sort);
+    List<SimpleEntity> findFirst2ByNumberAfter(int number, Sort sort);
 
-  List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameNot(String notName, Sort sort);
 
-  List<SimpleEntity> findByNumberLessThan(int number, Sort sort);
+    List<SimpleEntity> findByNumberBetween(int min, int max, Sort sort);
 
-  List<SimpleEntity> findByNumberBefore(int number, Sort sort);
+    List<SimpleEntity> findByNumberLessThan(int number, Sort sort);
 
-  List<SimpleEntity> findByNumberGreaterThan(int number, Sort sort);
+    List<SimpleEntity> findByNumberBefore(int number, Sort sort);
 
-  List<SimpleEntity> findByNumberAfter(int number, Sort sort);
+    List<SimpleEntity> findByNumberGreaterThan(int number, Sort sort);
 
-  List<SimpleEntity> findByTextRegex(String text, Sort sort);
+    List<SimpleEntity> findByNumberAfter(int number, Sort sort);
 
-  List<SimpleEntity> findByTextLike(String text, Sort sort);
+    List<SimpleEntity> findByTextRegex(String text, Sort sort);
 
-  List<SimpleEntity> findByTextStartingWith(String text, Sort sort);
+    List<SimpleEntity> findByTextLike(String text, Sort sort);
 
-  List<SimpleEntity> findByTextContaining(String text, Sort sort);
+    List<SimpleEntity> findByTextStartingWith(String text, Sort sort);
 
-  List<SimpleEntity> findByTextNotContaining(String text, Sort sort);
+    List<SimpleEntity> findByTextContaining(String text, Sort sort);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameIn(Collection<String> names, Sort sort);
+    List<SimpleEntity> findByTextNotContaining(String text, Sort sort);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByNameNotIn(Collection<String> names, Sort sort);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameIn(Collection<String> names, Sort sort);
 
-  List<SimpleEntity> findByBuulTrue(Sort sort);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByNameNotIn(Collection<String> names, Sort sort);
 
-  List<SimpleEntity> findByBuulFalse(Sort sort);
+    List<SimpleEntity> findByBuulTrue(Sort sort);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByColorOrderByNameAsc(String color);
+    List<SimpleEntity> findByBuulFalse(Sort sort);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByColorOrderByNameDesc(String color);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByColorOrderByNameAsc(String color);
 
-  @TargetField(property = "name", field = "identity.name")
-  List<SimpleEntity> findByName(String name);
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByColorOrderByNameDesc(String color);
+
+    @TargetField(property = "name", field = "identity.name")
+    List<SimpleEntity> findByName(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_Name(String name);
 
 //  List<SimpleEntity> findByBridge_Custom_DynamicName(String name);
 
-  @TargetField(property = "contained.name", field = "containedList.somePrefix_containedName")
-  List<SimpleEntity> findByContainedName(String containedName);
+    @TargetField(property = "contained.name", field = "containedList.somePrefix_containedName")
+    List<SimpleEntity> findByContainedName(String containedName);
 
-  @TargetField(property = "contained.number", field = "containedList.somePrefix_numberAsText")
-  List<SimpleEntity> findByContainedNumberBetween(int min, int max);
+    @TargetField(property = "contained.number", field = "containedList.somePrefix_numberAsText")
+    List<SimpleEntity> findByContainedNumberBetween(int min, int max);
 }

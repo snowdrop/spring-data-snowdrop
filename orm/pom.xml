@@ -28,7 +28,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <name>Spring Data for hibernate-search-orm</name>
+    <name>Spring Data for Hibernate Search ORM</name>
     <description>Spring Data Implementation for Hibernate Search - Hibernate ORM integration</description>
 
     <build>
@@ -51,7 +51,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>${springdata}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

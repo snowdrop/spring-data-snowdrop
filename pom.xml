@@ -78,6 +78,12 @@
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
+        <artifactId>spring-data-hibernate-search-infinispan</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>me.snowdrop.data</groupId>
         <artifactId>spring-data-hibernate-search</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
@@ -269,6 +275,7 @@
         <module>core</module>
         <module>config</module>
         <module>orm</module>
+        <module>infinispan</module>
         <module>starters</module>
         <module>documentation</module>
       </modules>
@@ -279,6 +286,7 @@
         <module>core</module>
         <module>config</module>
         <module>orm</module>
+        <module>infinispan</module>
         <module>starters</module>
       </modules>
     </profile>

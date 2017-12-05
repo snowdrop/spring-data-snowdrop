@@ -40,6 +40,9 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.SortableField;
 import org.hibernate.search.annotations.Spatial;
 import org.hibernate.search.annotations.Store;
+import org.infinispan.protostream.annotations.ProtoDoc;
+import org.infinispan.protostream.annotations.ProtoField;
+import org.infinispan.protostream.annotations.ProtoMessage;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -54,39 +57,69 @@ import org.springframework.data.annotation.Id;
 @Indexed
 @Entity
 @Table(name = "simple")
+@ProtoDoc("@Indexed")
+@ProtoMessage(name = "SimpleEntity")
 public class SimpleEntity implements AbstractEntity<Long> {
     @Id
     @DocumentId
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @ProtoDoc("@Field(index = Index.NO, store=Store.NO)")
+    @ProtoField(number = 1, required = true)
+    public Long id;
+
     @Field(store = Store.NO)
     @SortableField(forField = "identity.name")
     @Field(name = "identity.name")
     @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
-    private String name;
+    @ProtoDoc("@Field @SortableField")
+    @ProtoField(number = 2)
+    public String name;
+
     @Field(store = Store.NO)
-    private String text;
+    @ProtoDoc("@Field(store=Store.NO)")  // TODO add , analyze=Analyze.YES
+    @ProtoField(number = 3)
+    public String text;
+
     @Field(store = Store.NO)
     @Field(name = "var")
-    private int number;
+    @ProtoDoc("@Field(store=Store.NO)")
+    @ProtoField(number = 4, defaultValue = "0")
+    public int number;
+
     @Field(name = "boool", store = Store.NO)
-    private boolean buul;
+    @ProtoDoc("@Field(store=Store.NO)")
+    @ProtoField(number = 5, defaultValue = "false")
+    public boolean buul;
+
     @Field(store = Store.NO)
     @SortableField
-    private String hero;
+    @ProtoDoc("@Field(store=Store.NO) @SortableField") // TODO add , analyze=Analyze.YES
+    @ProtoField(number = 6)
+    public String hero;
+
     @Field(store = Store.NO)
     @SortableField
-    private String color;
+    @ProtoDoc("@Field(store=Store.NO) @SortableField")
+    @ProtoField(number = 7)
+    public String color;
+
     @Spatial
     @Embedded
-    private Location location;
+    public Location location;
+
     @IndexedEmbedded
     @Embedded
-    private Address address;
+    @ProtoDoc("@Field(store=Store.NO)")
+    @ProtoField(number = 8)
+    public Address address;
+
     @IndexedEmbedded(prefix = "containedList.somePrefix_")
     @OneToMany
-    private List<ContainedEntity> contained;
+    public List<ContainedEntity> contained;
+
     @Field(store = Store.NO, indexNullAs = Field.DEFAULT_NULL_TOKEN)
-    private String poke;
+    @ProtoDoc("@Field(store=Store.NO)")
+    @ProtoField(number = 9)
+    public String poke;
 }

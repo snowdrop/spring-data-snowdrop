@@ -15,7 +15,8 @@
  */
 package me.snowdrop.data.hibernatesearch.config.jpa.crud;
 
-import me.snowdrop.data.hibernatesearch.config.infinispan.HibernateSearchDataInfinispanAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.embedded.HibernateSearchDataInfinispanEmbeddedAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.remote.HibernateSearchDataInfinispanRemoteAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.crud.SimpleCrudRepository;
 import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
@@ -25,7 +26,10 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(JpaConfiguration.class)
-@EnableAutoConfiguration(exclude = HibernateSearchDataInfinispanAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {
+    HibernateSearchDataInfinispanEmbeddedAutoConfiguration.class,
+    HibernateSearchDataInfinispanRemoteAutoConfiguration.class
+})
 @EnableHibernateSearchRepositories(basePackageClasses = SimpleCrudRepository.class)
 public class JpaCrudConfiguration {
 

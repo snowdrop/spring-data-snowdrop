@@ -16,7 +16,8 @@
 package me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops;
 
 import me.snowdrop.data.hibernatesearch.TestedRepository;
-import me.snowdrop.data.hibernatesearch.config.infinispan.HibernateSearchDataInfinispanAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.embedded.HibernateSearchDataInfinispanEmbeddedAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.remote.HibernateSearchDataInfinispanRemoteAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops.repository.hibernatesearch.StandaloneJpaHibernateSearchOpsRepository;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.ops.repository.jpa.StandaloneJpaOpsRepository;
@@ -30,7 +31,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @Import(JpaConfiguration.class)
-@EnableAutoConfiguration(exclude = HibernateSearchDataInfinispanAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {
+    HibernateSearchDataInfinispanEmbeddedAutoConfiguration.class,
+    HibernateSearchDataInfinispanRemoteAutoConfiguration.class
+})
 @EnableJpaRepositories(basePackageClasses = StandaloneJpaOpsRepository.class)
 @EnableHibernateSearchRepositories(basePackageClasses = StandaloneJpaHibernateSearchOpsRepository.class)
 public class StandaloneJpaOpsConfiguration {

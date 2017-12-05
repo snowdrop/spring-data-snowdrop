@@ -45,6 +45,12 @@
     </dependency>
 
     <dependency>
+      <groupId>me.snowdrop.data</groupId>
+      <artifactId>spring-data-hibernate-search-infinispan</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-test-autoconfigure</artifactId>
     </dependency>
@@ -52,12 +58,6 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.infinispan</groupId>
-      <artifactId>infinispan-query</artifactId>
       <optional>true</optional>
     </dependency>
 

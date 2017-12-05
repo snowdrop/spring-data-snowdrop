@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.util.Map;
+import java.util.Objects;
 
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
@@ -26,44 +27,45 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class BaseQuery<T> implements Query<T> {
-  private Class<T> entityClass;
-  private Pageable pageable;
-  private Sort sort;
-  private Map<String, String> targetFields;
+    private Class<T> entityClass;
+    private Pageable pageable;
+    private Sort sort;
+    private Map<String, String> targetFields;
 
-  public BaseQuery(Class<T> entityClass) {
-    this.entityClass = entityClass;
-  }
+    public BaseQuery(Class<T> entityClass) {
+        Objects.requireNonNull(entityClass);
+        this.entityClass = entityClass;
+    }
 
-  void apply(AbstractQueryAdapter<T> adapter) {
-    adapter.query(this);
-  }
+    void apply(AbstractQueryAdapter<T, ?, ?> adapter) {
+        adapter.query(this);
+    }
 
-  public Class<T> getEntityClass() {
-    return entityClass;
-  }
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
 
-  public Pageable getPageable() {
-    return pageable;
-  }
+    public Pageable getPageable() {
+        return pageable;
+    }
 
-  public void setPageable(Pageable pageable) {
-    this.pageable = pageable;
-  }
+    public void setPageable(Pageable pageable) {
+        this.pageable = pageable;
+    }
 
-  public Sort getSort() {
-    return sort;
-  }
+    public Sort getSort() {
+        return sort;
+    }
 
-  public void setSort(Sort sort) {
-    this.sort = sort;
-  }
+    public void setSort(Sort sort) {
+        this.sort = sort;
+    }
 
-  public Map<String, String> getTargetFields() {
-    return targetFields;
-  }
+    public Map<String, String> getTargetFields() {
+        return targetFields;
+    }
 
-  public void setTargetFields(Map<String, String> targetFields) {
-    this.targetFields = targetFields;
-  }
+    public void setTargetFields(Map<String, String> targetFields) {
+        this.targetFields = targetFields;
+    }
 }

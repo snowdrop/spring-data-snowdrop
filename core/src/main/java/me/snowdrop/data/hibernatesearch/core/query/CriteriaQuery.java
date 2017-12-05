@@ -48,7 +48,7 @@ public class CriteriaQuery<T> extends BaseQuery<T> {
   }
 
   @Override
-  void apply(AbstractQueryAdapter<T> adapter) {
+  void apply(AbstractQueryAdapter<T, ?, ?> adapter) {
     adapter.convert(this);
   }
 

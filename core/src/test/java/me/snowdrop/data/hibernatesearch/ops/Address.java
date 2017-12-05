@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.search.annotations.Field;
+import org.infinispan.protostream.annotations.ProtoField;
+import org.infinispan.protostream.annotations.ProtoMessage;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -36,11 +38,17 @@ import org.hibernate.search.annotations.Field;
 @AllArgsConstructor
 @ToString
 @Embeddable
+@ProtoMessage(name = "Address")
 public class Address implements Serializable {
   @Field
-  private int zipcode;
+  @ProtoField(number = 10, required = true)
+  public int zipcode;
+
   @Field
-  private String city;
+  @ProtoField(number = 20)
+  public String city;
+
   @Field
-  private String country;
+  @ProtoField(number = 30)
+  public String country;
 }

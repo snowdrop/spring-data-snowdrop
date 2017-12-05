@@ -15,7 +15,8 @@
  */
 package me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke;
 
-import me.snowdrop.data.hibernatesearch.config.infinispan.HibernateSearchDataInfinispanAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.embedded.HibernateSearchDataInfinispanEmbeddedAutoConfiguration;
+import me.snowdrop.data.hibernatesearch.config.infinispan.remote.HibernateSearchDataInfinispanRemoteAutoConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.JpaConfiguration;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.hibernatesearch.StandaloneJpaHibernateSearchFruitRepository;
 import me.snowdrop.data.hibernatesearch.config.jpa.standalone.smoke.repository.jpa.StandaloneJpaFruitRepository;
@@ -27,7 +28,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @Import(JpaConfiguration.class)
-@EnableAutoConfiguration(exclude = HibernateSearchDataInfinispanAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {
+    HibernateSearchDataInfinispanEmbeddedAutoConfiguration.class,
+    HibernateSearchDataInfinispanRemoteAutoConfiguration.class
+})
 @EnableJpaRepositories(basePackageClasses = StandaloneJpaFruitRepository.class)
 @EnableHibernateSearchRepositories(basePackageClasses = StandaloneJpaHibernateSearchFruitRepository.class)
 public class StandaloneJpaSmokeConfiguration {

@@ -211,17 +211,6 @@ public class Criteria {
     }
 
     /**
-     * Crates new CriteriaEntry without any wildcards
-     *
-     * @param o
-     * @return new criteria instance
-     */
-    public Criteria isNot(Object o) {
-        queryCriteria.add(new CriteriaEntry(OperationKey.NOT_EQUALS, o));
-        return this;
-    }
-
-    /**
      * Crates new CriteriaEntry for is_null
      *
      * @return new criteria instance
@@ -251,12 +240,6 @@ public class Criteria {
     public Criteria contains(String s) {
         assertNoBlankInWildcardedQuery(s, true, true);
         queryCriteria.add(new CriteriaEntry(OperationKey.CONTAINS, s));
-        return this;
-    }
-
-    public Criteria notContains(String s) {
-        assertNoBlankInWildcardedQuery(s, true, true);
-        queryCriteria.add(new CriteriaEntry(OperationKey.NOT_CONTAINS, s));
         return this;
     }
 
@@ -422,16 +405,6 @@ public class Criteria {
         return Arrays.asList(values);
     }
 
-    public Criteria notIn(Object... values) {
-        return notIn(toCollection(values));
-    }
-
-    public Criteria notIn(Iterable<?> values) {
-        Assert.notNull(values, "Collection of 'NotIn' values must not be null");
-        queryCriteria.add(new CriteriaEntry(OperationKey.NOT_IN, values));
-        return this;
-    }
-
     /**
      * Creates new CriteriaEntry for {@code location WITHIN distance}
      *
@@ -552,7 +525,7 @@ public class Criteria {
     }
 
     public enum OperationKey {
-        EQUALS, NOT_EQUALS, CONTAINS, NOT_CONTAINS, STARTS_WITH, ENDS_WITH, REGEXP, BETWEEN, FUZZY, IN, NOT_IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, NULL, EMPTY;
+        EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, REGEXP, BETWEEN, FUZZY, IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, NULL, EMPTY;
     }
 
     public static class CriteriaEntry {

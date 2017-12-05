@@ -19,6 +19,8 @@ package me.snowdrop.data.hibernatesearch.repository.support;
 import me.snowdrop.data.hibernatesearch.core.HibernateSearchOperations;
 import me.snowdrop.data.hibernatesearch.core.query.BaseQuery;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
+import me.snowdrop.data.hibernatesearch.repository.query.TargetFieldsUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,28 +41,41 @@ public abstract class AbstractHibernateSearchRepository<T, ID> implements Hibern
         return entityInformation;
     }
 
+    protected BaseQuery<T> createBaseQuery() {
+        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        fillQuery(query);
+        return query;
+    }
+
+    protected void fillQuery(BaseQuery<T> query) {
+        MethodInvocation mi = HibernateSearchRepositoryProxyPostProcessor.INFO.get();
+        if (mi != null) {
+            query.setTargetFields(TargetFieldsUtils.getTargetFieldsMap(mi.getMethod()));
+        }
+    }
+
     @Override
     public Iterable<T> findAll() {
-        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        BaseQuery<T> query = createBaseQuery();
         return hibernateSearchOperations.findAll(query);
     }
 
     @Override
     public long count() {
-        BaseQuery<T> countQuery = new BaseQuery<>(getEntityClass());
+        BaseQuery<T> countQuery = createBaseQuery();
         return hibernateSearchOperations.count(countQuery);
     }
 
     @Override
     public Iterable<T> findAll(Sort sort) {
-        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        BaseQuery<T> query = createBaseQuery();
         query.setSort(sort);
         return hibernateSearchOperations.findAll(query);
     }
 
     @Override
     public Page<T> findAll(Pageable pageable) {
-        BaseQuery<T> query = new BaseQuery<>(getEntityClass());
+        BaseQuery<T> query = createBaseQuery();
         query.setPageable(pageable);
         return hibernateSearchOperations.findPageable(query);
     }
