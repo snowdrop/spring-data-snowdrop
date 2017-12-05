@@ -39,12 +39,8 @@
     <lucene>5.5.4</lucene>
     <infinispan>9.1.3.Final</infinispan>
 
-    <jackson>2.9.1</jackson>
-    <jodatime>2.9.9</jodatime>
     <lombok>1.16.18</lombok>
     <cdi>1.0</cdi>
-    <commonscollections>3.2.1</commonscollections>
-    <commonslang>2.6</commonslang>
     <log4j>2.8.2</log4j>
     <slf4j>1.7.25</slf4j>
 
@@ -109,20 +105,6 @@
         <version>${springdata}</version>
       </dependency>
 
-      <!-- APACHE -->
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commonslang}</version>
-      </dependency>
-
-      <!-- JODA Time -->
-      <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${jodatime}</version>
-      </dependency>
-
       <!-- Hibernate Search -->
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -153,27 +135,17 @@
       </dependency>
 
       <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-bom</artifactId>
+        <version>${infinispan}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-queryparser</artifactId>
         <version>${lucene}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.infinispan</groupId>
-        <artifactId>infinispan-query</artifactId>
-        <version>${infinispan}</version>
-      </dependency>
-
-      <!-- Jackson JSON Mapper -->
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson}</version>
       </dependency>
 
       <!-- CDI -->
@@ -197,13 +169,6 @@
             <artifactId>logback-classic</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>3.0-alpha-1</version>
-        <scope>test</scope>
       </dependency>
 
       <dependency>

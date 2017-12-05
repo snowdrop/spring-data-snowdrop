@@ -24,7 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.hibernate.search.util.StringHelper;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.geo.Box;
 import org.springframework.data.geo.Distance;
@@ -47,7 +47,7 @@ public class Criteria {
             "property=" + property.getName() +
             ", boost=" + boost +
             ", negating=" + negating +
-            ", queryCriteria=" + StringUtils.join(queryCriteria, '|') +
+            ", queryCriteria=" + StringHelper.join(queryCriteria, "|") +
             '}';
     }
 
@@ -468,14 +468,14 @@ public class Criteria {
      * @return new criteria instance Criteria the chaind criteria with the new 'boundedBy' criteria included.
      */
     public Criteria boundedBy(String topLeftGeohash, String bottomRightGeohash) {
-        Assert.isTrue(StringUtils.isNotBlank(topLeftGeohash), "topLeftGeohash must not be empty");
-        Assert.isTrue(StringUtils.isNotBlank(bottomRightGeohash), "bottomRightGeohash must not be empty");
+        Assert.isTrue(StringHelper.isNotEmpty(topLeftGeohash), "topLeftGeohash must not be empty");
+        Assert.isTrue(StringHelper.isNotEmpty(bottomRightGeohash), "bottomRightGeohash must not be empty");
         queryCriteria.add(new CriteriaEntry(OperationKey.BBOX, new Object[]{topLeftGeohash, bottomRightGeohash}));
         return this;
     }
 
     private void assertNoBlankInWildcardedQuery(String searchString, boolean leadingWildcard, boolean trailingWildcard) {
-        if (StringUtils.contains(searchString, CRITERIA_VALUE_SEPERATOR)) {
+        if (searchString.contains(CRITERIA_VALUE_SEPERATOR)) {
             throw new InvalidDataAccessApiUsageException("Cannot constructQuery '" + (leadingWildcard ? "*" : "") + "\""
                 + searchString + "\"" + (trailingWildcard ? "*" : "") + "'. Use expression or multiple clauses instead.");
         }
