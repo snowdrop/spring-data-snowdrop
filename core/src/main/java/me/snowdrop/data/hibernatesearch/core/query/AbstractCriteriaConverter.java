@@ -18,9 +18,7 @@ package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metric;
@@ -31,94 +29,52 @@ import org.springframework.data.geo.Metrics;
  *
  * @author Ales Justin
  */
-public abstract class AbstractCriteriaConverter<Q, S> implements CriteriaConverter<Q> {
+public abstract class AbstractCriteriaConverter<Q> implements CriteriaConverter<Q> {
 
-    private final QueryBuilder<Q, S> queryBuilder;
+    private final QueryBuilder<Q> queryBuilder;
 
-    public AbstractCriteriaConverter(QueryBuilder<Q, S> queryBuilder) {
+    public AbstractCriteriaConverter(QueryBuilder<Q> queryBuilder) {
         this.queryBuilder = queryBuilder;
     }
 
-    public Q convert(Criteria criteria) {
-        List<Q> shouldQueryList = new LinkedList<>();
-        List<Q> mustNotQueryList = new LinkedList<>();
-        List<Q> mustQueryList = new LinkedList<>();
+    protected abstract String getFieldName(Property property);
 
-        ListIterator<Criteria> chainIterator = criteria.getCriteriaChain().listIterator();
+    public Q convert(Criteria root) {
+        List<Q> queries = new ArrayList<>();
+        List<Criteria> criteriaChain = root.getCriteriaChain();
+        for (Criteria criteria : criteriaChain) {
+            List<Q> subQueries = new ArrayList<>();
+            for (Criteria.CriteriaEntry entry : criteria.getQueryCriteriaEntries()) {
+                String fieldName = getFieldName(entry.getProperty());
 
-        Q firstQuery = null;
-        boolean negateFirstQuery = false;
-
-        while (chainIterator.hasNext()) {
-            Criteria chainedCriteria = chainIterator.next();
-            Q queryFragmentForCriteria = processCriteriaEntries(chainedCriteria);
-            if (queryFragmentForCriteria != null) {
-                if (firstQuery == null) {
-                    firstQuery = queryFragmentForCriteria;
-                    negateFirstQuery = chainedCriteria.isNegating();
-                    continue;
+                Q query = convert(entry, fieldName);
+                if (entry.isNegating()) {
+                    query = queryBuilder.not(query);
                 }
-                if (chainedCriteria.isOr()) {
-                    shouldQueryList.add(queryFragmentForCriteria);
-                } else if (chainedCriteria.isNegating()) {
-                    mustNotQueryList.add(queryFragmentForCriteria);
-                } else {
-                    mustQueryList.add(queryFragmentForCriteria);
+                if (!Float.isNaN(entry.getBoost())) {
+                    query = queryBuilder.boost(query, entry.getBoost());
                 }
+                subQueries.add(query);
             }
-        }
-
-        if (firstQuery != null) {
-            if (!shouldQueryList.isEmpty() && mustNotQueryList.isEmpty() && mustQueryList.isEmpty()) {
-                shouldQueryList.add(0, firstQuery);
+            Q subQuery;
+            if (criteria.isOr()) {
+                subQuery = queryBuilder.any(subQueries);
             } else {
-                if (negateFirstQuery) {
-                    mustNotQueryList.add(0, firstQuery);
-                } else {
-                    mustQueryList.add(0, firstQuery);
-                }
-            }
-        }
-
-        List<Q> queries = new ArrayList<>();
-        if (!shouldQueryList.isEmpty()) {
-            queries.add(queryBuilder.any(shouldQueryList));
-        }
-        if (!mustNotQueryList.isEmpty()) {
-            queries.add(queryBuilder.not(queryBuilder.any(mustNotQueryList)));
-        }
-        if (!mustQueryList.isEmpty()) {
-            queries.add(queryBuilder.all(mustQueryList));
-        }
-        return queryBuilder.all(queries);
-    }
-
-    protected Q processCriteriaEntries(Criteria criteria) {
-        List<Q> queries = new ArrayList<>();
-        for (Criteria.CriteriaEntry criteriaEntry : criteria.getQueryCriteriaEntries()) {
-            Q subQuery = processCriteriaEntry(criteria.getProperty(), criteriaEntry);
-            if (!Float.isNaN(criteria.getBoost())) {
-                subQuery = queryBuilder.boost(subQuery, criteria.getBoost());
+                subQuery = queryBuilder.all(subQueries);
             }
             queries.add(subQuery);
         }
         return queryBuilder.all(queries);
     }
 
-    protected abstract String getFieldName(Property property);
+    private Q convert(Criteria.CriteriaEntry entry, String fieldName) {
+        Object value = entry.getValue();
 
-    protected Q processCriteriaEntry(Property property, Criteria.CriteriaEntry criteriaEntry) {
-        Object value = criteriaEntry.getValue();
-
-        String fieldName = getFieldName(property);
-
-        switch (criteriaEntry.getKey()) {
+        switch (entry.getKey()) {
             case EQUALS:
                 return queryBuilder.equal(fieldName, value);
             case NULL:
                 return queryBuilder.isNull(fieldName);
-            case EMPTY: // TODO
-                return queryBuilder.isEmpty(fieldName);
             case IN:
                 return queryBuilder.in(fieldName, (Collection<?>) value);
             case GREATER:
@@ -139,9 +95,7 @@ public abstract class AbstractCriteriaConverter<Q, S> implements CriteriaConvert
             case ENDS_WITH:
                 return queryBuilder.endsWith(fieldName, value);
             case REGEXP:
-                return queryBuilder.reqexp(fieldName, (String) value);
-            case FUZZY:
-                return queryBuilder.fuzzy(fieldName, value);
+                return queryBuilder.reqexp(fieldName, String.valueOf(value));
             case WITHIN:
                 Object[] params = (Object[]) value;
                 Double latitude = (Double) params[0];
@@ -150,11 +104,11 @@ public abstract class AbstractCriteriaConverter<Q, S> implements CriteriaConvert
                 double distanceInKm = toKm(distance);
                 return queryBuilder.spatial(fieldName, latitude, longitude, distanceInKm);
             default:
-                throw new IllegalArgumentException("Unknown operator " + criteriaEntry.getKey());
+                throw new IllegalArgumentException("Unsupported operator " + entry.getKey());
         }
     }
 
-    private static double toKm(Distance distance) {
+    public static double toKm(Distance distance) {
         Metric metric = distance.getMetric();
         if (Metrics.KILOMETERS.equals(metric)) {
             return distance.getValue();

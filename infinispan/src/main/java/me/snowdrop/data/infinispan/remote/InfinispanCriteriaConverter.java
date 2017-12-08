@@ -44,16 +44,20 @@ public class InfinispanCriteriaConverter implements CriteriaConverter<Query> {
         List<Criteria> criteriaChain = root.getCriteriaChain();
         for (int i = 0; i < criteriaChain.size(); i++) {
             Criteria criteria = criteriaChain.get(i);
-            String fieldName = criteria.getProperty().getName();
-            Expression property = Expression.property(fieldName);
-            boolean isNegating = criteria.isNegating();
             List<Criteria.CriteriaEntry> entries = new ArrayList<>(criteria.getQueryCriteriaEntries());
             for (int j = 0; j < entries.size(); j++) {
                 Criteria.CriteriaEntry entry = entries.get(j);
+                String fieldName = entry.getProperty().getName();
+                Expression property = Expression.property(fieldName);
+
                 FilterConditionBeginContext begin = (first == null ? queryBuilder : (FilterConditionBeginContext) first);
-                if (isNegating) {
+                if (entry.isNegating()) {
                     begin = begin.not();
                 }
+                if (!Float.isNaN(entry.getBoost())) {
+                    // TODO boost
+                }
+
                 FilterConditionEndContext context = begin.having(property);
                 FilterConditionContext next = convert(entry, context);
                 if (j < entries.size() - 1 || i < criteriaChain.size() - 1) {

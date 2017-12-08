@@ -20,18 +20,17 @@ import me.snowdrop.data.hibernatesearch.core.query.AbstractCriteriaConverter;
 import me.snowdrop.data.hibernatesearch.core.query.Property;
 import me.snowdrop.data.hibernatesearch.core.query.QueryBuilder;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
 
 /**
  * Converts Criteria to Lucene queries
  *
  * @author Ales Justin
  */
-public class LuceneCriteriaConverter extends AbstractCriteriaConverter<Query, Sort> {
+public class LuceneCriteriaConverter extends AbstractCriteriaConverter<Query> {
 
     private final EntityMetadataContext entityMetadataContext;
 
-    public LuceneCriteriaConverter(EntityMetadataContext entityMetadataContext, QueryBuilder<Query, Sort> queryBuilder) {
+    public LuceneCriteriaConverter(EntityMetadataContext entityMetadataContext, QueryBuilder<Query> queryBuilder) {
         super(queryBuilder);
         this.entityMetadataContext = entityMetadataContext;
     }

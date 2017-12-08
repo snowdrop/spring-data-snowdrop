@@ -24,7 +24,6 @@ import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RegexpQuery;
-import org.apache.lucene.search.Sort;
 import org.hibernate.search.query.dsl.BooleanJunction;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.RangeMatchingContext;
@@ -35,7 +34,7 @@ import org.hibernate.search.query.dsl.Unit;
  * @author <a href="mailto:mluksa@redhat.com">Marko Luksa</a>
  * @author Ales Justin
  */
-public class LuceneQueryBuilder implements me.snowdrop.data.hibernatesearch.core.query.QueryBuilder<Query, Sort> {
+public class LuceneQueryBuilder implements me.snowdrop.data.hibernatesearch.core.query.QueryBuilder<Query> {
     private final QueryBuilder queryBuilder;
 
     public LuceneQueryBuilder(QueryBuilder queryBuilder) {

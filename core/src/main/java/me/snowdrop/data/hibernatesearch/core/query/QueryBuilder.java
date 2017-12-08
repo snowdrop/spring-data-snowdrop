@@ -21,7 +21,7 @@ import java.util.Collection;
 /**
  * @author Ales Justin
  */
-public interface QueryBuilder<Q, S> {
+public interface QueryBuilder<Q> {
     Q boost(Q query, Float boost);
 
     Q all(Collection<Q> subQueries);

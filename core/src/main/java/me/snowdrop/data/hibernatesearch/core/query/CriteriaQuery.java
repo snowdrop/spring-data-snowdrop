@@ -24,62 +24,62 @@ import org.springframework.util.Assert;
  */
 public class CriteriaQuery<T> extends BaseQuery<T> {
 
-  private Criteria criteria;
+    private Criteria criteria;
 
-  private Integer maxResults;
-  private boolean distinct;
+    private Integer maxResults;
+    private boolean distinct;
 
-  private CriteriaQuery(Class<T> entityClass) {
-    super(entityClass);
-  }
-
-  public CriteriaQuery(Class<T> entityClass, Criteria criteria) {
-    this(entityClass, criteria, null);
-  }
-
-  public CriteriaQuery(Class<T> entityClass, Criteria criteria, Pageable pageable) {
-    super(entityClass);
-    Assert.notNull(criteria, "Criteria must not be null!");
-    this.criteria = criteria;
-    if (pageable != null) {
-      setPageable(pageable);
-      setSort(pageable.getSort());
+    private CriteriaQuery(Class<T> entityClass) {
+        super(entityClass);
     }
-  }
 
-  @Override
-  void apply(AbstractQueryAdapter<T, ?, ?> adapter) {
-    adapter.convert(this);
-  }
-
-  @SuppressWarnings("unchecked")
-  public final <S extends CriteriaQuery> S addCriteria(Criteria criteria) {
-    Assert.notNull(criteria, "Cannot add null criteria.");
-    if (this.criteria == null) {
-      this.criteria = criteria;
-    } else {
-      this.criteria.and(criteria);
+    public CriteriaQuery(Class<T> entityClass, Criteria criteria) {
+        this(entityClass, criteria, null);
     }
-    return (S) this;
-  }
 
-  public Criteria getCriteria() {
-    return criteria;
-  }
+    public CriteriaQuery(Class<T> entityClass, Criteria criteria, Pageable pageable) {
+        super(entityClass);
+        Assert.notNull(criteria, "Criteria must not be null!");
+        this.criteria = criteria;
+        if (pageable != null) {
+            setPageable(pageable);
+            setSort(pageable.getSort());
+        }
+    }
 
-  public Integer getMaxResults() {
-    return maxResults;
-  }
+    @Override
+    void apply(AbstractQueryAdapter<T, ?, ?> adapter) {
+        adapter.convert(this);
+    }
 
-  public void setMaxResults(Integer maxResults) {
-    this.maxResults = maxResults;
-  }
+    @SuppressWarnings("unchecked")
+    public final <S extends CriteriaQuery> S addCriteria(Criteria criteria) {
+        Assert.notNull(criteria, "Cannot add null criteria.");
+        if (this.criteria == null) {
+            this.criteria = criteria;
+        } else {
+            this.criteria.and(criteria);
+        }
+        return (S) this;
+    }
 
-  public boolean isDistinct() {
-    return distinct;
-  }
+    public Criteria getCriteria() {
+        return criteria;
+    }
 
-  public void setDistinct(boolean distinct) {
-    this.distinct = distinct;
-  }
+    public Integer getMaxResults() {
+        return maxResults;
+    }
+
+    public void setMaxResults(Integer maxResults) {
+        this.maxResults = maxResults;
+    }
+
+    public boolean isDistinct() {
+        return distinct;
+    }
+
+    public void setDistinct(boolean distinct) {
+        this.distinct = distinct;
+    }
 }

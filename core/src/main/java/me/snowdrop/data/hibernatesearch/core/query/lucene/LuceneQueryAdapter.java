@@ -16,8 +16,8 @@
 
 package me.snowdrop.data.hibernatesearch.core.query.lucene;
 
-import me.snowdrop.data.hibernatesearch.core.query.AbstractCriteriaConverter;
 import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
+import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
 import me.snowdrop.data.hibernatesearch.core.query.QueryHelper;
 import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
 import org.apache.lucene.analysis.Analyzer;
@@ -50,7 +50,7 @@ public abstract class LuceneQueryAdapter<T> extends AbstractQueryAdapter<T, Quer
         super.initialize(query);
     }
 
-    protected me.snowdrop.data.hibernatesearch.core.query.QueryBuilder<Query, Sort> createQueryBuilder() {
+    protected me.snowdrop.data.hibernatesearch.core.query.QueryBuilder<Query> createQueryBuilder() {
         return new LuceneQueryBuilder(queryBuilder);
     }
 
@@ -58,7 +58,7 @@ public abstract class LuceneQueryAdapter<T> extends AbstractQueryAdapter<T, Quer
         return new LuceneQueryHelper(emc, queryBuilder);
     }
 
-    protected AbstractCriteriaConverter<Query, Sort> createCriteriaConverter() {
+    protected CriteriaConverter<Query> createCriteriaConverter() {
         return new LuceneCriteriaConverter(emc, createQueryBuilder());
     }
 

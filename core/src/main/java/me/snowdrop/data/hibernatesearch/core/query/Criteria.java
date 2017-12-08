@@ -66,6 +66,7 @@ public class Criteria {
     private Set<CriteriaEntry> queryCriteria = new LinkedHashSet<>();
 
     public Criteria() {
+        this.criteriaChain.add(this);
     }
 
     /**
@@ -89,64 +90,10 @@ public class Criteria {
         this.property = property;
     }
 
-    protected Criteria(List<Criteria> criteriaChain, String fieldname) {
-        this(criteriaChain, new SimpleProperty(fieldname));
-    }
-
-    protected Criteria(List<Criteria> criteriaChain, Property property) {
-        Assert.notNull(criteriaChain, "CriteriaChain must not be null");
-        Assert.notNull(property, "Field for criteria must not be null");
-        Assert.hasText(property.getName(), "Field.name for criteria must not be null/empty");
-
-        this.criteriaChain.addAll(criteriaChain);
-        this.criteriaChain.add(this);
-        this.property = property;
-    }
-
-    /**
-     * Static factory method to create a new Criteria for propertyName with given name
-     *
-     * @param propertyName the propertyName
-     * @return new criteria instance
-     */
-    public static Criteria where(String propertyName) {
-        return where(new SimpleProperty(propertyName));
-    }
-
-    /**
-     * Static factory method to create a new Criteria for provided field
-     *
-     * @param property the prooperty
-     * @return new criteria instance
-     */
-    public static Criteria where(Property property) {
-        return new Criteria(property);
-    }
-
     /**
      * Chain using {@code AND}
      *
-     * @param property
-     * @return new criteria instance
-     */
-    public Criteria and(Property property) {
-        return new Criteria(this.criteriaChain, property);
-    }
-
-    /**
-     * Chain using {@code AND}
-     *
-     * @param propertyName the property name
-     * @return new criteria instance
-     */
-    public Criteria and(String propertyName) {
-        return new Criteria(this.criteriaChain, propertyName);
-    }
-
-    /**
-     * Chain using {@code AND}
-     *
-     * @param criteria
+     * @param criteria criteria
      * @return new criteria instance
      */
     public Criteria and(Criteria criteria) {
@@ -157,7 +104,7 @@ public class Criteria {
     /**
      * Chain using {@code AND}
      *
-     * @param criterias
+     * @param criterias criterias
      * @return new criteria instance
      */
     public Criteria and(Criteria... criterias) {
@@ -168,41 +115,24 @@ public class Criteria {
     /**
      * Chain using {@code OR}
      *
-     * @param property
-     * @return new criteria instance
-     */
-    public Criteria or(Property property) {
-        return new OrCriteria(this.criteriaChain, property);
-    }
-
-    /**
-     * Chain using {@code OR}
-     *
-     * @param criteria
+     * @param criteria criteria
      * @return new criteria instance
      */
     public Criteria or(Criteria criteria) {
         Assert.notNull(criteria, "Cannot chain 'null' criteria.");
 
-        Criteria orConnectedCritiera = new OrCriteria(this.criteriaChain, criteria.getProperty());
+        Criteria orConnectedCritiera = new OrCriteria();
+        orConnectedCritiera.queryCriteria.addAll(queryCriteria);
         orConnectedCritiera.queryCriteria.addAll(criteria.queryCriteria);
         return orConnectedCritiera;
     }
 
-    /**
-     * Chain using {@code OR}
-     *
-     * @param fieldName
-     * @return new criteria instance
-     */
-    public Criteria or(String fieldName) {
-        return or(new SimpleProperty(fieldName));
-    }
+    // --- OPS!
 
     /**
      * Crates new CriteriaEntry without any wildcards
      *
-     * @param o
+     * @param o value
      * @return new criteria instance
      */
     public Criteria is(Object o) {
@@ -234,7 +164,7 @@ public class Criteria {
      * Crates new CriteriaEntry with leading and trailing wildcards <br/>
      * <strong>NOTE: </strong> mind your schema as leading wildcards may not be supported and/or execution might be slow.
      *
-     * @param s
+     * @param s string
      * @return new criteria instance
      */
     public Criteria contains(String s) {
@@ -246,7 +176,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry with trailing wildcard
      *
-     * @param s
+     * @param s string
      * @return new criteria instance
      */
     public Criteria startsWith(String s) {
@@ -259,7 +189,7 @@ public class Criteria {
      * Crates new CriteriaEntry with leading wildcard <br />
      * <strong>NOTE: </strong> mind your schema and execution times as leading wildcards may not be supported.
      *
-     * @param s
+     * @param s string
      * @return new criteria instance
      */
     public Criteria endsWith(String s) {
@@ -281,7 +211,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry with trailing ~
      *
-     * @param s
+     * @param s string
      * @return new criteria instance
      */
     public Criteria fuzzy(String s) {
@@ -292,7 +222,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry allowing native expressions
      *
-     * @param s
+     * @param s string
      * @return new criteria instance
      */
     public Criteria regexp(String s) {
@@ -303,7 +233,7 @@ public class Criteria {
     /**
      * Boost positive hit with given factor. eg. ^2.3
      *
-     * @param boost
+     * @param boost boost
      * @return new criteria instance
      */
     public Criteria boost(float boost) {
@@ -317,8 +247,8 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry for {@code RANGE [lowerBound TO upperBound]}
      *
-     * @param lowerBound
-     * @param upperBound
+     * @param lowerBound lb
+     * @param upperBound ub
      * @return new criteria instance
      */
     public Criteria between(Object lowerBound, Object upperBound) {
@@ -333,7 +263,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry for {@code RANGE [* TO upperBound]}
      *
-     * @param upperBound
+     * @param upperBound ub
      * @return new criteria instance
      */
     public Criteria lessThanEqual(Object upperBound) {
@@ -355,7 +285,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry for {@code RANGE [lowerBound TO *]}
      *
-     * @param lowerBound
+     * @param lowerBound lb
      * @return new criteria instance
      */
     public Criteria greaterThanEqual(Object lowerBound) {
@@ -377,7 +307,7 @@ public class Criteria {
     /**
      * Crates new CriteriaEntry for multiple values {@code (arg0 arg1 arg2 ...)}
      *
-     * @param values
+     * @param values values
      * @return new criteria instance
      */
     public Criteria in(Object... values) {
@@ -454,15 +384,6 @@ public class Criteria {
         }
     }
 
-    /**
-     * Property targeted by this Criteria
-     *
-     * @return new criteria instance
-     */
-    public Property getProperty() {
-        return this.property;
-    }
-
     public Set<CriteriaEntry> getQueryCriteriaEntries() {
         return Collections.unmodifiableSet(this.queryCriteria);
     }
@@ -480,10 +401,6 @@ public class Criteria {
         return Collections.unmodifiableList(this.criteriaChain);
     }
 
-    public boolean isNegating() {
-        return this.negating;
-    }
-
     public boolean isAnd() {
         return AND_OPERATOR == getConjunctionOperator();
     }
@@ -492,30 +409,10 @@ public class Criteria {
         return OR_OPERATOR == getConjunctionOperator();
     }
 
-    public float getBoost() {
-        return this.boost;
-    }
-
     static class OrCriteria extends Criteria {
 
         public OrCriteria() {
             super();
-        }
-
-        public OrCriteria(Property property) {
-            super(property);
-        }
-
-        public OrCriteria(List<Criteria> criteriaChain, Property property) {
-            super(criteriaChain, property);
-        }
-
-        public OrCriteria(List<Criteria> criteriaChain, String fieldname) {
-            super(criteriaChain, fieldname);
-        }
-
-        public OrCriteria(String fieldname) {
-            super(fieldname);
         }
 
         @Override
@@ -528,7 +425,7 @@ public class Criteria {
         EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, REGEXP, BETWEEN, FUZZY, IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, NULL, EMPTY;
     }
 
-    public static class CriteriaEntry {
+    public class CriteriaEntry {
 
         private final OperationKey key;
         private final Object value;
@@ -540,6 +437,18 @@ public class Criteria {
         CriteriaEntry(OperationKey key, Object value) {
             this.key = key;
             this.value = value;
+        }
+
+        public Property getProperty() {
+            return property;
+        }
+
+        public boolean isNegating() {
+            return negating;
+        }
+
+        public float getBoost() {
+            return boost;
         }
 
         public OperationKey getKey() {
