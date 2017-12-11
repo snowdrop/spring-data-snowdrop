@@ -29,10 +29,6 @@ public class CriteriaQuery<T> extends BaseQuery<T> {
     private Integer maxResults;
     private boolean distinct;
 
-    private CriteriaQuery(Class<T> entityClass) {
-        super(entityClass);
-    }
-
     public CriteriaQuery(Class<T> entityClass, Criteria criteria) {
         this(entityClass, criteria, null);
     }

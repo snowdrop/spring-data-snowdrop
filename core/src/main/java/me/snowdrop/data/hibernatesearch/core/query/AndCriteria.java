@@ -19,6 +19,12 @@ package me.snowdrop.data.hibernatesearch.core.query;
 /**
  * @author Ales Justin
  */
-public interface CriteriaConverter<Q> {
-    Q convert(Criteria<Q> criteria);
+public class AndCriteria<Q> extends Criteria<Q> {
+    public AndCriteria(String property) {
+        super(property);
+    }
+
+    public Q apply(OpsCriteriaConverter<Q> converter) {
+        return converter.and(this);
+    }
 }

@@ -19,6 +19,6 @@ package me.snowdrop.data.hibernatesearch.core.query;
 /**
  * @author Ales Justin
  */
-public interface CriteriaConverter<Q> {
-    Q convert(Criteria<Q> criteria);
+public enum OperationKey {
+    EQUALS, CONTAINS, STARTS_WITH, ENDS_WITH, REGEXP, BETWEEN, FUZZY, IN, WITHIN, BBOX, NEAR, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, NULL, EMPTY;
 }

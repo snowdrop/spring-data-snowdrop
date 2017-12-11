@@ -16,12 +16,14 @@
 
 package me.snowdrop.data.infinispan.remote;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import me.snowdrop.data.hibernatesearch.core.query.AndCriteria;
+import me.snowdrop.data.hibernatesearch.core.query.Condition;
 import me.snowdrop.data.hibernatesearch.core.query.Criteria;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
+import me.snowdrop.data.hibernatesearch.core.query.OrCriteria;
 import org.infinispan.query.dsl.Expression;
 import org.infinispan.query.dsl.FilterConditionBeginContext;
 import org.infinispan.query.dsl.FilterConditionContext;
@@ -39,43 +41,53 @@ public class InfinispanCriteriaConverter implements CriteriaConverter<Query> {
         this.queryBuilder = queryBuilder;
     }
 
-    public Query convert(Criteria root) {
-        FilterConditionContext first = null;
-        List<Criteria> criteriaChain = root.getCriteriaChain();
-        for (int i = 0; i < criteriaChain.size(); i++) {
-            Criteria criteria = criteriaChain.get(i);
-            List<Criteria.CriteriaEntry> entries = new ArrayList<>(criteria.getQueryCriteriaEntries());
-            for (int j = 0; j < entries.size(); j++) {
-                Criteria.CriteriaEntry entry = entries.get(j);
-                String fieldName = entry.getProperty().getName();
-                Expression property = Expression.property(fieldName);
-
-                FilterConditionBeginContext begin = (first == null ? queryBuilder : (FilterConditionBeginContext) first);
-                if (entry.isNegating()) {
-                    begin = begin.not();
-                }
-                if (!Float.isNaN(entry.getBoost())) {
-                    // TODO boost
-                }
-
-                FilterConditionEndContext context = begin.having(property);
-                FilterConditionContext next = convert(entry, context);
-                if (j < entries.size() - 1 || i < criteriaChain.size() - 1) {
-                    if (criteria.isOr()) {
-                        begin = next.or();
-                    } else {
-                        begin = next.and();
-                    }
-                    first = (FilterConditionContext) begin;
-                } else {
-                    first = next;
-                }
-            }
-        }
+    public Query convert(Criteria<Query> root) {
+        FilterConditionContext first = convert(queryBuilder, root);
         return first.toBuilder().build();
     }
 
-    private FilterConditionContext convert(Criteria.CriteriaEntry entry, FilterConditionEndContext context) {
+    public FilterConditionContext convert(FilterConditionBeginContext first, Criteria<Query> current) {
+        if (current instanceof OrCriteria) {
+            OrCriteria<Query> orCriteria = (OrCriteria<Query>) current;
+            return fromOrCriteria(first, orCriteria);
+        } else {
+            AndCriteria<Query> andCriteria = (AndCriteria<Query>) current;
+            return fromAndCriteria(first, andCriteria);
+        }
+    }
+
+    private FilterConditionContext fromOrCriteria(FilterConditionBeginContext begin, OrCriteria<Query> orCriteria) {
+        Criteria<Query> left = orCriteria.getLeft();
+        FilterConditionContext first = convert(begin, left);
+        Criteria<Query> right = orCriteria.getRight();
+        begin = first.or();
+        return convert(begin, right);
+    }
+
+    private FilterConditionContext fromAndCriteria(FilterConditionBeginContext begin, AndCriteria<Query> andCriteria) {
+        FilterConditionContext first = null;
+        List<Condition> conditions = andCriteria.conditions();
+        for (int i = 0; i < conditions.size(); i++) {
+            Condition condition = conditions.get(i);
+            if (condition.isNegating()) {
+                begin = begin.not();
+            }
+            if (!Float.isNaN(condition.getBoost())) {
+                // TODO boost
+            }
+            Expression property = Expression.property(condition.getProperty().getName());
+            FilterConditionEndContext having = begin.having(property);
+            FilterConditionContext next = convert(condition, having);
+            if (i < conditions.size() - 1) {
+                begin = next.and();
+            } else {
+                first = next;
+            }
+        }
+        return first;
+    }
+
+    private FilterConditionContext convert(Condition entry, FilterConditionEndContext context) {
         Object value = entry.getValue();
 
         switch (entry.getKey()) {

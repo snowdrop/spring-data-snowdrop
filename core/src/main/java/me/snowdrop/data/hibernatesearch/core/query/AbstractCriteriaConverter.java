@@ -17,6 +17,7 @@
 package me.snowdrop.data.hibernatesearch.core.query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import org.springframework.data.geo.Metrics;
  *
  * @author Ales Justin
  */
-public abstract class AbstractCriteriaConverter<Q> implements CriteriaConverter<Q> {
+public abstract class AbstractCriteriaConverter<Q> implements OpsCriteriaConverter<Q> {
 
     private final QueryBuilder<Q> queryBuilder;
 
@@ -39,38 +40,36 @@ public abstract class AbstractCriteriaConverter<Q> implements CriteriaConverter<
 
     protected abstract String getFieldName(Property property);
 
-    public Q convert(Criteria root) {
-        List<Q> queries = new ArrayList<>();
-        List<Criteria> criteriaChain = root.getCriteriaChain();
-        for (Criteria criteria : criteriaChain) {
-            List<Q> subQueries = new ArrayList<>();
-            for (Criteria.CriteriaEntry entry : criteria.getQueryCriteriaEntries()) {
-                String fieldName = getFieldName(entry.getProperty());
+    public Q convert(Criteria<Q> root) {
+        return root.apply(this);
+    }
 
-                Q query = convert(entry, fieldName);
-                if (entry.isNegating()) {
-                    query = queryBuilder.not(query);
-                }
-                if (!Float.isNaN(entry.getBoost())) {
-                    query = queryBuilder.boost(query, entry.getBoost());
-                }
-                subQueries.add(query);
+    public Q and(AndCriteria<Q> andCriteria) {
+        List<Q> queries = new ArrayList<>();
+        for (Condition condition : andCriteria.conditions()) {
+            String fieldName = getFieldName(condition.getProperty());
+            Q subQuery = convert(condition, fieldName);
+            if (condition.isNegating()) {
+                subQuery = queryBuilder.not(subQuery);
             }
-            Q subQuery;
-            if (criteria.isOr()) {
-                subQuery = queryBuilder.any(subQueries);
-            } else {
-                subQuery = queryBuilder.all(subQueries);
+            if (!Float.isNaN(condition.getBoost())) {
+                subQuery = queryBuilder.boost(subQuery, condition.getBoost());
             }
             queries.add(subQuery);
         }
         return queryBuilder.all(queries);
     }
 
-    private Q convert(Criteria.CriteriaEntry entry, String fieldName) {
-        Object value = entry.getValue();
+    public Q or(OrCriteria<Q> orCriteria) {
+        Q leftQuery = orCriteria.getLeft().apply(this);
+        Q rightQuery = orCriteria.getRight().apply(this);
+        return queryBuilder.any(Arrays.asList(leftQuery, rightQuery));
+    }
 
-        switch (entry.getKey()) {
+    private Q convert(Condition condition, String fieldName) {
+        Object value = condition.getValue();
+
+        switch (condition.getKey()) {
             case EQUALS:
                 return queryBuilder.equal(fieldName, value);
             case NULL:
@@ -104,7 +103,7 @@ public abstract class AbstractCriteriaConverter<Q> implements CriteriaConverter<
                 double distanceInKm = toKm(distance);
                 return queryBuilder.spatial(fieldName, latitude, longitude, distanceInKm);
             default:
-                throw new IllegalArgumentException("Unsupported operator " + entry.getKey());
+                throw new IllegalArgumentException("Unsupported operator " + condition.getKey());
         }
     }
 

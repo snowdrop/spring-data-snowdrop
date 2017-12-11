@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import me.snowdrop.data.hibernatesearch.core.mapping.HibernateSearchPersistentProperty;
 import me.snowdrop.data.hibernatesearch.core.query.Criteria;
+import me.snowdrop.data.hibernatesearch.core.query.AndCriteria;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaQuery;
 import org.hibernate.search.spatial.Coordinates;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -41,6 +42,7 @@ import org.springframework.data.repository.query.parser.PartTree;
  * @author Artur Konczak
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
+@SuppressWarnings("unchecked")
 public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQuery<?>, CriteriaQuery<?>> {
 
     private final Class<?> entityClass;
@@ -55,7 +57,7 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
     @Override
     protected CriteriaQuery<?> create(Part part, Iterator<Object> iterator) {
         PersistentPropertyPath<HibernateSearchPersistentProperty> path = context.getPersistentPropertyPath(part.getProperty());
-        return new CriteriaQuery<>(entityClass, from(part, new Criteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
+        return new CriteriaQuery(entityClass, from(part, new AndCriteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
     }
 
     @Override
@@ -64,12 +66,12 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
             return create(part, iterator);
         }
         PersistentPropertyPath<HibernateSearchPersistentProperty> path = context.getPersistentPropertyPath(part.getProperty());
-        return base.addCriteria(from(part, new Criteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
+        return base.addCriteria(from(part, new AndCriteria(path.toDotPath(HibernateSearchPersistentProperty.PropertyToFieldNameConverter.INSTANCE)), iterator));
     }
 
     @Override
     protected CriteriaQuery<?> or(CriteriaQuery<?> base, CriteriaQuery<?> query) {
-        return new CriteriaQuery<>(base.getEntityClass(), base.getCriteria().or(query.getCriteria()));
+        return new CriteriaQuery(base.getEntityClass(), base.getCriteria().or(query.getCriteria()));
     }
 
     @Override
@@ -81,13 +83,9 @@ public class HibernateSearchQueryCreator extends AbstractQueryCreator<CriteriaQu
         return query;
     }
 
-    private Criteria from(Part part, Criteria instance, Iterator<?> parameters) {
+    private Criteria from(Part part, Criteria criteria, Iterator<?> parameters) {
         Part.Type type = part.getType();
 
-        Criteria criteria = instance;
-        if (criteria == null) {
-            criteria = new Criteria();
-        }
         switch (type) {
             case IS_NULL:
                 return criteria.isNull();

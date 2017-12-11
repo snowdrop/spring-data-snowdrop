@@ -56,6 +56,14 @@ public class OpsDefaultBase extends OpsTestBase {
   }
 
   @Test
+  public void testOrAnd() {
+    assertSize(repository.findByPokeNotNullAndTextNotLikeOrNumber("good", 0), 3);
+    assertSize(repository.findByPokeNotNullAndTextNotLikeOrNumberAndPoke("good", 0, "bzzz"), 2);
+    assertSize(repository.findByPokeNotNullAndTextNotLikeOrNumberOrPoke("good", 0, "army"), 4);
+    assertSize(repository.findByPokeNotNullAndTextNotLikeAndNumberOrPoke("good", 10, "army"), 2);
+  }
+
+  @Test
   public void testIsNull() {
     assertSize(repository.findByPokeIsNull(), 3);
   }

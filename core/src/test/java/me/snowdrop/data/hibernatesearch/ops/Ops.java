@@ -34,6 +34,14 @@ public interface Ops {
 
     List<SimpleEntity> findByPokeNotNullAndTextNotLike(String text);
 
+    List<SimpleEntity> findByPokeNotNullAndTextNotLikeOrNumber(String text, int number);
+
+    List<SimpleEntity> findByPokeNotNullAndTextNotLikeOrNumberAndPoke(String text, int number, String poke);
+
+    List<SimpleEntity> findByPokeNotNullAndTextNotLikeOrNumberOrPoke(String text, int number, String poke);
+
+    List<SimpleEntity> findByPokeNotNullAndTextNotLikeAndNumberOrPoke(String text, int number, String poke);
+
     List<SimpleEntity> findByPokeIsNull();
 
     List<SimpleEntity> findByPokeIsNotNull();
