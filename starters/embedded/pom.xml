@@ -44,15 +44,7 @@
       <exclusions>
         <exclusion>
           <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-commons</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
           <artifactId>infinispan-client-hotrod</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.infinispan</groupId>
-          <artifactId>infinispan-query-dsl</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.infinispan</groupId>
