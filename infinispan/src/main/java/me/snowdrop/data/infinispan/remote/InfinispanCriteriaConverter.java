@@ -25,66 +25,72 @@ import me.snowdrop.data.hibernatesearch.core.query.Criteria;
 import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
 import me.snowdrop.data.hibernatesearch.core.query.OrCriteria;
 import org.infinispan.query.dsl.Expression;
-import org.infinispan.query.dsl.FilterConditionBeginContext;
 import org.infinispan.query.dsl.FilterConditionContext;
 import org.infinispan.query.dsl.FilterConditionEndContext;
 import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryBuilder;
+import org.infinispan.query.dsl.QueryFactory;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class InfinispanCriteriaConverter implements CriteriaConverter<Query> {
+    private final QueryFactory queryFactory;
     private final QueryBuilder queryBuilder;
+    private boolean usedQB;
 
-    public InfinispanCriteriaConverter(QueryBuilder queryBuilder) {
+    public InfinispanCriteriaConverter(QueryFactory queryFactory, QueryBuilder queryBuilder) {
+        this.queryFactory = queryFactory;
         this.queryBuilder = queryBuilder;
     }
 
     public Query convert(Criteria<Query> root) {
-        FilterConditionContext first = convert(queryBuilder, root);
-        return first.toBuilder().build();
+        return convertInternal(root).toBuilder().build();
     }
 
-    public FilterConditionContext convert(FilterConditionBeginContext first, Criteria<Query> current) {
+    private FilterConditionContext convertInternal(Criteria<Query> current) {
         if (current instanceof OrCriteria) {
             OrCriteria<Query> orCriteria = (OrCriteria<Query>) current;
-            return fromOrCriteria(first, orCriteria);
+            return or(orCriteria);
         } else {
             AndCriteria<Query> andCriteria = (AndCriteria<Query>) current;
-            return fromAndCriteria(first, andCriteria);
+            return and(andCriteria);
         }
     }
 
-    private FilterConditionContext fromOrCriteria(FilterConditionBeginContext begin, OrCriteria<Query> orCriteria) {
-        Criteria<Query> left = orCriteria.getLeft();
-        FilterConditionContext first = convert(begin, left);
-        Criteria<Query> right = orCriteria.getRight();
-        begin = first.or();
-        return convert(begin, right);
-    }
-
-    private FilterConditionContext fromAndCriteria(FilterConditionBeginContext begin, AndCriteria<Query> andCriteria) {
-        FilterConditionContext first = null;
+    private FilterConditionContext and(AndCriteria<Query> andCriteria) {
         List<Condition> conditions = andCriteria.conditions();
-        for (int i = 0; i < conditions.size(); i++) {
-            Condition condition = conditions.get(i);
-            if (condition.isNegating()) {
-                begin = begin.not();
-            }
-            if (!Float.isNaN(condition.getBoost())) {
-                // TODO boost
-            }
-            Expression property = Expression.property(condition.getProperty().getName());
-            FilterConditionEndContext having = begin.having(property);
-            FilterConditionContext next = convert(condition, having);
-            if (i < conditions.size() - 1) {
-                begin = next.and();
-            } else {
-                first = next;
-            }
+        FilterConditionContext first = fromCondition(conditions.get(0));
+        for (int i = 1; i < conditions.size(); i++) {
+            first = first.and(fromCondition(conditions.get(i)));
         }
         return first;
+    }
+
+    private FilterConditionContext or(OrCriteria<Query> orCriteria) {
+        FilterConditionContext left = convertInternal(orCriteria.getLeft());
+        return left.or(convertInternal(orCriteria.getRight()));
+    }
+
+    // TODO -- boost
+    private FilterConditionContext fromCondition(Condition condition) {
+        Expression property = Expression.property(condition.getProperty().getName());
+        FilterConditionEndContext having;
+        if (!usedQB) {
+            usedQB = true;
+            if (condition.isNegating()) {
+                having = queryBuilder.not().having(property);
+            } else {
+                having = queryBuilder.having(property);
+            }
+        } else {
+            if (condition.isNegating()) {
+                having = queryFactory.not().having(property);
+            } else {
+                having = queryFactory.having(property);
+            }
+        }
+        return convert(condition, having);
     }
 
     private FilterConditionContext convert(Condition entry, FilterConditionEndContext context) {

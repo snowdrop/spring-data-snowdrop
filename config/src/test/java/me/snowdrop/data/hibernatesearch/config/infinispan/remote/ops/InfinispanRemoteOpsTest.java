@@ -50,10 +50,4 @@ public class InfinispanRemoteOpsTest extends OpsDefaultBase {
     @Ignore
     public void testGeoLocation() {
     }
-
-    @Test
-    @Ignore
-    public void testOrAnd() {
-        super.testOrAnd();
-    }
 }

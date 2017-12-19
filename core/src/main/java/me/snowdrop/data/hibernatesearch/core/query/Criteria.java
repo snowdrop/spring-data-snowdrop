@@ -49,7 +49,7 @@ public abstract class Criteria<Q> {
         this.property = new SimpleProperty(property);
     }
 
-    abstract Q apply(OpsCriteriaConverter<Q> converter);
+    public abstract Q apply(OpsCriteriaConverter<Q> converter);
 
     public List<Condition> conditions() {
         return conditions;

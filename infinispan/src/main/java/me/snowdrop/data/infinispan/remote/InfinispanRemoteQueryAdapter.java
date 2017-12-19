@@ -55,7 +55,7 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
 
     @Override
     protected CriteriaConverter<Query> createCriteriaConverter() {
-        return new InfinispanCriteriaConverter(queryBuilder);
+        return new InfinispanCriteriaConverter(queryFactory, queryBuilder);
     }
 
     @Override
