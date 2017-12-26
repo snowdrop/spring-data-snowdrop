@@ -31,10 +31,12 @@ public class HibernateSearchQueryMethod extends QueryMethod {
 
     private final Method method;
     private final Query queryAnnotation;
+    private final ProjectionFactory factory;
 
     public HibernateSearchQueryMethod(Method method, RepositoryMetadata metadata, ProjectionFactory factory) {
         super(method, metadata, factory);
         this.method = method;
+        this.factory = factory;
         this.queryAnnotation = method.getAnnotation(Query.class);
     }
 
@@ -48,5 +50,9 @@ public class HibernateSearchQueryMethod extends QueryMethod {
 
     Method getMethod() {
         return method;
+    }
+
+    ProjectionFactory getFactory() {
+        return factory;
     }
 }

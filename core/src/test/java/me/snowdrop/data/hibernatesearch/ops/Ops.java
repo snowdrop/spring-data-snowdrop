@@ -93,6 +93,8 @@ public interface Ops {
 
     List<SimpleProjection> findByNameOrderByHero(String name);
 
+    SimpleProjection findByNameOrderByColor(String name);
+
     <T> List<T> findByName(String name, Class<T> type);
 
     List<HeroProjection> findByHero(String hero);

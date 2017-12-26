@@ -68,7 +68,7 @@ public class SimpleEntity implements AbstractEntity<Long> {
     @ProtoField(number = 1, required = true)
     public Long id;
 
-    @Field(store = Store.NO)
+    @Field(store = Store.YES)
     @SortableField(forField = "identity.name")
     @Field(name = "identity.name")
     @Field(name = "bridge", bridge = @FieldBridge(impl = MyCustomFieldBridge.class))
@@ -81,7 +81,7 @@ public class SimpleEntity implements AbstractEntity<Long> {
     @ProtoField(number = 3)
     public String text;
 
-    @Field(store = Store.NO)
+    @Field(store = Store.YES)
     @Field(name = "var")
     @ProtoDoc("@Field(store=Store.NO)")
     @ProtoField(number = 4, defaultValue = "0")

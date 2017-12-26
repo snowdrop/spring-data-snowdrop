@@ -111,6 +111,10 @@ public class InfinispanEmbeddedDatasourceMapper implements DatasourceMapper {
         protected void setMaxResults(long maxResults) {
             cacheQuery.maxResults(Integers.safeCast(maxResults));
         }
+
+        protected void setProjections(String[] fields) {
+            cacheQuery.projection(fields);
+        }
     }
 
     private class InfinispanEmbeddedCrudAdapter<T, ID> extends MapCrudAdapter<T, ID> {

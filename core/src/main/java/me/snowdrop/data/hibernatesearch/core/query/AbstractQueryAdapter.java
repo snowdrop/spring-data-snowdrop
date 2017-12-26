@@ -16,6 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.core.query;
 
+import java.beans.PropertyDescriptor;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,6 +25,7 @@ import me.snowdrop.data.hibernatesearch.spi.Query;
 import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.projection.ProjectionInformation;
 import org.springframework.data.util.StreamUtils;
 
 /**
@@ -39,13 +41,8 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
 
     protected abstract CriteriaConverter<Q> createCriteriaConverter();
 
-    protected void initialize() {
-    }
-
     protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
         this.entityClass = query.getEntityClass();
-
-        initialize();
 
         this.queryHelper = createQueryHelper();
         this.criteriaConverter = createCriteriaConverter();
@@ -53,6 +50,8 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
         BaseQuery<T> baseQuery = (BaseQuery<T>) query;
         baseQuery.apply(this);
     }
+
+    protected abstract String getFieldName(String property);
 
     protected abstract long size();
 
@@ -112,6 +111,8 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
 
     protected abstract void setMaxResults(long maxResults);
 
+    protected abstract void setProjections(String[] fields);
+
     void convert(CriteriaQuery<T> query) {
         fillQuery(query);
         // apply/override max results
@@ -131,6 +132,7 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
         applyQueryImpl(queryImpl);
         addSortToQuery(query);
         addPagingToQuery(query);
+        applyProjections(query);
     }
 
     private void fillQuery(CriteriaQuery<T> query) {
@@ -170,4 +172,26 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
             setMaxResults(pageable.getPageSize());
         }
     }
+
+    protected String[] getFields(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+        ProjectionInformation pi = query.getProjectionInformation();
+        if (pi != null && pi.isClosed()) {
+            List<PropertyDescriptor> properties = pi.getInputProperties();
+            String[] fields = new String[properties.size()];
+            for (int i = 0; i < fields.length; i++) {
+                String property = properties.get(i).getName();
+                fields[i] = getFieldName(property);
+            }
+            return fields;
+        }
+        return null;
+    }
+
+    protected void applyProjections(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+        String[] fields = getFields(query);
+        if (fields != null) {
+            setProjections(fields);
+        }
+    }
+
 }

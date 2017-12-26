@@ -24,6 +24,7 @@ import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
 import me.snowdrop.data.hibernatesearch.core.query.QueryHelper;
 import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
 import me.snowdrop.data.hibernatesearch.util.Integers;
+import org.infinispan.query.dsl.Expression;
 import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryBuilder;
 import org.infinispan.query.dsl.QueryFactory;
@@ -44,8 +45,24 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     }
 
     @Override
-    protected void initialize() {
-        queryBuilder = queryFactory.from(entityClass);
+    protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+        queryBuilder = queryFactory.from(query.getEntityClass());
+
+        String[] fields = getFields(query);
+        if (fields != null) {
+            Expression[] projection = new Expression[fields.length];
+            for (int i = 0; i < fields.length; i++) {
+                projection[i] = Expression.property(fields[i]);
+            }
+            queryBuilder = queryBuilder.select(projection);
+        }
+
+        super.initialize(query);
+    }
+
+    @Override
+    protected String getFieldName(String property) {
+        return property;
     }
 
     @Override
@@ -106,6 +123,10 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     @Override
     protected void setMaxResults(long maxResults) {
         query.maxResults(Integers.safeCast(maxResults));
+    }
+
+    @Override
+    protected void setProjections(String[] fields) {
     }
 
     @Override

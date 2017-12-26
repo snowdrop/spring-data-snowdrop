@@ -113,6 +113,10 @@ public class JpaDatasourceMapper implements DatasourceMapper {
             fullTextQuery.setMaxResults(Integers.safeCast(maxResults));
         }
 
+        protected void setProjections(String[] fields) {
+            fullTextQuery.setProjection(fields);
+        }
+
         protected long size() {
             try {
                 return fullTextQuery.getResultSize();

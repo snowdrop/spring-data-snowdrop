@@ -22,6 +22,7 @@ import java.util.Objects;
 import me.snowdrop.data.hibernatesearch.spi.Query;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.projection.ProjectionInformation;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -31,6 +32,7 @@ public class BaseQuery<T> implements Query<T> {
     private Pageable pageable;
     private Sort sort;
     private Map<String, String> targetFields;
+    private ProjectionInformation projectionInformation;
 
     public BaseQuery(Class<T> entityClass) {
         Objects.requireNonNull(entityClass);
@@ -67,5 +69,13 @@ public class BaseQuery<T> implements Query<T> {
 
     public void setTargetFields(Map<String, String> targetFields) {
         this.targetFields = targetFields;
+    }
+
+    public ProjectionInformation getProjectionInformation() {
+        return projectionInformation;
+    }
+
+    public void setProjectionInformation(ProjectionInformation projectionInformation) {
+        this.projectionInformation = projectionInformation;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.core.query;
+package me.snowdrop.data.hibernatesearch.core.query.hs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,13 @@ public abstract class AbstractHSQueryAdapter<T> extends LuceneQueryAdapter<T> {
     protected List<T> list() {
         List<T> list = new ArrayList<>();
         for (EntityInfo ei : hsQuery.queryEntityInfos()) {
-            list.add(get(entityClass, ei.getId()));
+            Object[] projection = ei.getProjection();
+            if (projection != null) {
+                //noinspection unchecked
+                list.add((T) projection); // force it!
+            } else {
+                list.add(get(entityClass, ei.getId()));
+            }
         }
         return list;
     }
@@ -65,5 +71,9 @@ public abstract class AbstractHSQueryAdapter<T> extends LuceneQueryAdapter<T> {
 
     protected void setMaxResults(long maxResults) {
         hsQuery.maxResults(Integers.safeCast(maxResults));
+    }
+
+    protected void setProjections(String[] fields) {
+        hsQuery.projection(fields);
     }
 }

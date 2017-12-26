@@ -20,16 +20,19 @@ import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.projection.ProjectionInformation;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public interface Query<T> {
-  Class<T> getEntityClass();
+    Class<T> getEntityClass();
 
-  Pageable getPageable();
+    Pageable getPageable();
 
-  Sort getSort();
+    Sort getSort();
 
-  Map<String, String> getTargetFields();
+    Map<String, String> getTargetFields();
+
+    ProjectionInformation getProjectionInformation();
 }

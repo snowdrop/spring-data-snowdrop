@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.snowdrop.data.hibernatesearch.core.query.AbstractHSQueryAdapter;
+import me.snowdrop.data.hibernatesearch.core.query.hs.AbstractHSQueryAdapter;
 import me.snowdrop.data.hibernatesearch.crud.CEntity;
 import me.snowdrop.data.hibernatesearch.spi.AbstractCrudAdapter;
 import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;

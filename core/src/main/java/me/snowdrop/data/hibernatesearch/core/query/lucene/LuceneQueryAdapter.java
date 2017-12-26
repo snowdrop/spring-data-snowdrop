@@ -50,6 +50,10 @@ public abstract class LuceneQueryAdapter<T> extends AbstractQueryAdapter<T, Quer
         super.initialize(query);
     }
 
+    protected String getFieldName(String property) {
+        return emc.getFieldName(property);
+    }
+
     protected me.snowdrop.data.hibernatesearch.core.query.QueryBuilder<Query> createQueryBuilder() {
         return new LuceneQueryBuilder(queryBuilder);
     }
