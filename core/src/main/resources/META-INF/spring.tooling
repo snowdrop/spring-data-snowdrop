@@ -1,0 +1,4 @@
+# Tooling related information for the HibernateSearch namespace
+http\://www.snowdrop.me/schema/data/hibernatesearch@name=HibernateSearch Namespace
+http\://www.snowdrop.me/schema/data/hibernatesearch@prefix=hibernatesearch
+http\://www.snowdrop.me/schema/data/hibernatesearch@icon=org/springframework/jdbc/config/spring-jdbc.gif

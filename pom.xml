@@ -41,7 +41,7 @@
 
     <lombok>1.16.18</lombok>
     <cdi>1.0</cdi>
-    <log4j>2.8.2</log4j>
+    <log4j>2.9.1</log4j>
     <slf4j>1.7.25</slf4j>
 
     <!-- Asciidoctor -->

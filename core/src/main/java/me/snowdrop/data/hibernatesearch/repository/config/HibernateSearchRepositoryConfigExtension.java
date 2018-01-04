@@ -16,6 +16,11 @@
 
 package me.snowdrop.data.hibernatesearch.repository.config;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchCrudRepository;
 import me.snowdrop.data.hibernatesearch.repository.HibernateSearchRepository;
 import me.snowdrop.data.hibernatesearch.repository.support.HibernateSearchRepositoryFactoryBean;
@@ -24,39 +29,42 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
-
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import org.springframework.data.repository.config.XmlRepositoryConfigurationSource;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class HibernateSearchRepositoryConfigExtension extends RepositoryConfigurationExtensionSupport {
-  @Override
-  protected String getModulePrefix() {
-    return "hibernatesearch";
-  }
+    @Override
+    protected String getModulePrefix() {
+        return "hibernatesearch";
+    }
 
-  @Override
-  protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
-    return Collections.singletonList(Indexed.class);
-  }
+    @Override
+    protected Collection<Class<? extends Annotation>> getIdentifyingAnnotations() {
+        return Collections.singletonList(Indexed.class);
+    }
 
-  @Override
-  protected Collection<Class<?>> getIdentifyingTypes() {
-    return Arrays.asList(HibernateSearchRepository.class, HibernateSearchCrudRepository.class);
-  }
+    @Override
+    protected Collection<Class<?>> getIdentifyingTypes() {
+        return Arrays.asList(HibernateSearchRepository.class, HibernateSearchCrudRepository.class);
+    }
 
-  @Override
-  public String getRepositoryFactoryBeanClassName() {
-    return HibernateSearchRepositoryFactoryBean.class.getName();
-  }
+    @Override
+    public String getRepositoryFactoryBeanClassName() {
+        return HibernateSearchRepositoryFactoryBean.class.getName();
+    }
 
-  @Override
-  public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
-    AnnotationAttributes attributes = config.getAttributes();
-    builder.addPropertyReference("datasourceMapper", attributes.getString("datasourceMapperRef"));
-  }
+    @Override
+    public void postProcess(BeanDefinitionBuilder builder, XmlRepositoryConfigurationSource config) {
+        Element element = config.getElement();
+        builder.addPropertyReference("datasourceMapper", element.getAttribute("datasource-mapper-ref"));
+    }
+
+    @Override
+    public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
+        AnnotationAttributes attributes = config.getAttributes();
+        builder.addPropertyReference("datasourceMapper", attributes.getString("datasourceMapperRef"));
+    }
 }

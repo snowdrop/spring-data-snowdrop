@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc, and individual contributors.
+ * Copyright 2018 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,7 @@
 
 package me.snowdrop.data.hibernatesearch.smoke;
 
-import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
-import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -30,16 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 @RunWith(SpringRunner.class)
-@ContextConfiguration
-public class SmokeTest extends SmokeTestBase {
-
-    @Configuration
-    @EnableHibernateSearchRepositories
-    @EnableAsync
-    public static class Config {
-        @Bean(destroyMethod = "close")
-        public DatasourceMapperTester datasourceMapper() {
-            return TestUtils.createDatasourceMapper(SmokeEntity.class);
-        }
-    }
+@ContextConfiguration("classpath:my-xml-config.xml")
+public class XmlSmokeTest extends SmokeTestBase {
 }
