@@ -25,34 +25,24 @@ import java.util.stream.Stream;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
 import me.snowdrop.data.hibernatesearch.TestUtils;
-import me.snowdrop.data.hibernatesearch.repository.config.EnableHibernateSearchRepositories;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public abstract class SmokeTestBase {
 
-    @Autowired
-    SmokeRepository repository;
+    protected abstract SmokeRepository getRepository();
 
-    @Autowired
-    DatasourceMapperTester datasourceMapper;
+    protected abstract DatasourceMapperTester getDatasourceMapper();
 
     @Before
     public void setUp() {
@@ -82,80 +72,82 @@ public abstract class SmokeTestBase {
         entity.setType("baz");
         entities[3] = entity;
 
-        TestUtils.preindexEntities(datasourceMapper, entities);
+        TestUtils.preindexEntities(getDatasourceMapper(), entities);
     }
 
     @After
     public void tearDown() {
-        TestUtils.purgeAll(datasourceMapper, SmokeEntity.class);
+        TestUtils.purgeAll(getDatasourceMapper(), SmokeEntity.class);
     }
 
     @Test
     public void testDefaultRepository() {
-        Assert.assertNotNull(repository);
+        Assert.assertNotNull(getRepository());
 
-        List<SmokeEntity> all = TestUtils.toList(repository.findAll());
+        List<SmokeEntity> all = TestUtils.toList(getRepository().findAll());
         Assert.assertEquals(4L, all.size());
 
-        Assert.assertEquals(4L, repository.count());
+        Assert.assertEquals(4L, getRepository().count());
 
-        Iterable<SmokeEntity> sorted = repository.findAll(Sort.by(Sort.Direction.DESC, "name"));
+        Iterable<SmokeEntity> sorted = getRepository().findAll(Sort.by(Sort.Direction.DESC, "name"));
         Assert.assertEquals("4", sorted.iterator().next().getId());
 
         Pageable pageable = PageRequest.of(1, 2, Sort.by(Sort.Order.by("type")));
-        Page<SmokeEntity> pageables = repository.findAll(pageable);
+        Page<SmokeEntity> pageables = getRepository().findAll(pageable);
         Assert.assertEquals(2, pageables.getNumberOfElements());
     }
 
     @Test
     public void testSmokeRepository() throws Exception {
-        Assert.assertEquals(2, repository.findByType("foo").size());
+        Assert.assertNotNull(getRepository());
 
-        SmokeEntity byName = repository.findByName("bb");
+        Assert.assertEquals(2, getRepository().findByType("foo").size());
+
+        SmokeEntity byName = getRepository().findByName("bb");
         Assert.assertNotNull(byName);
         Assert.assertEquals("2", byName.getId());
 
-        List<SmokeEntity> byNameAndType = repository.findByNameAndType("cc", "foo");
+        List<SmokeEntity> byNameAndType = getRepository().findByNameAndType("cc", "foo");
         Assert.assertEquals(1, byNameAndType.size());
         Assert.assertEquals("3", byNameAndType.get(0).getId());
 
-        List<SmokeEntity> byTypeQuery = repository.findByTypeQuery("foo");
+        List<SmokeEntity> byTypeQuery = getRepository().findByTypeQuery("foo");
         Assert.assertEquals(2, byTypeQuery.size());
 
-        List<SmokeEntity> byNameOrType = repository.findByNameOrType("aa", "bar");
+        List<SmokeEntity> byNameOrType = getRepository().findByNameOrType("aa", "bar");
         Assert.assertEquals(2, byNameOrType.size());
 
-        List<SmokeEntity> byNamed = repository.findByNameViaNamedQuery("dd");
+        List<SmokeEntity> byNamed = getRepository().findByNameViaNamedQuery("dd");
         Assert.assertEquals(1, byNamed.size());
 
-        try (Stream<SmokeEntity> stream = repository.findByTypeIn(Collections.singleton("foo"))) {
+        try (Stream<SmokeEntity> stream = getRepository().findByTypeIn(Collections.singleton("foo"))) {
             Assert.assertEquals(2, stream.count());
         }
 
-        Future<List<SmokeEntity>> async = repository.findByTypeAfter("cqq");
+        Future<List<SmokeEntity>> async = getRepository().findByTypeAfter("cqq");
         List<SmokeEntity> list = async.get();
         Assert.assertEquals(2, list.size());
 
-        Optional<SmokeEntity> optional = repository.findByNameBefore("az");
+        Optional<SmokeEntity> optional = getRepository().findByNameBefore("az");
         Assert.assertEquals("aa", optional.get().getName());
-        optional = repository.findByNameBefore("00"); // should be before "aa"
+        optional = getRepository().findByNameBefore("00"); // should be before "aa"
         Assert.assertFalse(optional.isPresent());
 
-        Assert.assertTrue(repository.existsByType("foo"));
-        Assert.assertFalse(repository.existsByType("zwy"));
+        Assert.assertTrue(getRepository().existsByType("foo"));
+        Assert.assertFalse(getRepository().existsByType("zwy"));
 
-        Set<SmokeEntity> set = repository.findByNameAfter("bz");
+        Set<SmokeEntity> set = getRepository().findByNameAfter("bz");
         Assert.assertEquals(2, set.size());
 
         try {
-            repository.findByNameBefore("bz"); // should be 2
+            getRepository().findByNameBefore("bz"); // should be 2
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals(IncorrectResultSizeDataAccessException.class, e.getClass());
         }
 
         try {
-            repository.deleteByName("bz");
+            getRepository().deleteByName("bz");
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals(UnsupportedOperationException.class, e.getClass());

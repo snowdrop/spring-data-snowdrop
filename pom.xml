@@ -40,9 +40,11 @@
     <infinispan>9.2.0.Beta2</infinispan>
 
     <lombok>1.16.18</lombok>
-    <cdi>1.0</cdi>
+    <cdi>2.0</cdi>
     <log4j>2.9.1</log4j>
     <slf4j>1.7.25</slf4j>
+
+    <weld>3.0.2.Final</weld>
 
     <!-- Asciidoctor -->
     <hibernate-asciidoctor-theme.version>1.0.1.Final</hibernate-asciidoctor-theme.version>
@@ -175,6 +177,14 @@
             <artifactId>logback-classic</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.weld.se</groupId>
+        <artifactId>weld-se-core</artifactId>
+        <version>${weld}</version>
+        <scope>test</scope>
+        <optional>true</optional>
       </dependency>
 
       <dependency>

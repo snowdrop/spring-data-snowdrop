@@ -16,14 +16,19 @@
 
 package me.snowdrop.data.hibernatesearch.smoke;
 
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+
+import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
+import me.snowdrop.data.hibernatesearch.TestUtils;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration("classpath:my-xml-config.xml")
-public class XmlSmokeTest extends SpringSmokeTestBase {
+public class CdiBeans {
+    @Produces
+    @ApplicationScoped
+    public DatasourceMapperTester createDatasourceMapper() {
+        return TestUtils.createDatasourceMapper(SmokeEntity.class);
+    }
 }

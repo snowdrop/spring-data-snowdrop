@@ -15,59 +15,61 @@
  */
 package me.snowdrop.data.repository.extension.support;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.RepositoryComposition.RepositoryFragments;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.core.support.RepositoryFragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * @author Yoann Rodiere
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
+ */
 public abstract class ExtendingRepositoryFactorySupport extends RepositoryFactorySupport {
 
-  public RepositoryFragments getExtensionFragments(RepositoryMetadata metadata) {
-    Class<?> repositoryInterface = metadata.getRepositoryInterface();
-    List<RepositoryFragment<?>> result = new ArrayList<>();
+    public RepositoryFragments getExtensionFragments(RepositoryMetadata metadata) {
+        Class<?> repositoryInterface = metadata.getRepositoryInterface();
+        List<RepositoryFragment<?>> result = new ArrayList<>();
 
-    Class<?> extensionInterface = getRepositoryExtensionInterface();
+        Class<?> extensionInterface = getRepositoryExtensionInterface();
 
-    for (Class<?> extendedInterface : repositoryInterface.getInterfaces()) {
-      if (extensionInterface.isAssignableFrom(extendedInterface)) {
-        result.add(createExtensionFragment(extendedInterface));
-      }
+        for (Class<?> extendedInterface : repositoryInterface.getInterfaces()) {
+            if (extensionInterface.isAssignableFrom(extendedInterface)) {
+                result.add(createExtensionFragment(extendedInterface));
+            }
+        }
+
+        if (result.isEmpty()) {
+            return RepositoryFragments.empty();
+        } else {
+            return RepositoryFragments.from(result);
+        }
     }
 
-    if (result.isEmpty()) {
-      return RepositoryFragments.empty();
+    @Override
+    protected final RepositoryMetadata getRepositoryMetadata(Class<?> interfaze) {
+        if (getRepositoryExtensionInterface().isAssignableFrom(interfaze)) {
+            return getRepositoryExtensionMetadata(interfaze);
+        } else {
+            return getMainRepositoryMetadata(interfaze);
+        }
     }
-    else {
-      return RepositoryFragments.from(result);
+
+    protected abstract Class<?> getRepositoryExtensionInterface();
+
+    protected RepositoryMetadata getMainRepositoryMetadata(Class<?> repositoryInterface) {
+        return super.getRepositoryMetadata(repositoryInterface);
     }
-  }
 
-  @Override
-  protected final RepositoryMetadata getRepositoryMetadata(Class<?> interfaze) {
-    if (getRepositoryExtensionInterface().isAssignableFrom(interfaze)) {
-      return getRepositoryExtensionMetadata(interfaze);
+    protected RepositoryMetadata getRepositoryExtensionMetadata(Class<?> extensionInterface) {
+        return new DefaultRepositoryExtensionMetadata(extensionInterface);
     }
-    else {
-      return getMainRepositoryMetadata(interfaze);
+
+    private <T> RepositoryFragment<T> createExtensionFragment(Class<T> fragmentInterface) {
+        T repository = getRepository(fragmentInterface);
+        return RepositoryFragment.implemented(fragmentInterface, repository);
     }
-  }
-
-  protected abstract Class<?> getRepositoryExtensionInterface();
-
-  protected RepositoryMetadata getMainRepositoryMetadata(Class<?> repositoryInterface) {
-    return super.getRepositoryMetadata(repositoryInterface);
-  }
-
-  protected RepositoryMetadata getRepositoryExtensionMetadata(Class<?> extensionInterface) {
-    return new DefaultRepositoryExtensionMetadata(extensionInterface);
-  }
-
-  private <T> RepositoryFragment<T> createExtensionFragment(Class<T> fragmentInterface) {
-    T repository = getRepository(fragmentInterface);
-    return RepositoryFragment.implemented(fragmentInterface, repository);
-  }
 
 }

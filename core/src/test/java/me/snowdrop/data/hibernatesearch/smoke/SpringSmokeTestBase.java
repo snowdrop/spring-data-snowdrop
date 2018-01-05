@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc, and individual contributors.
+ * Copyright 2018 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.hibernatesearch.repository.cdi;
+package me.snowdrop.data.hibernatesearch.smoke;
 
-import org.springframework.data.repository.cdi.CdiRepositoryExtensionSupport;
+import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class HibernateSearchCdiRepositoryExtension extends CdiRepositoryExtensionSupport {
-  // TODO
+public abstract class SpringSmokeTestBase extends SmokeTestBase {
+
+    @Autowired
+    SmokeRepository repository;
+
+    @Autowired
+    DatasourceMapperTester datasourceMapper;
+
+    protected SmokeRepository getRepository() {
+        return repository;
+    }
+
+    protected DatasourceMapperTester getDatasourceMapper() {
+        return datasourceMapper;
+    }
 }
