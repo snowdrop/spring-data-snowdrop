@@ -103,8 +103,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.weld.se</groupId>
-      <artifactId>weld-se-core</artifactId>
+      <groupId>org.jboss.weld</groupId>
+      <artifactId>weld-junit4</artifactId>
       <scope>test</scope>
       <optional>true</optional>
     </dependency>

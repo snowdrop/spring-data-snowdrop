@@ -18,46 +18,22 @@ package me.snowdrop.data.hibernatesearch.smoke;
 
 import me.snowdrop.data.hibernatesearch.DatasourceMapperTester;
 import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.jboss.weld.junit4.WeldInitiator;
+import org.junit.Rule;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class CdiSmokeTest extends SmokeTestBase {
 
-    private static WeldContainer container;
-
-    SmokeRepository repository;
-
-    DatasourceMapperTester datasourceMapper;
+    @Rule
+    public WeldInitiator weld = WeldInitiator.of(new Weld());
 
     protected SmokeRepository getRepository() {
-        return repository;
+        return weld.select(SmokeRepository.class).get();
     }
 
     protected DatasourceMapperTester getDatasourceMapper() {
-        return datasourceMapper;
-    }
-
-    @BeforeClass
-    public static void initialize() {
-        Weld weld = new Weld();
-        container = weld.initialize();
-    }
-
-    @Before
-    public void setUp() {
-        datasourceMapper = container.select(DatasourceMapperTester.class).get();
-        repository = container.select(SmokeRepository.class).get();
-
-        super.setUp();
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        container.shutdown();
+        return weld.select(DatasourceMapperTester.class).get();
     }
 }
