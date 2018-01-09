@@ -38,6 +38,7 @@
 
     <lucene>5.5.4</lucene>
     <infinispan>9.2.0.Beta2</infinispan>
+    <gae>1.9.60</gae>
 
     <lombok>1.16.18</lombok>
     <cdi>2.0</cdi>
@@ -160,6 +161,12 @@
         <groupId>org.apache.lucene</groupId>
         <artifactId>lucene-queryparser</artifactId>
         <version>${lucene}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-1.0-sdk</artifactId>
+        <version>${gae}</version>
       </dependency>
 
       <!-- CDI -->
@@ -290,6 +297,7 @@
       <modules>
         <module>core</module>
         <module>hibernate-search</module>
+        <module>gae</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>
@@ -302,6 +310,7 @@
       <modules>
         <module>core</module>
         <module>hibernate-search</module>
+        <module>gae</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>

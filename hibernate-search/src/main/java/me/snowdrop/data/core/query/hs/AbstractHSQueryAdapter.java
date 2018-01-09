@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.core.query.Projection;
 import me.snowdrop.data.core.query.lucene.LuceneQueryAdapter;
 import me.snowdrop.data.core.util.Integers;
 import org.apache.lucene.search.Query;
@@ -73,7 +74,7 @@ public abstract class AbstractHSQueryAdapter<T> extends LuceneQueryAdapter<T> {
         hsQuery.maxResults(Integers.safeCast(maxResults));
     }
 
-    protected void setProjections(String[] fields) {
-        hsQuery.projection(fields);
+    protected void setProjections(Projection[] projections) {
+        hsQuery.projection(toFields(projections));
     }
 }

@@ -7,6 +7,7 @@ Currently supported backends
 * JPA (Hibernate Full-Text search)
 * Infinispan Embedded
 * Infinispan Remote
+* Google App Engine
 
 e.g.
 

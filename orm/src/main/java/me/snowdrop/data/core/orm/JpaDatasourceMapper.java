@@ -23,6 +23,7 @@ import java.util.stream.Stream;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import me.snowdrop.data.core.query.Projection;
 import me.snowdrop.data.core.query.lucene.LuceneQueryAdapter;
 import me.snowdrop.data.core.spi.CrudAdapter;
 import me.snowdrop.data.core.spi.DatasourceMapper;
@@ -113,8 +114,8 @@ public class JpaDatasourceMapper implements DatasourceMapper {
             fullTextQuery.setMaxResults(Integers.safeCast(maxResults));
         }
 
-        protected void setProjections(String[] fields) {
-            fullTextQuery.setProjection(fields);
+        protected void setProjections(Projection[] projections) {
+            fullTextQuery.setProjection(toFields(projections));
         }
 
         protected long size() {

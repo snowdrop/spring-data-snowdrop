@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import me.snowdrop.data.core.query.Projection;
 import me.snowdrop.data.core.query.lucene.LuceneQueryAdapter;
 import me.snowdrop.data.core.crud.MapCrudAdapter;
 import me.snowdrop.data.core.spi.CrudAdapter;
@@ -112,8 +113,8 @@ public class InfinispanEmbeddedDatasourceMapper implements DatasourceMapper {
             cacheQuery.maxResults(Integers.safeCast(maxResults));
         }
 
-        protected void setProjections(String[] fields) {
-            cacheQuery.projection(fields);
+        protected void setProjections(Projection[] projections) {
+            cacheQuery.projection(toFields(projections));
         }
     }
 

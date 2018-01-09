@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import me.snowdrop.data.core.query.AbstractQueryAdapter;
 import me.snowdrop.data.core.query.CriteriaConverter;
+import me.snowdrop.data.core.query.Projection;
 import me.snowdrop.data.core.query.QueryHelper;
 import me.snowdrop.data.core.query.StringQuery;
 import me.snowdrop.data.core.util.Integers;
@@ -48,7 +49,7 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     protected void initialize(me.snowdrop.data.core.spi.Query<T> query) {
         queryBuilder = queryFactory.from(query.getEntityClass());
 
-        String[] fields = getFields(query);
+        String[] fields = toFields(getProjections(query));
         if (fields != null) {
             Expression[] projection = new Expression[fields.length];
             for (int i = 0; i < fields.length; i++) {
@@ -126,7 +127,7 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     }
 
     @Override
-    protected void setProjections(String[] fields) {
+    protected void setProjections(Projection[] projections) {
     }
 
     @Override

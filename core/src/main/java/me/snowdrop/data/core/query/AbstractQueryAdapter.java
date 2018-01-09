@@ -111,7 +111,7 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
 
     protected abstract void setMaxResults(long maxResults);
 
-    protected abstract void setProjections(String[] fields);
+    protected abstract void setProjections(Projection[] projections);
 
     void convert(CriteriaQuery<T> query) {
         fillQuery(query);
@@ -173,24 +173,36 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
         }
     }
 
-    protected String[] getFields(me.snowdrop.data.core.spi.Query<T> query) {
+    protected Projection[] getProjections(me.snowdrop.data.core.spi.Query<T> query) {
         ProjectionInformation pi = query.getProjectionInformation();
         if (pi != null && pi.isClosed()) {
             List<PropertyDescriptor> properties = pi.getInputProperties();
-            String[] fields = new String[properties.size()];
-            for (int i = 0; i < fields.length; i++) {
-                String property = properties.get(i).getName();
-                fields[i] = getFieldName(property);
+            Projection[] projections = new Projection[properties.size()];
+            for (int i = 0; i < projections.length; i++) {
+                PropertyDescriptor pd = properties.get(i);
+                String property = pd.getName();
+                projections[i] = new SimpleProjection(getFieldName(property), pd.getPropertyType());
             }
-            return fields;
+            return projections;
         }
         return null;
     }
 
+    protected static String[] toFields(Projection[] projections) {
+        if (projections == null) {
+            return null;
+        }
+        String[] fields = new String[projections.length];
+        for (int i = 0; i < projections.length; i++) {
+            fields[i] = projections[i].getName();
+        }
+        return fields;
+    }
+
     protected void applyProjections(me.snowdrop.data.core.spi.Query<T> query) {
-        String[] fields = getFields(query);
-        if (fields != null) {
-            setProjections(fields);
+        Projection[] projections = getProjections(query);
+        if (projections != null) {
+            setProjections(projections);
         }
     }
 
