@@ -1,7 +1,12 @@
-**Spring Data + Hibernate Search**
+**Spring Data + Snowdrop**
 
-We're following features from similar Elasticsearch implementation
-* https://docs.spring.io/spring-data/elasticsearch/docs/current/reference/html/
+We're following features from SpringData Common implementation
+* https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/
+
+Currently supported backends
+* JPA (Hibernate Full-Text search)
+* Infinispan Embedded
+* Infinispan Remote
 
 e.g.
 

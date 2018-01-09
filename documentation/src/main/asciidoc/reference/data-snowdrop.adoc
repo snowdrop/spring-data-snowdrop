@@ -1,0 +1,448 @@
+[[snowdrop.jpaextension]]
+= JPA repository extension setup
+
+This section explains how to set up the Snowdrop Spring Data integration
+to extend JPA repositories.
+
+With such a setup, you will be able to add Hibernate Search query methods
+(i.e. methods targeting a full-text index) to JPA repository.
+How exactly you can add these methods is explained in
+<<snowdrop.repository.extending>>.
+
+[[snowdrop.jpaextension.dependencies]]
+== Dependencies
+
+Add a dependency to `me.snowdrop.data:spring-data-snowdrop-starter-jpa:{version}` in your project.
+
+[[snowdrop.jpaextension.configuration]]
+== Configuration
+
+[[snowdrop.jpaextension.configuration.annotation]]
+=== Annotation-based configuration
+
+https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.introduction[Set up the JPA Spring Data module as usual],
+except you need to override the repository factory bean class
+and set it to `me.snowdrop.data.core.orm.repository.support.JpaWithSnowdropRepositoryFactoryBean`.
+
+.Hibernate Search extension to JPA repositories using JavaConfig
+====
+[source,java,options="nowrap"]
+----
+@Configuration
+@EnableJpaRepositories(
+        basePackages = "com/example/repositories",
+        repositoryFactoryBeanClass = JpaWithSnowdropRepositoryFactoryBean.class
+)
+public class Config {
+}
+----
+====
+
+[[snowdrop.jpaextension.configuration.xml]]
+=== XML-based configuration
+
+WARNING: XML-based configuration is not implemented yet.
+
+[[snowdrop.jpaextension.configuration.cdi]]
+=== CDI configuration
+
+WARNING: CDI integration is not implemented yet.
+
+[[snowdrop.standalone]]
+= Standalone Hibernate Search repository setup
+
+This section explains how to set up the Hibernate Search / Spring Data integration
+as standalone repositories, i.e. in a similar fashion to other Spring Data modules.
+
+With such a setup, you will be able to create standalone,
+read-only Hibernate Search repositories.
+
+[[snowdrop.standalone.dependencies]]
+== Dependencies
+
+When using Hibernate Search integrated to Hibernate ORM,
+add a dependency to `me.snowdrop.data:spring-data-snowdrop-starter-jpa:{version}` in your project.
+
+When using Hibernate Search integrated to Infinispan Query,
+add a dependency to `me.snowdrop.data:spring-data-snowdrop-starter-infinispan:{version}` in your project.
+
+[[snowdrop.standalone.configuration]]
+== Configuration
+
+[[snowdrop.standalone.configuration.annotation]]
+=== Annotation-based configuration
+
+Spring Data Hibernate Search Repositories can be activated using the `@EnableSnowdropRepositories` annotation.
+
+Apart from `datasourceMapperRef`, this annotation's attributes are standard and defined in
+https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.namespace-reference[Spring Data Commons' documentation]
+
+If no base package is configured, the one the configuration class resides in will be used.
+
+The configuration is simpler when using Spring Boot's auto-configuration:
+
+.Hibernate Search standalone repositories using JavaConfig when using Spring Boot's auto-configuration
+====
+[source,java,options="nowrap"]
+----
+@Configuration
+@EnableAutoConfiguration
+@EnableSnowdropRepositories(basePackages = "com/example/repositories")
+public class Config {
+}
+----
+====
+
+If you do not want to or cannot use auto-configuration for some reason,
+you will also need to declare additional beans:
+see <<snowdrop.standalone.configuration.advanced>>.
+
+[[snowdrop.standalone.configuration.xml]]
+=== XML-based configuration
+
+WARNING: XML-based configuration is not implemented yet.
+
+[[snowdrop.standalone.configuration.cdi]]
+=== CDI configuration
+
+WARNING: CDI integration is not implemented yet.
+
+[[snowdrop.standalone.configuration.advanced]]
+=== Advanced configuration
+
+If you don't want to use auto configuration for some reason,
+you need to add a bean of type `me.snowdrop.data.core.spi.DatasourceMapper` to the context.
+The Hibernate Search Spring Data module will look for such a bean named `datasourceMapper` by default,
+but you can customize the bean name using `@EnableSnowdropRepositories.datasourceMapperRef`.
+
+When using Hibernate Search integrated to Hibernate ORM,
+you can declare the bean as an instance of `me.snowdrop.data.core.orm.JpaDatasourceMapper`.
+Its constructor expects an `EntityManagerFactory`.
+
+When using Hibernate Search integrated to Infinispan Query,
+you can declare the bean as an instance of `me.snowdrop.data.core.config.infinispan.InfinispanDatasourceMapper`.
+Its constructor expects a `me.snowdrop.data.core.config.infinispan.EntityToCacheMapper`.
+
+[[snowdrop.repository]]
+= Repository interfaces
+
+[[snowdrop.repository.extending]]
+== JPA repository extension
+
+This section explains how to add Hibernate Search methods to a JPA repository.
+This means that, whenever Spring Data implements these methods automatically
+(see <<snowdrop.query-methods.derived,derived queries>>, <<snowdrop.query-methods.at-query,declared queries>>),
+they are implemented as Hibernate Search queries (i.e. methods targeting a full-text index)
+instead of JPA queries.
+
+[NOTE]
+====
+This feature is only available if you set up
+the Hibernate Search / Spring Data integration to extend JPA repositories:
+see <<snowdrop.jpaextension>>.
+====
+
+In order to add a Hibernate Search extension to a JPA repository, you need to:
+
+* create an interface extending `me.snowdrop.data.core.repository.extension.RepositorySnowdropExtension<T, ID>`
+* add to this interface the methods that are to be implemented as Hibernate Search queries
+* make the interface of your JPA repository extend this interface
+
+.Extending a JPA repository with Hibernate Search query methods
+====
+[source,java,options="nowrap"]
+----
+public interface BookRepositorySnowdropExtension extends RepositorySnowdropExtension<Book, String> {
+    List<Book> findByName(String name);
+}
+
+public interface BookRepository extends JpaRepository<Book, String>, BookRepositorySnowdropExtension {
+    List<Book> findByPrice(Integer price);
+}
+
+public class SomeComponent {
+
+    @Autowired
+    BookRepository bookRepository;
+
+    public void doSomething() {
+        // This executes a Hibernate Search query, i.e. a query on the full-text indexes, instead of a JPA query
+        List<Book> books = bookRepository.findByName("robots dawn");
+
+        // ... do something with the book list ...
+    }
+
+}
+----
+====
+
+[[snowdrop.repository.standalone]]
+== Standalone Hibernate Search repository
+
+To declare repository interfaces, you can extend either the generic `org.springframework.data.repository.Repository<T, ID>` interface
+(if there is no ambiguity as to which Spring Data module should implement the repository)
+or the more specific `me.snowdrop.data.core.repository.SnowdropRepository<T, ID>`.
+
+If you also need simple CRUD operations, extend `me.snowdrop.data.core.repository.SnowdropCrudRepository<T, ID>`.
+
+[[snowdrop.query-methods]]
+= Query methods
+
+[[snowdrop.query-methods.finders]]
+== Query lookup strategies
+
+Queries can be <<snowdrop.query-methods.derived,derived from the method name>>,
+or be <<snowdrop.query-methods.at-query,defined as strings and assigned to a method>>.
+
+As with any Spring Data module, you can also implement query methods yourself through
+https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories.custom-implementations[custom implementation fragments].
+
+[[snowdrop.query-methods.derived]]
+== Derived queries
+
+Generally the query derivation mechanism for Hibernate Search works as described in
+https://docs.spring.io/spring-data/data-commons/docs/{springDataVersion}/reference/html/#repositories.query-methods[the Spring Data Commons documentation].
+
+Here's a short example of what a Hibernate Search query method translates into:
+
+.Query creation from method names
+====
+[source,java,options="nowrap"]
+----
+public interface BookRepository extends Repository<Book, String> {
+    List<Book> findByNameAndPrice(String name, Integer price);
+}                
+----
+====
+
+The method name above will be translated into the following call to a Hibernate Search query builder:
+
+[source,java,options="nowrap"]
+----
+Query query = queryBuilder.bool()
+        .must(
+                queryBuilder.keyword().onField("name").matching(name).createQuery()
+        )
+        .must(
+                queryBuilder.keyword().onField("price").matching(price).createQuery()
+        )
+        .createQuery();
+----
+
+A list of supported keywords for Hibernate Search is shown below.
+
+[cols="1,2,3", options="header"]
+.Supported keywords inside method names
+|===
+| Keyword
+| Sample
+| Query builder equivalent
+
+| `Is`
+| `findByName`
+| `queryBuilder.keyword().onField("name").matching(name).createQuery()`
+
+| `And`
+| `findByNameAndPrice`
+a|
+[source,java,options="nowrap"]
+----
+queryBuilder.bool()
+        .must(
+               queryBuilder.keyword().onField("name").matching(name).createQuery()
+        )
+        .must(
+               queryBuilder.keyword().onField("price").matching(price).createQuery()
+        )
+        .createQuery();
+----
+
+| `Or`
+| `findByNameOrPrice`
+a|
+[source,java,options="nowrap"]
+----
+queryBuilder.bool()
+        .should(
+               queryBuilder.keyword().onField("name").matching(name).createQuery()
+        )
+        .should(
+               queryBuilder.keyword().onField("price").matching(price).createQuery()
+        )
+        .createQuery();
+----
+
+| `Not`
+| `findByNameNot`
+a|
+[source,java,options="nowrap"]
+----
+queryBuilder.bool()
+        .must(
+               queryBuilder.keyword().onField("name").matching(name).createQuery()
+        )
+        .not()
+        .createQuery();
+----
+
+| `Null`
+| `findByPokeNull`
+| `queryBuilder.range().onField("poke").matching(null).createQuery()`
+
+| `Between`
+| `findByPriceBetween`
+| `queryBuilder.range().onField("price").from(lower).to(upper).createQuery()`
+
+| `LessThan`
+| `findByPriceLessThan`
+| `queryBuilder.range().onField("price").below(upper).excludeLimit().createQuery()`
+
+| `LessThanEqual`
+| `findByPriceLessThanEqual`
+| `queryBuilder.range().onField("price").below(upper).createQuery()`
+
+| `GreaterThan`
+| `findByPriceGreaterThan`
+| `queryBuilder.range().onField("price").above(lower).excludeLimit().createQuery()`
+
+| `GreaterThanEqual`
+| `findByPriceGreaterThanEqual`
+| `queryBuilder.range().onField("price").above(lower).createQuery()`
+
+| `Before`
+| `findByPriceBefore`
+| `queryBuilder.range().onField("price").below(upper).excludeLimit().createQuery()`
+
+| `After`
+| `findByPriceAfter`
+| `queryBuilder.range().onField("price").above(lower).excludeLimit().createQuery()`
+
+| `Like`
+| `findByNameLike`
+| `queryBuilder.keyword().wildcard().onField("name").matching(name + "*")`
+
+| `StartingWith`
+| `findByNameStartingWith`
+| `queryBuilder.keyword().wildcard().onField("name").matching(name + "*")`
+
+| `EndingWith`
+| `findByNameEndingWith`
+| `queryBuilder.keyword().wildcard().onField("name").matching("*" + name)`
+
+| `Contains/Containing`
+| `findByNameContaining`
+| `queryBuilder.keyword().wildcard().onField("name").matching("*" + name + "*")`
+
+| `In`
+| `findByNameIn(Collection<String>names)`
+a|
+[source,java,options="nowrap"]
+----
+queryBuilder.bool()
+        .should(
+               queryBuilder.keyword().onField("name").matching(<first element>).createQuery()
+        )
+        .should(
+               queryBuilder.keyword().onField("name").matching(<second element>).createQuery()
+        )
+        // ...
+        .should(
+               queryBuilder.keyword().onField("name").matching(<last element>).createQuery()
+        )
+        .createQuery();
+----
+
+| `NotIn`
+| `findByNameNotIn(Collection<String>names)`
+a|
+[source,java,options="nowrap"]
+----
+queryBuilder.bool()
+        .must(
+               queryBuilder.keyword().onField("name").matching(<first element>).createQuery()
+        )
+            .not()
+        .must(
+               queryBuilder.keyword().onField("name").matching(<second element>).createQuery()
+        )
+            .not()
+        // ...
+        .must(
+               queryBuilder.keyword().onField("name").matching(<last element>).createQuery()
+        )
+            .not()
+        .createQuery();
+----
+
+| `Near`
+| `findByStoreNear`
+| `Not Supported Yet !`
+
+| `True`
+| `findByAvailableTrue`
+| `queryBuilder.keyword().wildcard().onField("available").matching(true)`
+
+| `False`
+| `findByAvailableFalse`
+| `queryBuilder.keyword().wildcard().onField("available").matching(false)`
+
+| `MatchesRegex`/`Regex`/`Matches`
+| `findByNameMatchesRegex`
+| `new RegexpQuery(new Term("name", reqexp)`
+
+| `Within`
+| `findByLocationWithin`
+| `queryBuilder.spatial().onField("location").within(distance, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery()`
+
+| `OrderBy`
+| `findByAvailableTrueOrderByNameDesc`
+| `queryBuilder.keyword().wildcard().onField("available").matching(true)` and
+`queryBuilder.sort().byField("name").desc().createSort()`
+|===
+
+When doing isNull or isNotNull queries, you must index the null fields properly -- see @Field::indexNullAs property.
+
+[[snowdrop.query-methods.fieldnames]]
+=== Targeting specific fields
+
+By default, derived queries target the default field,
+the one named after the entity property mentioned in the query method name.
+That is to say, if your method refers to the property "name", the query will target the index field "name",
+and will expect that index field to exist.
+
+What if you want to target the field "name_sort"?
+You can use the `@me.snowdrop.data.core.annotations.TargetField` annotation.
+
+.Target non-default fields using the `@TargetField` annotation.
+====
+[source,java,options="nowrap"]
+----
+public interface BookRepository extends SnowdropRepository<Book, String> {
+    @TargetField(property = "name", field = "name_sort")
+    Page<Book> findByAvailableTrueOrderByNameAsc(String name, Pageable pageable);
+}
+----
+====
+
+[[snowdrop.query-methods.at-query]]
+== Using @Query Annotation
+
+Queries can be defined as strings using the `me.snowdrop.data.core.annotations.Query` annotation.
+Such strings are expected to use the Lucene Query syntax.
+
+They can be named and defined in a resource file,
+the location of which is defined when <<snowdrop.jpaextension.configuration,configuring>> the Hibernate Search module.
+Then the queries will be assigned to a query method using `@Query(name = "<the query name>")`.
+
+Alternatively, the queries can be assigned to the method directly using `@Query("<the query>")`.
+
+.Declare query at the method using the `@Query` annotation.
+====
+[source,java,options="nowrap"]
+----
+public interface BookRepository extends SnowdropRepository<Book, String> {
+    @Query("+name:?0")
+    Page<Book> findByName(String name, Pageable pageable);
+}                
+----
+====

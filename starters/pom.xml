@@ -19,19 +19,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>spring-data-hibernate-search-starters</artifactId>
+  <artifactId>spring-data-snowdrop-starters</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <parent>
     <groupId>me.snowdrop.data</groupId>
-    <artifactId>spring-data-hibernate-search-parent</artifactId>
+    <artifactId>spring-data-snowdrop-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Spring Data HibernateSearch Starters</name>
-  <description>Spring Data Implementation for Hibernate Search - Starters</description>
-  <url>https://github.com/snowdrop/spring-data-hibernate-search</url>
+  <name>Spring Data Snowdrop Starters</name>
+  <description>Spring Data Implementation for Snodrop - Starters</description>
+  <url>https://github.com/snowdrop/spring-data-snowdrop</url>
 
   <modules>
     <module>embedded</module>

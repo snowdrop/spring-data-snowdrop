@@ -19,17 +19,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>spring-data-hibernate-search</artifactId>
+  <artifactId>spring-data-snowdrop-core</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>me.snowdrop.data</groupId>
-    <artifactId>spring-data-hibernate-search-parent</artifactId>
+    <artifactId>spring-data-snowdrop-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Spring Data HibernateSearch Core</name>
-  <description>Spring Data Implementation for Hibernate Search</description>
+  <name>Spring Data Snowdrop Core</name>
+  <description>Spring Data Implementation for Snowdrop</description>
 
   <build>
     <plugins>
@@ -62,26 +62,6 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-engine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-search-testing</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-queryparser</artifactId>
     </dependency>
 
     <dependency>

@@ -20,8 +20,8 @@
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
                  version="2.0">
-  <entity class="me.snowdrop.data.hibernatesearch.config.Fruit"/>
-  <entity class="me.snowdrop.data.hibernatesearch.crud.CEntity"/>
-  <entity class="me.snowdrop.data.hibernatesearch.ops.SimpleEntity"/>
-  <entity class="me.snowdrop.data.hibernatesearch.ops.ContainedEntity"/>
+  <entity class="me.snowdrop.data.core.config.Fruit"/>
+  <entity class="me.snowdrop.data.core.crud.CEntity"/>
+  <entity class="me.snowdrop.data.core.ops.SimpleEntity"/>
+  <entity class="me.snowdrop.data.core.ops.ContainedEntity"/>
 </entity-mappings>

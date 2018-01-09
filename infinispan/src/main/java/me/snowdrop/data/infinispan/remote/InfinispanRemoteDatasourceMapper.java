@@ -16,9 +16,9 @@
 
 package me.snowdrop.data.infinispan.remote;
 
-import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;
-import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
+import me.snowdrop.data.core.spi.CrudAdapter;
+import me.snowdrop.data.core.spi.DatasourceMapper;
+import me.snowdrop.data.core.spi.QueryAdapter;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.query.dsl.QueryFactory;
 import org.springframework.data.repository.core.EntityInformation;

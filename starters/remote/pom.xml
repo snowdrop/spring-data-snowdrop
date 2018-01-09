@@ -19,28 +19,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>spring-data-hibernate-search-starter-infinispan-remote</artifactId>
+  <artifactId>spring-data-snowdrop-starter-infinispan-remote</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>me.snowdrop.data</groupId>
-    <artifactId>spring-data-hibernate-search-starters</artifactId>
+    <artifactId>spring-data-snowdrop-starters</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Spring Data HibernateSearch Starter - Infinispan Remote</name>
-  <description>Spring Data HibernateSearch Starter - Infinispan Remote</description>
+  <name>Spring Data Snowdrop Starter - Infinispan Remote</name>
+  <description>Spring Data Snowdrop Starter - Infinispan Remote</description>
 
   <dependencies>
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search-config</artifactId>
+      <artifactId>spring-data-snowdrop-config</artifactId>
     </dependency>
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search-infinispan</artifactId>
+      <artifactId>spring-data-snowdrop-infinispan</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.infinispan</groupId>

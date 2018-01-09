@@ -22,19 +22,19 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
   <bean name="datasourceMapper"
-        class="me.snowdrop.data.hibernatesearch.orm.JpaDatasourceMapper"
+        class="me.snowdrop.data.core.orm.JpaDatasourceMapper"
         autowire="constructor"
   >
   </bean>
 
   <bean name="testedRepository"
-        class="me.snowdrop.data.hibernatesearch.config.jpa.extension.ops.ExtendedJpaTestedRepository"
+        class="me.snowdrop.data.core.config.jpa.extension.ops.ExtendedJpaTestedRepository"
         autowire="constructor"
   />
 
   <jpa:repositories
-      base-package="me.snowdrop.data.hibernatesearch.config.jpa.extension.ops.repository.jpa"
-      factory-class="me.snowdrop.data.hibernatesearch.orm.repository.support.JpaWithHibernateSearchRepositoryFactoryBean"
+      base-package="me.snowdrop.data.core.config.jpa.extension.ops.repository.jpa"
+      factory-class="me.snowdrop.data.core.orm.repository.support.JpaWithSnowdropRepositoryFactoryBean"
   />
 
 </beans>

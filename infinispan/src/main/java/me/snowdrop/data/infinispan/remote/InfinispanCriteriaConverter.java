@@ -19,11 +19,11 @@ package me.snowdrop.data.infinispan.remote;
 import java.util.Collection;
 import java.util.List;
 
-import me.snowdrop.data.hibernatesearch.core.query.AndCriteria;
-import me.snowdrop.data.hibernatesearch.core.query.Condition;
-import me.snowdrop.data.hibernatesearch.core.query.Criteria;
-import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
-import me.snowdrop.data.hibernatesearch.core.query.OrCriteria;
+import me.snowdrop.data.core.query.AndCriteria;
+import me.snowdrop.data.core.query.Condition;
+import me.snowdrop.data.core.query.Criteria;
+import me.snowdrop.data.core.query.CriteriaConverter;
+import me.snowdrop.data.core.query.OrCriteria;
 import org.infinispan.query.dsl.Expression;
 import org.infinispan.query.dsl.FilterConditionContext;
 import org.infinispan.query.dsl.FilterConditionEndContext;

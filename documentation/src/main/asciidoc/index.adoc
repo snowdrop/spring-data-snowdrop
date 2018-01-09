@@ -1,4 +1,4 @@
-= Hibernate Search integration for Spring Data
+= Snowdrop integration for Spring Data
 Aleš Justin, Yoann Rodiere
 :revnumber: {version}
 :revdate: {localdate}
@@ -13,6 +13,6 @@ include::preface.adoc[]
 = Reference Documentation
 
 :leveloffset: +1
-include::reference/data-hibernatesearch.adoc[]
+include::reference/data-snowdrop.adoc[]
 :leveloffset: -1
 

@@ -1,1 +1,1 @@
-me.snowdrop.data.hibernatesearch.cdi.HibernateSearchRepositoryExtension
+me.snowdrop.data.core.cdi.SnowdropRepositoryExtension

@@ -19,34 +19,34 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>spring-data-hibernate-search-config</artifactId>
+  <artifactId>spring-data-snowdrop-config</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
   <parent>
     <groupId>me.snowdrop.data</groupId>
-    <artifactId>spring-data-hibernate-search-parent</artifactId>
+    <artifactId>spring-data-snowdrop-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <name>Spring Data HibernateSearch Config</name>
-  <description>Spring Data Implementation for Hibernate Search</description>
+  <name>Spring Data Snowdrop Config</name>
+  <description>Spring Data Implementation for Snowdrop</description>
 
   <dependencies>
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search</artifactId>
+      <artifactId>spring-data-snowdrop-hibernate-search</artifactId>
     </dependency>
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search-orm</artifactId>
+      <artifactId>spring-data-snowdrop-orm</artifactId>
       <optional>true</optional>
     </dependency>
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search-infinispan</artifactId>
+      <artifactId>spring-data-snowdrop-infinispan</artifactId>
       <optional>true</optional>
     </dependency>
 
@@ -63,7 +63,7 @@
 
     <dependency>
       <groupId>me.snowdrop.data</groupId>
-      <artifactId>spring-data-hibernate-search</artifactId>
+      <artifactId>spring-data-snowdrop-hibernate-search</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>

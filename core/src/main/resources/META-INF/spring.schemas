@@ -1,2 +1,2 @@
-http\://www.snowdrop.me/schema/data/hibernatesearch/spring-hibernatesearch-1.0.xsd=me/snowdrop/data/hibernatesearch/config/spring-hibernatesearch-1.0.xsd
-http\://www.snowdrop.me/schema/data/hibernatesearch/spring-hibernatesearch.xsd=me/snowdrop/data/hibernatesearch/config/spring-hibernatesearch-1.0.xsd
+http\://www.snowdrop.me/schema/data/core/spring-snowdrop-1.0.xsd=me/snowdrop/data/core/config/spring-snowdrop-1.0.xsd
+http\://www.snowdrop.me/schema/data/core/spring-snowdrop.xsd=me/snowdrop/data/core/config/spring-snowdrop-1.0.xsd

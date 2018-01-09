@@ -19,17 +19,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-data-hibernate-search-orm</artifactId>
+    <artifactId>spring-data-snowdrop-orm</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <parent>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-parent</artifactId>
+        <artifactId>spring-data-snowdrop-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <name>Spring Data for Hibernate Search ORM</name>
-    <description>Spring Data Implementation for Hibernate Search - Hibernate ORM integration</description>
+    <description>Spring Data Implementation for Hibernate Search / ORM integration</description>
 
     <build>
         <plugins>
@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>spring-data-hibernate-search</artifactId>
+            <artifactId>spring-data-snowdrop-hibernate-search</artifactId>
         </dependency>
     </dependencies>
 

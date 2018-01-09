@@ -1,20 +1,22 @@
 = Preface
 
-The Spring Data Hibernate Search project allows to implement Spring Data repositories
-backed by Hibernate Search.
+The Spring Data Snowdrop project allows to implement Spring Data repositories
+backed by Hibernate Search (JPA and Infinispan Embedded), Infinispan Remote and GAE.
 
 If you are not familiar with Spring Data,
 we recommend you have a look at the
 https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/[Spring Data Commons documentation] first,
 In particular the section about https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories[working with repositories].
 
-This project currently covers integrations of Hibernate Search to two technologies:
-Hibernate ORM (`org.hibernate:hibernate-search-orm`)
-and Infinispan Query (`org.infinispan:infinispan-query`).
+This project currently covers integrations of Spring Data search to following technologies:
+* Hibernate ORM (`org.hibernate:hibernate-search-orm`)
+* Infinispan Embedded Query (`org.infinispan:infinispan-query`)
+* Infinispan Remote Query (`org.infinispan:infinispan-remote-query-client`)
+* GAE (`com.google.appengine:appengine-sdk-api`)
 
 [NOTE]
 ====
-This project is mainly a bridge allowing to access Hibernate Search through Spring Data
+This project is mainly a bridge allowing to access full-text through Spring Data
 while enjoying the benefits of some Spring Data features such as query definition by derivation of method name.
 
 All the usual configuration of Hibernate Search (configuration properties, entity mapping, analyzer definitions, ...)
@@ -31,8 +33,8 @@ indexes can be stored in an embedded Lucene index as well as in a remote Elastic
 [preface]
 == Project Metadata
 
-* Version Control: https://github.com/snowdrop/spring-data-hibernate-search/
-* Bugtracker: https://github.com/snowdrop/spring-data-hibernate-search/issues
+* Version Control: https://github.com/snowdrop/spring-data-snowdrop/
+* Bugtracker: https://github.com/snowdrop/spring-data-snowdrop/issues
 * Maven repository: Maven Central
 
 [[requirements]]

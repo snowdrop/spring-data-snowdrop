@@ -20,13 +20,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>me.snowdrop.data</groupId>
-  <artifactId>spring-data-hibernate-search-parent</artifactId>
+  <artifactId>spring-data-snowdrop-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Spring Data Hibernate Search Build</name>
-  <description>Spring Data Implementation for Hibernate Search</description>
-  <url>https://github.com/snowdrop/spring-data-hibernate-search</url>
+  <name>Spring Data Snowdrop Build</name>
+  <description>Spring Data Implementation for Snowdrop (JPA full-text, Infinispan, GAE)</description>
+  <url>https://github.com/snowdrop/spring-data-snowdrop</url>
 
   <properties>
     <spring>5.0.0.RELEASE</spring>
@@ -62,31 +62,37 @@
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search</artifactId>
+        <artifactId>spring-data-snowdrop-core</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-orm</artifactId>
+        <artifactId>spring-data-snowdrop-hibernate-search</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-config</artifactId>
+        <artifactId>spring-data-snowdrop-orm</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-infinispan</artifactId>
+        <artifactId>spring-data-snowdrop-config</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search</artifactId>
+        <artifactId>spring-data-snowdrop-infinispan</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>me.snowdrop.data</groupId>
+        <artifactId>spring-data-snowdrop-hibernate-search</artifactId>
         <version>${project.version}</version>
         <type>test-jar</type>
         <scope>test</scope>
@@ -283,6 +289,7 @@
       </activation>
       <modules>
         <module>core</module>
+        <module>hibernate-search</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>
@@ -294,6 +301,7 @@
       <id>code</id>
       <modules>
         <module>core</module>
+        <module>hibernate-search</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>

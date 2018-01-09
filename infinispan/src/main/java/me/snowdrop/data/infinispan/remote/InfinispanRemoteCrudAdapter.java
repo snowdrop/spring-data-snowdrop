@@ -19,7 +19,7 @@ package me.snowdrop.data.infinispan.remote;
 import java.util.Map;
 import java.util.Set;
 
-import me.snowdrop.data.hibernatesearch.crud.MapCrudAdapter;
+import me.snowdrop.data.core.crud.MapCrudAdapter;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.springframework.data.repository.core.EntityInformation;
 

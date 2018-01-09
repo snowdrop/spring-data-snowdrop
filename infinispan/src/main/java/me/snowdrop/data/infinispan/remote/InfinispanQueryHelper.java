@@ -16,7 +16,7 @@
 
 package me.snowdrop.data.infinispan.remote;
 
-import me.snowdrop.data.hibernatesearch.core.query.QueryHelper;
+import me.snowdrop.data.core.query.QueryHelper;
 import org.infinispan.query.dsl.Expression;
 import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryBuilder;

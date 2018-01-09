@@ -19,11 +19,11 @@ package me.snowdrop.data.infinispan.remote;
 import java.util.List;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.core.query.AbstractQueryAdapter;
-import me.snowdrop.data.hibernatesearch.core.query.CriteriaConverter;
-import me.snowdrop.data.hibernatesearch.core.query.QueryHelper;
-import me.snowdrop.data.hibernatesearch.core.query.StringQuery;
-import me.snowdrop.data.hibernatesearch.util.Integers;
+import me.snowdrop.data.core.query.AbstractQueryAdapter;
+import me.snowdrop.data.core.query.CriteriaConverter;
+import me.snowdrop.data.core.query.QueryHelper;
+import me.snowdrop.data.core.query.StringQuery;
+import me.snowdrop.data.core.util.Integers;
 import org.infinispan.query.dsl.Expression;
 import org.infinispan.query.dsl.Query;
 import org.infinispan.query.dsl.QueryBuilder;
@@ -45,7 +45,7 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     }
 
     @Override
-    protected void initialize(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+    protected void initialize(me.snowdrop.data.core.spi.Query<T> query) {
         queryBuilder = queryFactory.from(query.getEntityClass());
 
         String[] fields = getFields(query);
@@ -91,7 +91,7 @@ public class InfinispanRemoteQueryAdapter<T> extends AbstractQueryAdapter<T, Que
     }
 
     @Override
-    protected void applyQuery(me.snowdrop.data.hibernatesearch.spi.Query<T> query) {
+    protected void applyQuery(me.snowdrop.data.core.spi.Query<T> query) {
         // we need to sort before creating query
         Sort sort = query.getSort();
         if (sort == null || sort.isUnsorted()) {

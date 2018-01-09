@@ -21,12 +21,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import me.snowdrop.data.hibernatesearch.core.query.lucene.LuceneQueryAdapter;
-import me.snowdrop.data.hibernatesearch.crud.MapCrudAdapter;
-import me.snowdrop.data.hibernatesearch.spi.CrudAdapter;
-import me.snowdrop.data.hibernatesearch.spi.DatasourceMapper;
-import me.snowdrop.data.hibernatesearch.spi.QueryAdapter;
-import me.snowdrop.data.hibernatesearch.util.Integers;
+import me.snowdrop.data.core.query.lucene.LuceneQueryAdapter;
+import me.snowdrop.data.core.crud.MapCrudAdapter;
+import me.snowdrop.data.core.spi.CrudAdapter;
+import me.snowdrop.data.core.spi.DatasourceMapper;
+import me.snowdrop.data.core.spi.QueryAdapter;
+import me.snowdrop.data.core.util.Integers;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.spi.SearchIntegrator;

@@ -18,18 +18,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>spring-data-hibernate-search-documentation</artifactId>
+    <artifactId>spring-data-snowdrop-documentation</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
 
     <parent>
         <groupId>me.snowdrop.data</groupId>
-        <artifactId>spring-data-hibernate-search-parent</artifactId>
+        <artifactId>spring-data-snowdrop-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <name>Spring Data Hibernate Search documentation</name>
-    <description>Documentation for the Spring Data / Hibernate Search integration</description>
+    <name>Spring Data Snowdrop documentation</name>
+    <description>Documentation for the Spring Data Snowdrop integration</description>
 
     <properties>
         <asciidoctor.base-output-dir>${project.build.directory}/asciidoctor/en-US</asciidoctor.base-output-dir>
