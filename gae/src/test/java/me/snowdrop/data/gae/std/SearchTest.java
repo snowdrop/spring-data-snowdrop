@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
 import java.io.File;
 import java.util.List;
@@ -64,7 +64,7 @@ public class SearchTest {
 
         repository = context.getBean(GaeSearchRepository.class);
 
-        repository.save(new SearchData(10, "Baz"));
+        repository.save(new SearchData(1L, 10, "Baz"));
     }
 
     @After

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
 
 import java.util.ArrayList;

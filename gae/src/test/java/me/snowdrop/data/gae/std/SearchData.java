@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
+
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
@@ -26,11 +29,14 @@ public class SearchData {
     private Long id;
     private long foo;
     private String bar;
+    @Transient
+    private Date ignore;
 
     public SearchData() {
     }
 
-    public SearchData(long foo, String bar) {
+    public SearchData(Long id, long foo, String bar) {
+        this.id = id;
         this.foo = foo;
         this.bar = bar;
     }

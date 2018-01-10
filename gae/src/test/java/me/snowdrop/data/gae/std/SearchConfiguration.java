@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
-import com.google.appengine.api.datastore.Query;
-import me.snowdrop.data.core.query.QueryHelper;
-import org.springframework.data.domain.Sort;
+import me.snowdrop.data.core.repository.config.EnableSnowdropRepositories;
+import me.snowdrop.data.core.spi.DatasourceMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GaeQueryHelper implements QueryHelper<Query, Void> {
-
-    private final String kind;
-
-    public GaeQueryHelper(String kind) {
-        this.kind = kind;
-    }
-
-    @Override
-    public Void convert(Sort sort) {
-        return null;
-    }
-
-    public Query matchAll() {
-        return new Query(kind);
+@Configuration
+@EnableSnowdropRepositories
+public class SearchConfiguration {
+    @Bean
+    public DatasourceMapper datasourceMapper() {
+        return new GaeDatasourceMapper();
     }
 }

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
-import me.snowdrop.data.core.repository.config.EnableSnowdropRepositories;
-import me.snowdrop.data.core.spi.DatasourceMapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.google.appengine.api.datastore.Entity;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-@Configuration
-@EnableSnowdropRepositories
-public class SearchConfiguration {
-    @Bean
-    public DatasourceMapper datasourceMapper() {
-        return new GaeDatasourceMapper();
-    }
+public interface EntityToModelMapper {
+    <T> T toModel(Class<T> entityClass, Entity entity);
+
+    <T> Entity toEntity(Class<T> entityClass, T model);
+
+    String getKind(Class<?> entityClass);
 }

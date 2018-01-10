@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
-import com.google.appengine.api.datastore.Entity;
+import java.util.List;
+
+import me.snowdrop.data.core.repository.SnowdropCrudRepository;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface EntityToModelMapper {
-    <T> T toModel(Class<T> entityClass, Entity entity);
+public interface GaeSearchRepository extends SnowdropCrudRepository<SearchData, Long> {
+    List<SearchData> findByFooNot(int foo);
 
-    <T> Entity toEntity(Class<T> entityClass, T model);
+    List<SearchData> findByBar(String bar);
 
-    String getKind(Class<?> entityClass);
+    List<SearchData> findByFooAndBar(int foo, String bar);
+
+    List<SearchData> findByFooOrBar(int foo, String bar);
 }

@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.gae.sdk;
+package me.snowdrop.data.gae.std;
 
-import java.util.List;
-
-import me.snowdrop.data.core.repository.SnowdropCrudRepository;
+import com.google.appengine.api.datastore.Query;
+import me.snowdrop.data.core.query.QueryHelper;
+import org.springframework.data.domain.Sort;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface GaeSearchRepository extends SnowdropCrudRepository<SearchData, Long> {
-    List<SearchData> findByFooNot(int foo);
+public class GaeQueryHelper implements QueryHelper<Query, Void> {
 
-    List<SearchData> findByBar(String bar);
+    private final String kind;
 
-    List<SearchData> findByFooAndBar(int foo, String bar);
+    public GaeQueryHelper(String kind) {
+        this.kind = kind;
+    }
 
-    List<SearchData> findByFooOrBar(int foo, String bar);
+    @Override
+    public Void convert(Sort sort) {
+        return null;
+    }
+
+    public Query matchAll() {
+        return new Query(kind);
+    }
 }
