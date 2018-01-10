@@ -29,6 +29,10 @@ public class GaeDatasourceMapper implements DatasourceMapper {
 
     private final EntityToModelMapper entityToModelMapper;
 
+    public GaeDatasourceMapper() {
+        this(new GenericEntityToModelMapper());
+    }
+
     public GaeDatasourceMapper(EntityToModelMapper entityToModelMapper) {
         Assert.notNull(entityToModelMapper, "Null EntityToModelMapper!");
         this.entityToModelMapper = entityToModelMapper;

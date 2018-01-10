@@ -19,25 +19,24 @@ package me.snowdrop.data.core.query;
 /**
  * @author Ales Justin
  */
-public class OrCriteria<Q> extends Criteria<Q> {
-    private Criteria<Q> left;
-    private Criteria<Q> right;
+public class OrCriteria extends Criteria {
+    private Criteria left;
+    private Criteria right;
 
-    public OrCriteria(Criteria<Q> left, Criteria<Q> right) {
+    public OrCriteria(Criteria left, Criteria right) {
         this.left = left;
         this.right = right;
     }
 
-    @Override
-    public Q apply(OpsCriteriaConverter<Q> converter) {
+    public <Q> Q apply(OpsCriteriaConverter<Q> converter) {
         return converter.or(this);
     }
 
-    public Criteria<Q> getLeft() {
+    public Criteria getLeft() {
         return left;
     }
 
-    public Criteria<Q> getRight() {
+    public Criteria getRight() {
         return right;
     }
 }

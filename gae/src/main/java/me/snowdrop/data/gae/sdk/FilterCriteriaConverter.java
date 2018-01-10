@@ -35,25 +35,34 @@ class FilterCriteriaConverter implements OpsCriteriaConverter<Query.Filter> {
     static final FilterCriteriaConverter INSTANCE = new FilterCriteriaConverter();
 
     @Override
-    public Query.Filter convert(Criteria<Query.Filter> criteria) {
+    public Query.Filter convert(Criteria criteria) {
         return criteria.apply(this);
     }
 
     @Override
-    public Query.Filter and(AndCriteria<Query.Filter> andCriteria) {
-        List<Query.Filter> filters = new ArrayList<>();
-        for (Condition condition : andCriteria.conditions()) {
-            filters.add(new Query.FilterPredicate(condition.getProperty().getName(), convert(condition), condition.getValue()));
+    public Query.Filter and(AndCriteria andCriteria) {
+        List<Condition> conditions = andCriteria.conditions();
+        if (conditions.size() == 1) {
+            return toPredicate(conditions.get(0));
+        } else {
+            List<Query.Filter> filters = new ArrayList<>();
+            for (Condition condition : conditions) {
+                filters.add(toPredicate(condition));
+            }
+            return new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filters);
         }
-        return new Query.CompositeFilter(Query.CompositeFilterOperator.AND, filters);
     }
 
     @Override
-    public Query.Filter or(OrCriteria<Query.Filter> orCriteria) {
+    public Query.Filter or(OrCriteria orCriteria) {
         List<Query.Filter> filters = new ArrayList<>();
         filters.add(convert(orCriteria.getLeft()));                
         filters.add(convert(orCriteria.getRight()));                
         return new Query.CompositeFilter(Query.CompositeFilterOperator.OR, filters);
+    }
+
+    private Query.Filter toPredicate(Condition condition) {
+        return new Query.FilterPredicate(condition.getProperty().getName(), convert(condition), condition.getValue());
     }
 
     private Query.FilterOperator convert(Condition condition) {

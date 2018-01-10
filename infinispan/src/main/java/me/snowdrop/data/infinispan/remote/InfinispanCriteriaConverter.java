@@ -44,21 +44,21 @@ public class InfinispanCriteriaConverter implements CriteriaConverter<Query> {
         this.queryBuilder = queryBuilder;
     }
 
-    public Query convert(Criteria<Query> root) {
+    public Query convert(Criteria root) {
         return convertInternal(root).toBuilder().build();
     }
 
-    private FilterConditionContext convertInternal(Criteria<Query> current) {
+    private FilterConditionContext convertInternal(Criteria current) {
         if (current instanceof OrCriteria) {
-            OrCriteria<Query> orCriteria = (OrCriteria<Query>) current;
+            OrCriteria orCriteria = (OrCriteria) current;
             return or(orCriteria);
         } else {
-            AndCriteria<Query> andCriteria = (AndCriteria<Query>) current;
+            AndCriteria andCriteria = (AndCriteria) current;
             return and(andCriteria);
         }
     }
 
-    private FilterConditionContext and(AndCriteria<Query> andCriteria) {
+    private FilterConditionContext and(AndCriteria andCriteria) {
         List<Condition> conditions = andCriteria.conditions();
         FilterConditionContext first = fromCondition(conditions.get(0));
         for (int i = 1; i < conditions.size(); i++) {
@@ -67,7 +67,7 @@ public class InfinispanCriteriaConverter implements CriteriaConverter<Query> {
         return first;
     }
 
-    private FilterConditionContext or(OrCriteria<Query> orCriteria) {
+    private FilterConditionContext or(OrCriteria orCriteria) {
         FilterConditionContext left = convertInternal(orCriteria.getLeft());
         return left.or(convertInternal(orCriteria.getRight()));
     }

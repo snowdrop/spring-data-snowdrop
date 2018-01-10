@@ -12,7 +12,7 @@ This project currently covers integrations of Spring Data search to following te
 * Hibernate ORM (`org.hibernate:hibernate-search-orm`)
 * Infinispan Embedded Query (`org.infinispan:infinispan-query`)
 * Infinispan Remote Query (`org.infinispan:infinispan-remote-query-client`)
-* GAE (`com.google.appengine:appengine-sdk-api`)
+* GAE (`com.google.appengine:appengine-api-1.0-sdk`)
 
 [NOTE]
 ====

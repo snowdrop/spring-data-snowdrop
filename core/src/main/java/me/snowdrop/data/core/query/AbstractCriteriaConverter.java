@@ -40,11 +40,11 @@ public abstract class AbstractCriteriaConverter<Q> implements OpsCriteriaConvert
 
     protected abstract String getFieldName(Property property);
 
-    public Q convert(Criteria<Q> root) {
+    public Q convert(Criteria root) {
         return root.apply(this);
     }
 
-    public Q and(AndCriteria<Q> andCriteria) {
+    public Q and(AndCriteria andCriteria) {
         List<Q> queries = new ArrayList<>();
         for (Condition condition : andCriteria.conditions()) {
             String fieldName = getFieldName(condition.getProperty());
@@ -60,7 +60,7 @@ public abstract class AbstractCriteriaConverter<Q> implements OpsCriteriaConvert
         return queryBuilder.all(queries);
     }
 
-    public Q or(OrCriteria<Q> orCriteria) {
+    public Q or(OrCriteria orCriteria) {
         Q leftQuery = orCriteria.getLeft().apply(this);
         Q rightQuery = orCriteria.getRight().apply(this);
         return queryBuilder.any(Arrays.asList(leftQuery, rightQuery));

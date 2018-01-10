@@ -29,7 +29,7 @@ import org.springframework.util.Assert;
 /**
  * @author Ales Justin
  */
-public abstract class Criteria<Q> {
+public abstract class Criteria {
 
     @Override
     public String toString() {
@@ -48,7 +48,7 @@ public abstract class Criteria<Q> {
         this.property = new SimpleProperty(property);
     }
 
-    public abstract Q apply(OpsCriteriaConverter<Q> converter);
+    public abstract <Q> Q apply(OpsCriteriaConverter<Q> converter);
 
     public List<Condition> conditions() {
         return conditions;
@@ -67,7 +67,7 @@ public abstract class Criteria<Q> {
      * @param criteria criteria
      * @return new criteria instance
      */
-    public Criteria<Q> and(Criteria<Q> criteria) {
+    public Criteria and(Criteria criteria) {
         Assert.notNull(criteria, "Cannot chain 'null' criteria.");
         this.conditions.addAll(criteria.conditions());
         return this;
@@ -79,9 +79,9 @@ public abstract class Criteria<Q> {
      * @param criteria criteria
      * @return new criteria instance
      */
-    public Criteria<Q> or(Criteria<Q> criteria) {
+    public Criteria or(Criteria criteria) {
         Assert.notNull(criteria, "Cannot chain 'null' criteria.");
-        return new OrCriteria<>(this, criteria);
+        return new OrCriteria(this, criteria);
     }
 
     // --- OPS!
@@ -92,7 +92,7 @@ public abstract class Criteria<Q> {
      * @param o value
      * @return new criteria instance
      */
-    public Criteria<Q> is(Object o) {
+    public Criteria is(Object o) {
         conditions.add(new Condition(property, OperationKey.EQUALS, o));
         return this;
     }
@@ -102,7 +102,7 @@ public abstract class Criteria<Q> {
      *
      * @return new criteria instance
      */
-    public Criteria<Q> isNull() {
+    public Criteria isNull() {
         conditions.add(new Condition(property, OperationKey.NULL));
         return this;
     }
@@ -112,7 +112,7 @@ public abstract class Criteria<Q> {
      *
      * @return new criteria instance
      */
-    public Criteria<Q> isEmpty() {
+    public Criteria isEmpty() {
         conditions.add(new Condition(property, OperationKey.EMPTY));
         return this;
     }
@@ -124,7 +124,7 @@ public abstract class Criteria<Q> {
      * @param s string
      * @return new criteria instance
      */
-    public Criteria<Q> contains(String s) {
+    public Criteria contains(String s) {
         conditions.add(new Condition(property, OperationKey.CONTAINS, s));
         return this;
     }
@@ -135,7 +135,7 @@ public abstract class Criteria<Q> {
      * @param s string
      * @return new criteria instance
      */
-    public Criteria<Q> startsWith(String s) {
+    public Criteria startsWith(String s) {
         conditions.add(new Condition(property, OperationKey.STARTS_WITH, s));
         return this;
     }
@@ -147,7 +147,7 @@ public abstract class Criteria<Q> {
      * @param s string
      * @return new criteria instance
      */
-    public Criteria<Q> endsWith(String s) {
+    public Criteria endsWith(String s) {
         conditions.add(new Condition(property, OperationKey.ENDS_WITH, s));
         return this;
     }
@@ -157,7 +157,7 @@ public abstract class Criteria<Q> {
      *
      * @return new criteria instance
      */
-    public Criteria<Q> not() {
+    public Criteria not() {
         getCondition().setNegating(true);
         return this;
     }
@@ -168,7 +168,7 @@ public abstract class Criteria<Q> {
      * @param s string
      * @return new criteria instance
      */
-    public Criteria<Q> fuzzy(String s) {
+    public Criteria fuzzy(String s) {
         conditions.add(new Condition(property, OperationKey.FUZZY, s));
         return this;
     }
@@ -179,7 +179,7 @@ public abstract class Criteria<Q> {
      * @param s string
      * @return new criteria instance
      */
-    public Criteria<Q> regexp(String s) {
+    public Criteria regexp(String s) {
         conditions.add(new Condition(property, OperationKey.REGEXP, s));
         return this;
     }
@@ -190,7 +190,7 @@ public abstract class Criteria<Q> {
      * @param boost boost
      * @return new criteria instance
      */
-    public Criteria<Q> boost(float boost) {
+    public Criteria boost(float boost) {
         if (boost < 0) {
             throw new InvalidDataAccessApiUsageException("Boost must not be negative.");
         }
@@ -205,7 +205,7 @@ public abstract class Criteria<Q> {
      * @param upperBound ub
      * @return new criteria instance
      */
-    public Criteria<Q> between(Object lowerBound, Object upperBound) {
+    public Criteria between(Object lowerBound, Object upperBound) {
         if (lowerBound == null && upperBound == null) {
             throw new InvalidDataAccessApiUsageException("Range [* TO *] is not allowed");
         }
@@ -220,7 +220,7 @@ public abstract class Criteria<Q> {
      * @param upperBound ub
      * @return new criteria instance
      */
-    public Criteria<Q> lessThanEqual(Object upperBound) {
+    public Criteria lessThanEqual(Object upperBound) {
         if (upperBound == null) {
             throw new InvalidDataAccessApiUsageException("UpperBound can't be null");
         }
@@ -228,7 +228,7 @@ public abstract class Criteria<Q> {
         return this;
     }
 
-    public Criteria<Q> lessThan(Object upperBound) {
+    public Criteria lessThan(Object upperBound) {
         if (upperBound == null) {
             throw new InvalidDataAccessApiUsageException("UpperBound can't be null");
         }
@@ -242,7 +242,7 @@ public abstract class Criteria<Q> {
      * @param lowerBound lb
      * @return new criteria instance
      */
-    public Criteria<Q> greaterThanEqual(Object lowerBound) {
+    public Criteria greaterThanEqual(Object lowerBound) {
         if (lowerBound == null) {
             throw new InvalidDataAccessApiUsageException("LowerBound can't be null");
         }
@@ -250,7 +250,7 @@ public abstract class Criteria<Q> {
         return this;
     }
 
-    public Criteria<Q> greaterThan(Object lowerBound) {
+    public Criteria greaterThan(Object lowerBound) {
         if (lowerBound == null) {
             throw new InvalidDataAccessApiUsageException("LowerBound can't be null");
         }
@@ -264,7 +264,7 @@ public abstract class Criteria<Q> {
      * @param values values
      * @return new criteria instance
      */
-    public Criteria<Q> in(Object... values) {
+    public Criteria in(Object... values) {
         return in(toCollection(values));
     }
 
@@ -274,7 +274,7 @@ public abstract class Criteria<Q> {
      * @param values the collection containing the values to match against
      * @return new criteria instance
      */
-    public Criteria<Q> in(Iterable<?> values) {
+    public Criteria in(Iterable<?> values) {
         Assert.notNull(values, "Collection of 'in' values must not be null");
         conditions.add(new Condition(property, OperationKey.IN, values));
         return this;
@@ -295,9 +295,9 @@ public abstract class Criteria<Q> {
      * @param latitude  {@link org.springframework.data.geo.Point} latitude
      * @param longitude {@link org.springframework.data.geo.Point} longitude
      * @param distance  {@link Distance} distance
-     * @return new criteria instance AbstractCriteria<Q> the chaind criteria with the new 'within' criteria included.
+     * @return new criteria instance AbstractCriteria the chaind criteria with the new 'within' criteria included.
      */
-    public Criteria<Q> within(Double latitude, Double longitude, Distance distance) {
+    public Criteria within(Double latitude, Double longitude, Distance distance) {
         Assert.notNull(latitude, "Latitude must not be null");
         Assert.notNull(longitude, "Longitude must not be null");
         Assert.notNull(distance, "Distance must not be null");

@@ -29,45 +29,45 @@ import org.springframework.util.Assert;
  */
 public class SnowdropRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends RepositoryFactoryBeanSupport<T, S, ID> {
 
-  private DatasourceMapper datasourceMapper;
-  private SnowdropOperations snowdropOperations;
+    private DatasourceMapper datasourceMapper;
+    private SnowdropOperations snowdropOperations;
 
-  /**
-   * Creates a new {@link SnowdropRepositoryFactory} for the given repository interface.
-   *
-   * @param repositoryInterface must not be {@literal null}.
-   */
-  public SnowdropRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
-    super(repositoryInterface);
-  }
-
-  public void setDatasourceMapper(DatasourceMapper datasourceMapper) {
-    this.datasourceMapper = datasourceMapper;
-  }
-
-  public void setSnowdropOperations(SnowdropOperations snowdropOperations) {
-    this.snowdropOperations = snowdropOperations;
-  }
-
-  /*
-   * (non-Javadoc)
-   * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
-   */
-  @Override
-  public void afterPropertiesSet() {
-    if (snowdropOperations == null) {
-      Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
-
-      snowdropOperations = new SnowdropTemplate(datasourceMapper);
+    /**
+     * Creates a new {@link SnowdropRepositoryFactory} for the given repository interface.
+     *
+     * @param repositoryInterface must not be {@literal null}.
+     */
+    public SnowdropRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+        super(repositoryInterface);
     }
 
-    setMappingContext(snowdropOperations.getMappingContext());
+    public void setDatasourceMapper(DatasourceMapper datasourceMapper) {
+        this.datasourceMapper = datasourceMapper;
+    }
 
-    super.afterPropertiesSet();
-  }
+    public void setSnowdropOperations(SnowdropOperations snowdropOperations) {
+        this.snowdropOperations = snowdropOperations;
+    }
 
-  @Override
-  protected RepositoryFactorySupport createRepositoryFactory() {
-    return new SnowdropRepositoryFactory(snowdropOperations);
-  }
+    /*
+     * (non-Javadoc)
+     * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() {
+        if (snowdropOperations == null) {
+            Assert.notNull(datasourceMapper, "DatasourceMapper must be configured!");
+
+            snowdropOperations = new SnowdropTemplate(datasourceMapper);
+        }
+
+        setMappingContext(snowdropOperations.getMappingContext());
+
+        super.afterPropertiesSet();
+    }
+
+    @Override
+    protected RepositoryFactorySupport createRepositoryFactory() {
+        return new SnowdropRepositoryFactory(snowdropOperations);
+    }
 }

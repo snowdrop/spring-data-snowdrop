@@ -141,8 +141,7 @@ public abstract class AbstractQueryAdapter<T, Q, S> implements QueryAdapter<T> {
     }
 
     private Q createQueryImpl(CriteriaQuery<T> query) {
-        @SuppressWarnings("unchecked")
-        Criteria<Q> criteria = query.getCriteria();
+        Criteria criteria = query.getCriteria();
         if (criteria == null) {
             return queryHelper.matchAll();
         } else {

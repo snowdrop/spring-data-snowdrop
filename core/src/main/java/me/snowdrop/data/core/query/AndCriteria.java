@@ -19,12 +19,13 @@ package me.snowdrop.data.core.query;
 /**
  * @author Ales Justin
  */
-public class AndCriteria<Q> extends Criteria<Q> {
+public class AndCriteria extends Criteria {
     public AndCriteria(String property) {
         super(property);
     }
 
-    public Q apply(OpsCriteriaConverter<Q> converter) {
+    @Override
+    public <Q> Q apply(OpsCriteriaConverter<Q> converter) {
         return converter.and(this);
     }
 }

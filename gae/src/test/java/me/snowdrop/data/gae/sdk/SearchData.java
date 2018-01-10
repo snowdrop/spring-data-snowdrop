@@ -16,24 +16,46 @@
 
 package me.snowdrop.data.gae.sdk;
 
-
-import com.google.appengine.api.datastore.Query;
-import me.snowdrop.data.core.query.Criteria;
-import me.snowdrop.data.core.query.CriteriaConverter;
+import org.springframework.data.annotation.Id;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GaeCriteriaConverter implements CriteriaConverter<Query> {
-    private final String kind;
+public class SearchData {
+    @Id
+    private Long id;
+    private long foo;
+    private String bar;
 
-    public GaeCriteriaConverter(String kind) {
-        this.kind = kind;
+    public SearchData() {
     }
 
-    public Query convert(Criteria criteria) {
-        Query query = new Query(kind);
-        query.setFilter(FilterCriteriaConverter.INSTANCE.convert(criteria));
-        return query;
+    public SearchData(long foo, String bar) {
+        this.foo = foo;
+        this.bar = bar;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getFoo() {
+        return foo;
+    }
+
+    public void setFoo(long foo) {
+        this.foo = foo;
+    }
+
+    public String getBar() {
+        return bar;
+    }
+
+    public void setBar(String bar) {
+        this.bar = bar;
     }
 }

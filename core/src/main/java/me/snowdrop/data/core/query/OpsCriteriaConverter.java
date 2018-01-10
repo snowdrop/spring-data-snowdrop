@@ -20,6 +20,7 @@ package me.snowdrop.data.core.query;
  * @author Ales Justin
  */
 public interface OpsCriteriaConverter<Q> extends CriteriaConverter<Q> {
-    Q and(AndCriteria<Q> andCriteria);
-    Q or(OrCriteria<Q> orCriteria);
+    Q and(AndCriteria andCriteria);
+
+    Q or(OrCriteria orCriteria);
 }

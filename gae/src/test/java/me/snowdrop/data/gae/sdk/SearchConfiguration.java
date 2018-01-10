@@ -16,24 +16,19 @@
 
 package me.snowdrop.data.gae.sdk;
 
-
-import com.google.appengine.api.datastore.Query;
-import me.snowdrop.data.core.query.Criteria;
-import me.snowdrop.data.core.query.CriteriaConverter;
+import me.snowdrop.data.core.repository.config.EnableSnowdropRepositories;
+import me.snowdrop.data.core.spi.DatasourceMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public class GaeCriteriaConverter implements CriteriaConverter<Query> {
-    private final String kind;
-
-    public GaeCriteriaConverter(String kind) {
-        this.kind = kind;
-    }
-
-    public Query convert(Criteria criteria) {
-        Query query = new Query(kind);
-        query.setFilter(FilterCriteriaConverter.INSTANCE.convert(criteria));
-        return query;
+@Configuration
+@EnableSnowdropRepositories
+public class SearchConfiguration {
+    @Bean
+    public DatasourceMapper datasourceMapper() {
+        return new GaeDatasourceMapper();
     }
 }

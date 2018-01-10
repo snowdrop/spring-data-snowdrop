@@ -47,6 +47,9 @@
 
     <weld>1.2.0.Final</weld>
 
+    <arquillian>1.2.0.Final</arquillian>
+    <arquillian.gae>1.0.0.Beta10</arquillian.gae>
+
     <!-- Asciidoctor -->
     <hibernate-asciidoctor-theme.version>1.0.1.Final</hibernate-asciidoctor-theme.version>
     <asciidoctor-maven-plugin.version>1.5.3</asciidoctor-maven-plugin.version>
@@ -176,6 +179,29 @@
         <version>${cdi}</version>
         <scope>provided</scope>
         <optional>true</optional>
+      </dependency>
+
+      <!-- GAE -->
+
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <type>pom</type>
+        <scope>import</scope>
+        <version>${arquillian}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.arquillian.protocol</groupId>
+        <artifactId>arquillian-protocol-modules</artifactId>
+        <version>${arquillian.gae}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.arquillian.container</groupId>
+        <artifactId>arquillian-gae-local</artifactId>
+        <version>${arquillian.gae}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- Test -->
@@ -315,6 +341,13 @@
         <module>orm</module>
         <module>infinispan</module>
         <module>starters</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>gae</id>
+      <modules>
+        <module>core</module>
+        <module>gae</module>
       </modules>
     </profile>
     <!-- Just docs -->

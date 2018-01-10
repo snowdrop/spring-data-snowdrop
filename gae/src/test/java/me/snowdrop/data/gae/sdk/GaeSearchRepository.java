@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc, and individual contributors.
+ * Copyright 2018 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package me.snowdrop.data.core.query;
+package me.snowdrop.data.gae.sdk;
+
+import java.util.List;
+
+import me.snowdrop.data.core.repository.SnowdropRepository;
 
 /**
- * @author Ales Justin
+ * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface CriteriaConverter<Q> {
-    Q convert(Criteria criteria);
+public interface GaeSearchRepository extends SnowdropRepository<SearchData, Long> {
+    List<SearchData> findByFooNot(int foo);
+
+    List<SearchData> findByBar(String bar);
+
+    List<SearchData> findByFooAndBar(int foo, String bar);
+
+    List<SearchData> findByFooOrBar(int foo, String bar);
 }
