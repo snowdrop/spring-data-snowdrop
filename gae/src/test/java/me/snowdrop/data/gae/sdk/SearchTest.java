@@ -19,9 +19,6 @@ package me.snowdrop.data.gae.sdk;
 import java.io.File;
 import java.util.List;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -67,11 +64,7 @@ public class SearchTest {
 
         repository = context.getBean(GaeSearchRepository.class);
 
-        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-        Entity entity = new Entity(SearchData.class.getSimpleName());
-        entity.setProperty("foo", 10);
-        entity.setProperty("bar", "Baz");
-        ds.put(entity);
+        repository.save(new SearchData(10, "Baz"));
     }
 
     @After

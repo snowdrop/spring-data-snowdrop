@@ -50,7 +50,10 @@ public class GenericEntityToModelMapper implements EntityToModelMapper {
             Entity entity = new Entity(getKind(entityClass));
             org.springframework.util.ReflectionUtils.doWithFields(
                 entityClass,
-                field -> entity.setProperty(field.getName(), field.get(model))
+                field -> {
+                    org.springframework.util.ReflectionUtils.makeAccessible(field);
+                    entity.setProperty(field.getName(), org.springframework.util.ReflectionUtils.getField(field, model));
+                }
             );
             return entity;
         } catch (Exception e) {

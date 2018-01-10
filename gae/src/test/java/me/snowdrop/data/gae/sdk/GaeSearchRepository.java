@@ -18,12 +18,12 @@ package me.snowdrop.data.gae.sdk;
 
 import java.util.List;
 
-import me.snowdrop.data.core.repository.SnowdropRepository;
+import me.snowdrop.data.core.repository.SnowdropCrudRepository;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
-public interface GaeSearchRepository extends SnowdropRepository<SearchData, Long> {
+public interface GaeSearchRepository extends SnowdropCrudRepository<SearchData, Long> {
     List<SearchData> findByFooNot(int foo);
 
     List<SearchData> findByBar(String bar);
