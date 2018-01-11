@@ -8,6 +8,7 @@ Currently supported backends
 * Infinispan Embedded
 * Infinispan Remote
 * Google App Engine
+* Google Cloud Datastore
 
 e.g.
 

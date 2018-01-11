@@ -39,6 +39,7 @@
     <lucene>5.5.4</lucene>
     <infinispan>9.2.0.Beta2</infinispan>
     <gae>1.9.60</gae>
+    <gcd>1.14.0</gcd>
 
     <lombok>1.16.18</lombok>
     <cdi>2.0</cdi>
@@ -170,6 +171,12 @@
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
         <version>${gae}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-datastore</artifactId>
+        <version>${gcd}</version>
       </dependency>
 
       <!-- CDI -->
@@ -323,7 +330,7 @@
       <modules>
         <module>core</module>
         <module>hibernate-search</module>
-        <module>gae</module>
+        <module>gcp</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>
@@ -336,7 +343,7 @@
       <modules>
         <module>core</module>
         <module>hibernate-search</module>
-        <module>gae</module>
+        <module>gcp</module>
         <module>config</module>
         <module>orm</module>
         <module>infinispan</module>
@@ -344,10 +351,10 @@
       </modules>
     </profile>
     <profile>
-      <id>gae</id>
+      <id>gcp</id>
       <modules>
         <module>core</module>
-        <module>gae</module>
+        <module>gcp</module>
       </modules>
     </profile>
     <!-- Just docs -->
