@@ -49,7 +49,7 @@
     <weld>1.2.0.Final</weld>
 
     <arquillian>1.2.0.Final</arquillian>
-    <arquillian.gae>1.0.0.Beta10</arquillian.gae>
+    <arquillian.gae>1.0.0.CR1</arquillian.gae>
 
     <!-- Asciidoctor -->
     <hibernate-asciidoctor-theme.version>1.0.1.Final</hibernate-asciidoctor-theme.version>
