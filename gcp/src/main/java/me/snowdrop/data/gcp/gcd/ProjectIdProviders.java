@@ -16,14 +16,17 @@
 
 package me.snowdrop.data.gcp.gcd;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.ServiceLoader;
+import java.util.logging.Logger;
+
+import org.springframework.cloud.gcp.core.DefaultGcpProjectIdProvider;
+import org.springframework.cloud.gcp.core.GcpProjectIdProvider;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 class ProjectIdProviders {
-    private static final Log log = LogFactory.getLog(ProjectIdProviders.class);
+    private static final Logger log = Logger.getLogger(ProjectIdProviders.class.getName());
     private static String projectId;
 
     static String projectId() {
@@ -39,20 +42,11 @@ class ProjectIdProviders {
     }
 
     private static String getProjectId() {
-        ProjectIdProvider[] providers = new ProjectIdProvider[]{
-            GaeProjectIdProvider.INSTANCE,
-            SystemProjectIdProvider.INSTANCE,
-        };
-        for (ProjectIdProvider pip : providers) {
-            try {
-                String projectId = pip.projectId();
-                if (projectId != null) {
-                    return projectId;
-                }
-            } catch (Exception e) {
-                log.info(String.format("%s - %s", pip, e));
-            }
+        ServiceLoader<GcpProjectIdProvider> loader = ServiceLoader.load(GcpProjectIdProvider.class);
+        for (GcpProjectIdProvider provider : loader) {
+            return provider.getProjectId();
         }
-        throw new IllegalArgumentException("Cannot provide project id!");
+        GcpProjectIdProvider provider = new DefaultGcpProjectIdProvider();
+        return provider.getProjectId();
     }
 }

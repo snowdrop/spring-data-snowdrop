@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreReaderWriter;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
@@ -38,11 +38,13 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
     private final EntityInformation<T, ID> entityInformation;
     private final EntityToModelMapper<Entity, FullEntity<IncompleteKey>> entityToModelMapper;
 
-    private final Datastore datastore = DatastoreUtils.getDatastore();
-
     public GcdCrudAdapter(EntityInformation<T, ID> ei, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> entityToModelMapper) {
         this.entityInformation = ei;
         this.entityToModelMapper = entityToModelMapper;
+    }
+
+    protected DatastoreReaderWriter getDRW() {
+        return DatastoreUtils.getDatastoreReaderWriter();
     }
 
     protected Class<T> getEntityType() {
@@ -51,7 +53,7 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
 
     protected Key getKey(ID id) {
         String kind = entityToModelMapper.getKind(entityInformation.getJavaType());
-        KeyFactory factory = datastore.newKeyFactory().setKind(kind);
+        KeyFactory factory = DatastoreUtils.newKeyFactory().setKind(kind);
         if (id instanceof Number) {
             return factory.newKey(Number.class.cast(id).longValue());
         } else if (id instanceof String) {
@@ -68,7 +70,7 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
 
     @Override
     public <S extends T> S save(S entity) {
-        Entity e = datastore.put(entityToModelMapper.toEntity(getEntityType(), entity));
+        Entity e = getDRW().put(entityToModelMapper.toEntity(getEntityType(), entity));
         setId(e.getKey(), entity);
         return entity;
     }
@@ -81,7 +83,7 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
             list.add(entityToModelMapper.toEntity(getEntityType(), entity));
             models.add(entity);
         }
-        List<Entity> es = datastore.put(list.toArray(new FullEntity[list.size()]));
+        List<Entity> es = getDRW().put(list.toArray(new FullEntity[list.size()]));
         for (int i = 0; i < es.size(); i++) {
             setId(es.get(i).getKey(), models.get(i));
         }
@@ -90,7 +92,7 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
 
     @Override
     public Optional<T> findById(ID id) {
-        Entity entity = datastore.get(getKey(id));
+        Entity entity = getDRW().get(getKey(id));
         return Optional.ofNullable(entityToModelMapper.toModel(entityInformation.getJavaType(), entity));
     }
 
@@ -102,7 +104,10 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
     @Override
     public Iterable<T> findAllById(Iterable<ID> ids) {
         List<Key> keys = new ArrayList<>();
-        List<Entity> results = datastore.fetch(keys);
+        for (ID id : ids) {
+            keys.add(getKey(id));
+        }
+        List<Entity> results = getDRW().fetch(keys.toArray(new Key[keys.size()]));
         return results.stream().map(v -> entityToModelMapper.toModel(getEntityType(), v)).collect(Collectors.toList());
     }
 
@@ -117,12 +122,12 @@ public class GcdCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
         for (T entity : entities) {
             keys.add(getKey(entityInformation.getRequiredId(entity)));
         }
-        datastore.delete(keys.toArray(new Key[keys.size()]));
+        getDRW().delete(keys.toArray(new Key[keys.size()]));
     }
 
     @Override
     public void deleteById(ID id) {
-        datastore.delete(getKey(id));
+        getDRW().delete(getKey(id));
     }
 
     @Override

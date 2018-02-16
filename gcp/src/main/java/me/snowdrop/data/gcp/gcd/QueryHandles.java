@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreReaderWriter;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.EntityQuery;
 import com.google.cloud.datastore.FullEntity;
@@ -40,8 +40,8 @@ import org.springframework.data.domain.Sort;
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 class QueryHandles {
-    static Datastore getDatastore() {
-        return DatastoreUtils.getDatastore();
+    static DatastoreReaderWriter getDRW() {
+        return DatastoreUtils.getDatastoreReaderWriter();
     }
 
     static <T> List<T> toList(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper, QueryResults<Entity> qr) {
@@ -75,13 +75,13 @@ class QueryHandles {
 
         @Override
         public <T> List<T> toList(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
-            QueryResults<Entity> qr = getDatastore().run(builder.build());
+            QueryResults<Entity> qr = getDRW().run(builder.build());
             return QueryHandles.toList(entityClass, mapper, qr);
         }
 
         @Override
         public <T> Iterator<T> toIterator(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
-            QueryResults<Entity> qr = getDatastore().run(builder.build());
+            QueryResults<Entity> qr = getDRW().run(builder.build());
             return QueryHandles.toIterator(entityClass, mapper, qr);
         }
 
@@ -127,7 +127,7 @@ class QueryHandles {
         @Override
         public <T> List<T> toList(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
             List<T> list = new ArrayList<>();
-            QueryResults<ProjectionEntity> qr = getDatastore().run(builder.build());
+            QueryResults<ProjectionEntity> qr = getDRW().run(builder.build());
             while (qr.hasNext()) {
                 list.add(toEntity(qr.next()));
             }
@@ -136,7 +136,7 @@ class QueryHandles {
 
         @Override
         public <T> Iterator<T> toIterator(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
-            QueryResults<ProjectionEntity> qr = getDatastore().run(builder.build());
+            QueryResults<ProjectionEntity> qr = getDRW().run(builder.build());
             return new Iterator<T>() {
                 @Override
                 public boolean hasNext() {
@@ -204,13 +204,13 @@ class QueryHandles {
 
         @Override
         public <T> List<T> toList(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
-            QueryResults<Entity> qr = getDatastore().run(builder.build());
+            QueryResults<Entity> qr = getDRW().run(builder.build());
             return QueryHandles.toList(entityClass, mapper, qr);
         }
 
         @Override
         public <T> Iterator<T> toIterator(Class<T> entityClass, EntityToModelMapper<Entity, FullEntity<IncompleteKey>> mapper) {
-            QueryResults<Entity> qr = getDatastore().run(builder.build());
+            QueryResults<Entity> qr = getDRW().run(builder.build());
             return QueryHandles.toIterator(entityClass, mapper, qr);
         }
 

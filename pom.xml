@@ -40,6 +40,7 @@
     <infinispan>9.2.0.Beta2</infinispan>
     <gae>1.9.60</gae>
     <gcd>1.14.0</gcd>
+    <gcp-spring>1.0.0.M2</gcp-spring>
 
     <lombok>1.16.18</lombok>
     <cdi>2.0</cdi>
@@ -177,6 +178,15 @@
         <groupId>com.google.cloud</groupId>
         <artifactId>google-cloud-datastore</artifactId>
         <version>${gcd}</version>
+      </dependency>
+
+      <!-- Google Cloud Platform -->
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-gcp-dependencies</artifactId>
+        <version>${gcp-spring}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- CDI -->

@@ -106,6 +106,9 @@ public class GaeCrudAdapter<T, ID> implements CrudAdapter<T, ID> {
     @Override
     public Iterable<T> findAllById(Iterable<ID> ids) {
         List<Key> keys = new ArrayList<>();
+        for (ID id : ids) {
+            keys.add(getKey(id));
+        }
         Map<Key, Entity> map = datastoreService.get(keys);
         return map.values().stream().map(v -> entityToModelMapper.toModel(getEntityType(), v)).collect(Collectors.toList());
     }

@@ -19,7 +19,6 @@ package me.snowdrop.data.gcp.gcd;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
@@ -53,8 +52,7 @@ public class GcdEntityToModelMapper extends AbstractEntityToModelMapper<Entity, 
         if (id == null) {
             return FullEntity.newBuilder(IncompleteKey.newBuilder(DatastoreUtils.fetchProjectId(), kind).build());
         } else {
-            Datastore datastore = DatastoreUtils.getDatastore();
-            KeyFactory factory = datastore.newKeyFactory().setKind(kind);
+            KeyFactory factory = DatastoreUtils.newKeyFactory().setKind(kind);
             Key key = (id instanceof Number) ? factory.newKey(Number.class.cast(id).longValue()) : factory.newKey((String) id);
             return FullEntity.newBuilder(key);
         }

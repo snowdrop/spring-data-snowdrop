@@ -18,32 +18,52 @@ package me.snowdrop.data.gcp.gcd;
 
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.DatastoreReaderWriter;
+import com.google.cloud.datastore.KeyFactory;
+import org.springframework.core.NamedThreadLocal;
 
 /**
  * @author <a href="mailto:ales.justin@jboss.org">Ales Justin</a>
  */
 public class DatastoreUtils {
+    private static final ThreadLocal<DatastoreReaderWriter> DRW = new NamedThreadLocal<>("GCD Datastore Reader Writer");
     private static Datastore datastore;
 
     public static String fetchProjectId() {
         return ProjectIdProviders.projectId();
     }
 
-    private static Datastore fetchDatastore() {
-        DatastoreOptions.Builder builder = DatastoreOptions.newBuilder();
-        builder.setProjectId(fetchProjectId());
-        DatastoreOptions options = builder.build();
-        return options.getService();
+    /**
+     * Should be used to push GCD Transaction as DatastoreReaderWriter.
+     */
+    public static void setDatastoreReaderWriter(DatastoreReaderWriter drw) {
+        DRW.set(drw);
     }
 
-    public static Datastore getDatastore() {
+    public static void clearDatastoreReaderWriter() {
+        DRW.remove();
+    }
+
+    private static Datastore fetchDatastore() {
         if (datastore == null) {
             synchronized (DatastoreUtils.class) {
                 if (datastore == null) {
-                    datastore = fetchDatastore();
+                    DatastoreOptions.Builder builder = DatastoreOptions.newBuilder();
+                    builder.setProjectId(fetchProjectId());
+                    DatastoreOptions options = builder.build();
+                    datastore = options.getService();
                 }
             }
         }
         return datastore;
+    }
+
+    public static DatastoreReaderWriter getDatastoreReaderWriter() {
+        DatastoreReaderWriter drw = DRW.get();
+        return drw != null ? drw : fetchDatastore();
+    }
+
+    public static KeyFactory newKeyFactory() {
+        return fetchDatastore().newKeyFactory();
     }
 }
