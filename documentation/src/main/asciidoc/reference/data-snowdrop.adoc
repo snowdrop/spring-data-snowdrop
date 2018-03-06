@@ -100,12 +100,12 @@ see <<snowdrop.standalone.configuration.advanced>>.
 [[snowdrop.standalone.configuration.xml]]
 === XML-based configuration
 
-WARNING: XML-based configuration is not implemented yet.
+TODO -- missing documentation!
 
 [[snowdrop.standalone.configuration.cdi]]
 === CDI configuration
 
-WARNING: CDI integration is not implemented yet.
+TODO -- missing documentation!
 
 [[snowdrop.standalone.configuration.advanced]]
 === Advanced configuration
