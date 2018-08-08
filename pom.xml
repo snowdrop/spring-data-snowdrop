@@ -21,7 +21,7 @@
 
   <groupId>me.snowdrop.data</groupId>
   <artifactId>spring-data-snowdrop-parent</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0-redhat</version>
   <packaging>pom</packaging>
 
   <name>Spring Data Snowdrop Build</name>
