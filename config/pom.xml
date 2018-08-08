@@ -20,12 +20,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>spring-data-snowdrop-config</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <parent>
     <groupId>me.snowdrop.data</groupId>
     <artifactId>spring-data-snowdrop-parent</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <name>Spring Data Snowdrop Config</name>
